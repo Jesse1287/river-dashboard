@@ -38,7 +38,10 @@
     </div>
 
     <script>
-        fetch('data.json').then(r => r.json()).then(data => {
+    function updateData() {
+        fetch('data.json?t=' + Date.now()) // The 't=' prevents the browser from caching the json file
+        .then(r => r.json())
+        .then(data => {
             document.getElementById('home-stage').innerText = data.river.stage;
             const status = document.getElementById('home-river-status');
             if (data.river.raw >= 29) {
@@ -56,7 +59,14 @@
             
             document.getElementById('home-donaldsonville-temp').innerText = data.weather.donaldsonville.temp;
             document.getElementById('home-donaldsonville-desc').innerText = data.weather.donaldsonville.desc;
-        }).catch(err => console.log("Error loading dashboard data."));
-    </script>
+        }).catch(err => console.log("Error fetching fresh telemetry."));
+    }
+
+    // Run it immediately when the page opens
+    updateData();
+
+    // Automatically run it every 5 minutes (300,000 milliseconds)
+    setInterval(updateData, 300000);
+</script>
 </body>
 </html>
