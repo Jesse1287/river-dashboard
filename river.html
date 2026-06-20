@@ -1,27 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>🌊 Flood Center</title>
 </head>
 <body>
-    <div class="nav-tabs">
-        <a href="index.html">🚪 Gate</a>
-        <a href="river.html" class="active">🌊 Flood Center</a>
-        <a href="weather.html">🌦️ Live Weather</a>
+    <div class="container">
+        <h1>🌊 Amite River Tracking</h1>
+        
+        <div class="nav-tabs">
+            <a href="index.html">Home</a>
+            <a href="river.html" class="active">🌊 Amite River</a>
+            <a href="weather.html">🌦️ Weather</a>
+        </div>
+
+        <div class="panel" style="text-align: center; padding: 24px;">
+            <div id="status-badge" class="status-badge" style="margin-bottom: 8px;">Checking status...</div>
+            <div id="stage" class="metric" style="font-size: 3rem; margin: 4px 0;">Loading...</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Flood Stage Action Level: 29.00 ft</div>
+        </div>
+
+        <h3>📈 5-Day Hydrograph Predictor</h3>
+        <div style="background: white; padding: 8px; border-radius: 16px; display: flex; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);">
+            <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" alt="Amite River Hydrograph" style="width:100%; border: none; border-radius: 8px;">
+        </div>
     </div>
-    <h1>Amite River Tracking</h1>
-    <div class="panel">
-        <div id="status-badge">Checking status...</div>
-        <div id="stage" class="metric">Loading...</div>
-    </div>
-    <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" style="width:100%; border-radius:8px; background:white;">
+
     <script>
         fetch('data.json').then(r => r.json()).then(data => {
             document.getElementById('stage').innerText = data.river.stage;
             const status = document.getElementById('status-badge');
-            status.innerText = data.river.raw >= 29 ? "⚠️ FLOOD STAGE" : "🟢 NORMAL FLOW";
-            status.style.color = data.river.raw >= 29 ? "#ff3131" : "#39ff14";
+            
+            if (data.river.raw >= 29) {
+                status.innerText = "⚠️ FLOOD STAGE WARNING";
+                status.style.background = "rgba(248, 113, 113, 0.2)";
+                status.style.color = "var(--status-red)";
+            } else {
+                status.innerText = "🟢 RIVER FLOW NORMAL";
+                status.style.background = "rgba(74, 222, 128, 0.2)";
+                status.style.color = "var(--status-green)";
+            }
         });
     </script>
 </body>
