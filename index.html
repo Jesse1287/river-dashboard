@@ -1,292 +1,97 @@
-:root {
-    --bg-dark: #0f141c;
-    --card-bg: #161f2b;
-    --border-color: #243245;
-    --text-main: #e2e8f0;
-    --text-muted: #94a3b8;
-    --accent-blue: #38bdf8;
-    --status-green: #4ade80;
-    --status-red: #f87171;
-    --status-orange: #fb923c;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>🏠 Family Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 Family Watch</h1>
+        <div class="heartbeat-container">
+            <span class="pulse-dot"></span> Telemetry Active: <span id="sys-clock">--</span>
+        </div>
+        
+        <div class="nav-tabs">
+            <a href="index.html" class="active">Home</a>
+            <a href="river.html">🌊 Amite River</a>
+            <a href="weather.html">🌦️ Weather</a>
+        </div>
 
-body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg-dark);
-    color: var(--text-main);
-    margin: 0;
-    padding: 16px;
-    display: flex;
-    justify-content: center;
-}
+        <div class="panel" style="border-left: 5px solid var(--accent-blue);">
+            <h3>🌊 Amite River Status</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div id="home-stage" class="metric">Loading...</div>
+                <div id="home-river-status" class="status-badge">Checking...</div>
+            </div>
+        </div>
 
-.container {
-    width: 100%;
-    max-width: 1100px;
-    margin-bottom: 40px;
-}
+        <div class="grid-2">
+            <div class="panel">
+                <h3>🏡 Denham Springs</h3>
+                <div id="home-denham-temp" class="metric">--</div>
+                <div id="home-denham-desc" style="color: var(--text-muted); text-transform: capitalize;">Loading...</div>
+            </div>
+            <div class="panel">
+                <h3>🏭 Donaldsonville</h3>
+                <div id="home-donaldsonville-temp" class="metric">--</div>
+                <div id="home-donaldsonville-desc" style="color: var(--text-muted); text-transform: capitalize;">Loading...</div>
+            </div>
+        </div>
 
-h1 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 20px 0 6px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+        <h3>🛠️ Infrastructure Control Center</h3>
+        <div class="panel" style="padding: 14px;">
+            <div class="launch-grid">
+                <a href="http://openmediavault.local" target="_blank" class="launch-card">
+                    <span>💾</span> OMV Server
+                </a>
+                <a href="http://portainer.local" target="_blank" class="launch-card">
+                    <span>🐋</span> Portainer
+                </a>
+                <a href="https://login.tailscale.com" target="_blank" class="launch-card">
+                    <span>🔒</span> Tailscale Node
+                </a>
+                <a href="http://pi.hole/admin" target="_blank" class="launch-card">
+                    <span>🛡️</span> Network AdGuard
+                </a>
+            </div>
+        </div>
+    </div>
 
-h2, h3 {
-    margin: 0 0 12px 0;
-    font-size: 1.15rem;
-    color: #ffffff;
-}
+    <script>
+    function updateData() {
+        fetch('data.json?t=' + Date.now())
+        .then(r => r.json())
+        .then(data => {
+            // Map System Heartbeat Clock
+            document.getElementById('sys-clock').innerText = data.system.last_updated;
 
-.nav-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 12px;
-}
+            // Map River Data Metrics
+            document.getElementById('home-stage').innerText = data.river.stage;
+            const status = document.getElementById('home-river-status');
+            if (data.river.raw >= 29) {
+                status.innerText = "⚠️ FLOOD STAGE";
+                status.style.background = "rgba(248, 113, 113, 0.15)";
+                status.style.color = "var(--status-red)";
+            } else {
+                status.innerText = "🟢 NORMAL FLOW";
+                status.style.background = "rgba(74, 222, 128, 0.15)";
+                status.style.color = "var(--status-green)";
+            }
 
-.nav-tabs a {
-    color: var(--text-muted);
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.nav-tabs a:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
-}
-
-.nav-tabs a.active {
-    background: var(--card-bg);
-    color: var(--accent-blue);
-    border: 1px solid var(--border-color);
-}
-
-.panel {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-}
-
-.metric {
-    font-size: 2.2rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    margin: 8px 0;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* System Heartbeat Clock styling */
-.heartbeat-container {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 20px;
-    padding-left: 4px;
-}
-
-.pulse-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--status-green);
-    border-radius: 50%;
-    display: inline-block;
-    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
-}
-
-/* Admin Dashboard Shortcuts Quick Grid */
-.launch-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 10px;
-    margin-top: 12px;
-}
-
-.launch-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 12px;
-    text-align: center;
-    color: var(--text-main);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-
-.launch-card:hover {
-    background: rgba(56, 189, 248, 0.08);
-    border-color: var(--accent-blue);
-    transform: translateY(-2px);
-}
-
-.launch-card span {
-    display: block;
-    font-size: 1.4rem;
-    margin-bottom: 4px;
-}
-
-/* Flood Stage Multi-Tier Progress Tracker */
-.progress-container {
-    background: #0b1017;
-    border-radius: 10px;
-    height: 16px;
-    width: 100%;
-    position: relative;
-    margin: 20px 0 35px 0;
-    border: 1px solid var(--border-color);
-}
-
-.progress-bar {
-    background: linear-gradient(90deg, var(--status-green) 60%, var(--status-orange) 85%, var(--status-red) 100%);
-    height: 100%;
-    border-radius: 9px;
-    width: 0%;
-    transition: width 1s ease-in-out;
-}
-
-.progress-marker {
-    position: absolute;
-    top: -22px;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    transform: translateX(-50%);
-    white-space: nowrap;
-}
-
-.progress-marker::after {
-    content: '';
-    position: absolute;
-    bottom: -22px;
-    left: 50%;
-    width: 2px;
-    height: 16px;
-    background: var(--border-color);
-    z-index: 1;
-}
-
-/* Horizontal Rolling Weather Forecast Strip */
-.forecast-strip {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border-color);
-}
-
-.forecast-card {
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-.forecast-card strong {
-    color: var(--text-main);
-    display: block;
-    font-size: 0.95rem;
-    margin: 2px 0;
-}
-
-/* Responsive Radar Viewport Handling */
-.radar-container {
-    padding: 0; 
-    overflow: hidden; 
-    position: relative;
-    border-radius: 16px;
-}
-
-.responsive-radar {
-    border: none;
-    vertical-align: bottom;
-    width: 100%;
-    height: 800px; /* Perfect scale for large desktop screens */
-}
-
-/* Mobile Layout Default Rules (Stacked Viewports) */
-.grid-2 {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-
-.weather-info-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-top: 14px;
-    border-top: 1px solid var(--border-color);
-    padding-top: 14px;
-}
-
-.info-item {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-}
-
-.info-item strong {
-    color: var(--text-main);
-    display: block;
-    font-size: 1rem;
-    margin-top: 2px;
-}
-
-img {
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    max-width: 100%;
-    height: auto;
-}
-
-/* Scaled Viewport Triggers for Tablets and Displays */
-@media (min-width: 768px) {
-    .grid-2 {
-        flex-direction: row;
+            // Map Weather Summaries
+            document.getElementById('home-denham-temp').innerText = data.weather.denham.current.temp;
+            document.getElementById('home-denham-desc').innerText = data.weather.denham.current.desc;
+            
+            document.getElementById('home-donaldsonville-temp').innerText = data.weather.donaldsonville.current.temp;
+            document.getElementById('home-donaldsonville-desc').innerText = data.weather.donaldsonville.current.desc;
+        }).catch(err => console.log("Error reading homepage json."));
     }
-    .grid-2 .panel {
-        flex: 1;
-        margin-bottom: 0;
-    }
-}
 
-/* MOBILE RADAR OVERRIDE FIX: Keeps it compact on phones */
-@media (max-width: 600px) {
-    .responsive-radar {
-        height: 250px; /* Keeps iframe from consuming the whole vertical screen space */
-    }
-}
+    updateData();
+    setInterval(updateData, 300000);
+    </script>
+</body>
+</html>
