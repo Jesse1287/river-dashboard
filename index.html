@@ -1,15 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="style.css"> <title>🚪 Gate | Roux Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <title>🖥️ Core Node</title>
 </head>
-<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
-    <div class="welcome-box">
-        <div class="neon-glow">Welcome to Roux's Studio Server</div>
-        <a href="core.html" class="enter-btn">Initialize Core Node</a>
-        <div class="terminal-log" id="status-log">
-            <div class="log-line">⚡ System warming up...</div>
-        </div>
+<body>
+    <div class="nav">
+        <a href="index.html" class="active">🖥️ Core Node</a>
+        <a href="river.html">🌊 River</a>
+        <a href="weather.html">🌦️ Weather</a>
     </div>
-    <script src="app.js"></script> </body>
+    <h1>Z600 Admin Node</h1>
+    <div class="panel">
+        <h2>System Resources</h2>
+        <p id="stats">Loading data...</p>
+    </div>
+    <script>
+        fetch('data.json')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('stats').innerText = "CPU: " + data.cpu + "% | RAM: " + data.ram_p + "%";
+            });
+    </script>
+</body>
 </html>
