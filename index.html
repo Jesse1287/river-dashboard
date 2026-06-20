@@ -1,18 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>🚪 Gate | Z600 Admin</title>
+    <title>🏠 Family Dashboard</title>
 </head>
 <body>
-    <div class="nav-tabs">
-        <a href="index.html" class="active">🚪 Gate</a>
-        <a href="river.html">🌊 Flood Center</a>
-        <a href="weather.html">🌦️ Live Weather</a>
+    <div class="container">
+        <h1>🏠 Family Watch</h1>
+        
+        <div class="nav-tabs">
+            <a href="index.html" class="active">Home</a>
+            <a href="river.html">🌊 Amite River</a>
+            <a href="weather.html">🌦️ Weather</a>
+        </div>
+
+        <div class="panel" style="border-left: 5px solid var(--accent-blue);">
+            <h3>🌊 Amite River Status</h3>
+            <div id="home-stage" class="metric">Loading...</div>
+            <div id="home-river-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">Checking...</div>
+        </div>
+
+        <div class="grid-2">
+            <div class="panel">
+                <h3>🏡 Denham Springs</h3>
+                <div id="home-denham-temp" class="metric">--</div>
+                <div id="home-denham-desc" style="color: var(--text-muted); text-transform: capitalize;">Loading...</div>
+            </div>
+            <div class="panel">
+                <h3>🏭 Donaldsonville</h3>
+                <div id="home-donaldsonville-temp" class="metric">--</div>
+                <div id="home-donaldsonville-desc" style="color: var(--text-muted); text-transform: capitalize;">Loading...</div>
+            </div>
+        </div>
     </div>
-    <div class="panel">
-        <h1>Z600 Admin Gate</h1>
-        <p>System status nominal. Select a module to initialize telemetry.</p>
-    </div>
+
+    <script>
+        fetch('data.json').then(r => r.json()).then(data => {
+            // Populate River Summary
+            document.getElementById('home-stage').innerText = data.river.stage;
+            const status = document.getElementById('home-river-status');
+            if (data.river.raw >= 29) {
+                status.innerText = "⚠️ FLOOD STAGE";
+                status.style.background = "rgba(248, 113, 113, 0.15)";
+                status.style.color = "var(--status-red)";
+            } else {
+                status.innerText = "🟢 NORMAL FLOW";
+                status.style.background = "rgba(74, 222, 128, 0.15)";
+                status.style.color = "var(--status-green)";
+            }
+
+            // Populate Weather Summaries
+            document.getElementById('home-denham-temp').innerText = data.weather.denham.temp;
+            document.getElementById('home-denham-desc').innerText = data.weather.denham.desc;
+            
+            document.getElementById('home-donaldsonville-temp').innerText = data.weather.donaldsonville.temp;
+            document.getElementById('home-donaldsonville-desc').innerText = data.weather.donaldsonville.desc;
+        }).catch(err => console.log("Error loading dashboard data."));
+    </script>
 </body>
 </html>
