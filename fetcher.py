@@ -2,6 +2,7 @@ import urllib.request
 import json
 import os
 import datetime
+import random
 
 def get_weather(lat, lon):
     try:
@@ -21,9 +22,7 @@ def get_weather(lat, lon):
             
             forecast_list = []
             for item in data['list'][1:4]:
-                # Force UTC epoch time safely to central runtime calculations
                 utc_ts = datetime.datetime.fromtimestamp(item['dt'], datetime.timezone.utc)
-                # Central Time is UTC - 5 hours
                 local_ts = utc_ts - datetime.timedelta(hours=5)
                 hour_str = local_ts.strftime('%I %p').lstrip('0')
                 
@@ -98,13 +97,21 @@ if __name__ == "__main__":
     river_pack = get_river()
     check_river_alerts(river_pack["raw"])
 
-    # Absolute safe server-side timezone shift to Central Time
+    # Rotate through these messages
+    messages = [
+        "System active. All stations nominal. 🚀",
+        "Watching the river. Stay dry! 🌊",
+        "Sensors online and calibrated. 🛰️",
+        "Command Center standing by. 🏠"
+    ]
+    
     utc_now = datetime.datetime.now(datetime.timezone.utc)
     local_now = (utc_now - datetime.timedelta(hours=5)).strftime("%I:%M %p").lstrip('0')
 
     composite_data = {
         "system": {
-            "last_updated": local_now
+            "last_updated": local_now,
+            "message": random.choice(messages)
         },
         "river": river_pack,
         "weather": {
