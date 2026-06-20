@@ -1,27 +1,27 @@
 {
     "system": {
-        "last_updated": "6:28 PM",
-        "message": "System active. All stations nominal. \ud83d\ude80"
+        "last_updated": "6:55 PM",
+        "message": "Watching the river. Stay dry! \ud83c\udf0a"
     },
     "river": {
-        "stage": "25.61 ft",
-        "raw": 25.61,
-        "delta": "-2.12 ft"
+        "stage": "N/A",
+        "raw": 0.0,
+        "delta": "--"
     },
     "weather": {
         "denham": {
             "current": {
-                "temp": "80\u00b0F",
-                "feels": "85\u00b0F",
+                "temp": "77\u00b0F",
+                "feels": "78\u00b0F",
                 "desc": "Light Rain",
                 "pop": "100%",
-                "hum": "91%",
+                "hum": "86%",
                 "wind": "5.3 mph"
             },
             "forecast": [
                 {
                     "time": "10 PM",
-                    "temp": "79\u00b0F",
+                    "temp": "77\u00b0F",
                     "desc": "Rain",
                     "pop": "100%"
                 },
@@ -41,17 +41,17 @@
         },
         "donaldsonville": {
             "current": {
-                "temp": "78\u00b0F",
-                "feels": "78\u00b0F",
+                "temp": "77\u00b0F",
+                "feels": "79\u00b0F",
                 "desc": "Light Rain",
                 "pop": "100%",
-                "hum": "94%",
+                "hum": "92%",
                 "wind": "6.2 mph"
             },
             "forecast": [
                 {
                     "time": "10 PM",
-                    "temp": "78\u00b0F",
+                    "temp": "77\u00b0F",
                     "desc": "Rain",
                     "pop": "30%"
                 },
@@ -75,7 +75,7 @@
                 "feels": "78\u00b0F",
                 "desc": "Light Rain",
                 "pop": "100%",
-                "hum": "91%",
+                "hum": "93%",
                 "wind": "6.2 mph"
             },
             "forecast": [
