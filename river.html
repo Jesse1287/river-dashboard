@@ -47,26 +47,30 @@
         fetch('data.json?t=' + timestamp)
         .then(r => r.json())
         .then(data => {
-            document.getElementById('stage').innerText = data.river.stage;
+            if (!data.river) return;
+
+            document.getElementById('stage').innerText = data.river.stage || '--';
             
-            // Map 24h Delta text indicators
+            // Safe handling for missing delta value configurations
             const deltaElement = document.getElementById('delta-trend');
-            deltaElement.innerText = data.river.delta;
-            if(data.river.delta.startsWith('+')) {
-                deltaElement.style.color = "var(--status-red)"; // Rising water warning indicator
-            } else {
+            const deltaVal = data.river.delta || '--';
+            deltaElement.innerText = deltaVal;
+            if(deltaVal.startsWith('+')) {
+                deltaElement.style.color = "var(--status-red)";
+            } else if (deltaVal.startsWith('-')) {
                 deltaElement.style.color = "var(--status-green)";
+            } else {
+                deltaElement.style.color = "#ffffff";
             }
 
-            // Compute dynamic progress slider sizing width (cap between 0ft and 40ft gauge values)
-            let waterLevel = data.river.raw;
+            let waterLevel = data.river.raw || 0;
             let percentage = (waterLevel / 40) * 100;
             if (percentage > 100) percentage = 100;
             if (percentage < 0) percentage = 0;
             document.getElementById('flood-meter').style.width = percentage + '%';
             
             const status = document.getElementById('status-badge');
-            if (data.river.raw >= 29) {
+            if (waterLevel >= 29) {
                 status.innerText = "⚠️ FLOOD STAGE";
                 status.style.background = "rgba(248, 113, 113, 0.15)";
                 status.style.color = "var(--status-red)";
@@ -75,7 +79,7 @@
                 status.style.background = "rgba(74, 222, 128, 0.15)";
                 status.style.color = "var(--status-green)";
             }
-        }).catch(err => console.log("Error updating hydrology center."));
+        }).catch(err => console.log("Error updating hydrology center:", err));
 
         document.getElementById('hydrograph').src = 'https://water.noaa.gov/resources/hydrographs/denl1_hg.png?t=' + timestamp;
     }
