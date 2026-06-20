@@ -54,23 +54,26 @@
     </div>
 
     <script>
-        fetch('data.json').then(r => r.json()).then(data => {
-            // Populate Denham Details
-            document.getElementById('denham-temp').innerText = data.weather.denham.temp;
-            document.getElementById('denham-desc').innerText = data.weather.denham.desc;
-            document.getElementById('denham-feels').innerText = data.weather.denham.feels;
-            document.getElementById('denham-pop').innerText = data.weather.denham.pop;
-            document.getElementById('denham-hum').innerText = data.weather.denham.hum;
-            document.getElementById('denham-wind').innerText = data.weather.denham.wind;
+    function updateWeatherData() {
+        fetch('data.json?t=' + Date.now())
+        .then(r => r.json())
+        .then(data => {
+            // Updates Denham Springs card text
+            document.getElementById('denham').innerHTML = 
+                `${data.weather.denham.temp} — ${data.weather.denham.desc}`;
+            
+            // Updates Donaldsonville card text
+            document.getElementById('donaldsonville').innerHTML = 
+                `${data.weather.donaldsonville.temp} — ${data.weather.donaldsonville.desc}`;
+                
+        }).catch(err => console.log("Error updating weather operations data."));
+    }
 
-            // Populate Donaldsonville Details
-            document.getElementById('donaldsonville-temp').innerText = data.weather.donaldsonville.temp;
-            document.getElementById('donaldsonville-desc').innerText = data.weather.donaldsonville.desc;
-            document.getElementById('donaldsonville-feels').innerText = data.weather.donaldsonville.feels;
-            document.getElementById('donaldsonville-pop').innerText = data.weather.donaldsonville.pop;
-            document.getElementById('donaldsonville-hum').innerText = data.weather.donaldsonville.hum;
-            document.getElementById('donaldsonville-wind').innerText = data.weather.donaldsonville.wind;
-        });
-    </script>
+    // Run immediately when the page opens
+    updateWeatherData();
+
+    // Refresh every 5 minutes (300,000 ms)
+    setInterval(updateWeatherData, 300000);
+</script>
 </body>
 </html>
