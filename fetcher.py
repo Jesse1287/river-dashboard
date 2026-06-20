@@ -3,13 +3,13 @@ import json
 
 def get_weather(lat, lon):
     try:
-        # Using your provided OpenWeatherMap API key
+        # Using OpenWeatherMap 5-day/3-hour forecast API
         url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=imperial&cnt=1&appid=2a95de8d0a53a380df2a6916b7d7582e"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
             w = data['list'][0]
             
-            # Extract rain probability if available
+            # Extract rain probability (pop is given as a float between 0 and 1)
             pop_val = int(w.get('pop', 0) * 100)
             
             return {
@@ -28,7 +28,7 @@ def get_weather(lat, lon):
 
 def get_river():
     try:
-        # USGS Amite River Gauge
+        # USGS Amite River Gauge at Denham Springs
         url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=07378500&parameterCd=00065"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
