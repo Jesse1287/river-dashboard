@@ -1,1 +1,1 @@
-{"river": {"stage": "25.95 ft"}, "weather": {"temp": "84\u00b0F", "desc": "moderate rain"}}
+{"river": {"stage": "25.95 ft", "raw": 25.95}, "weather": {"denham": {"temp": "N/A", "desc": "N/A", "feels": "N/A", "pop": "N/A", "hum": "N/A", "press": "N/A", "wind": "N/A", "vis": "N/A"}, "donaldsonville": {"temp": "N/A", "desc": "N/A", "feels": "N/A", "pop": "N/A", "hum": "N/A", "press": "N/A", "wind": "N/A", "vis": "N/A"}}}
