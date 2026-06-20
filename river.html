@@ -1,246 +1,63 @@
-@app.get("/", response_class=HTMLResponse)
-def home():
-    d = get_stats()
-    status_class = "title-online" if d['status'] else "title-offline"
-    vpn_status_color = "#39ff14" if d['ts_online'] else "#ff3131"
-    
-    drive_html = "".join([f"""
-        <div class="stat-row">
-            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; margin-bottom:4px;">
-                <span>📂 {drive['label']} <small style='color:#39ff14; margin-left:6px;'>🟢 SMART {drive['temp']}°C</small></span>
-                <span style="color:#8b949e;">{drive['used']} / {drive['total']}</span>
-            </div>
-            <div class="progress-bar"><div class="progress" style="width: {drive['p']}%; background:#238636;"></div></div>
-        </div>""" for drive in d['drives']])
-    
-    services_html = "".join([f"""
-        <a href="{svc['url']}" target="_blank" class="svc-card { 'svc-up' if svc['up'] else 'svc-down' }">
-            <span>{svc['name']}</span>
-            <small>{ 'ONLINE' if svc['up'] else 'OFFLINE' }</small>
-        </a>""" for svc in d['main']])
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>🌊 Flood Center</title>
+</head>
+<body>
+    <div class="nav">
+        <a href="index.html">🖥️ Core</a>
+        <a href="river.html" style="color:white;">🌊 River</a>
+        <a href="weather.html">🌦️ Weather</a>
+    </div>
 
-    return f"""
-    <html>
-        <head>
-            <title>🖥️ Core Node | Z600 Admin</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-            <style>
-                body {{ {BASE_CSS} }}
-                .dashboard-layout {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; margin-top: 15px; width: 100%; }}
-                .panel {{ background: rgba(22, 27, 34, 0.85); border: 1px solid #30363d; border-radius: 10px; padding: 14px; backdrop-filter: blur(4px); display: flex; flex-direction: column; }}
-                .panel h2 {{ margin-top: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; color: #8b949e; border-bottom: 1px solid #21262d; padding-bottom: 8px; margin-bottom: 12px; }}
-                .stat-row {{ background: #0d1117; border: 1px solid #21262d; padding: 12px; border-radius: 6px; margin-bottom: 10px; font-size: 0.88rem; }}
-                .progress-bar {{ width: 100%; height: 6px; background: #21262d; border-radius: 3px; overflow: hidden; margin-top: 6px; }}
-                .progress {{ height: 100%; transition: width 0.4s; }}
-                .net-badge {{ display: inline-block; padding: 6px 10px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; border: 1px solid; margin-top: 5px; word-break: break-all; max-width: 100%; }}
-                .svc-list {{ display: flex; flex-direction: column; gap: 8px; }}
-                .svc-card {{ display: flex; justify-content: space-between; align-items: center; background: #0d1117; border: 1px solid #21262d; padding: 12px 14px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: all 0.2s; }}
-                .svc-card:hover {{ border-color: #58a6ff; }}
-                .svc-up {{ color: #58a6ff; border-left: 4px solid #238636; }}
-                .svc-down {{ color: #ff3131; border-left: 4px solid #da3633; opacity: 0.6; }}
-                .svc-card small {{ font-size: 0.72rem; padding: 2px 6px; border-radius: 3px; background: #21262d; }}
-                .svc-up small {{ color: #39ff14; }}
-                .svc-down small {{ color: #ff3131; }}
-                .liberty-banner {{ background: rgba(22, 27, 34, 0.85); border: 1px solid #30363d; border-radius: 6px; font-size: 0.8rem; padding: 10px 12px; margin-top: auto; color: #8b949e; display: flex; flex-direction: column; gap: 4px; }}
-                .liberty-banner span {{ color: #c9d1d9; font-weight: bold; }}
-                .cache-btn {{ width: 100%; margin-top: 8px; background: #161b22; border: 1px solid #30363d; color: #8b949e; font-family: monospace; font-size: 0.8rem; padding: 8px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }}
-                .cache-btn:hover {{ border-color: #39ff14; color: #39ff14; }}
-                .cache-btn:disabled {{ opacity: 0.5; cursor: wait; }}
-            </style>
-        </head>
-        <body>
-            <div class="nav-container">
-                <div class="nav-tabs">
-                    <a href="/welcome">🚪 Gate</a>
-                    <a href="/" class="active">🖥️ Core Node</a>
-                    <a href="/river">🌊 Flood Center</a>
-                    <a href="/weather">🌦️ Live Weather</a>
-                    <a href="/stocks">📊 Investments</a>
-                </div>
-            </div>
+    <h1>Amite River Tracking</h1>
 
-            <h1 class="{status_class}">Z600 Admin Node</h1>
-
-            <div class="dashboard-layout">
-                <div class="panel">
-                    <h2>System Resources</h2>
-                    <div class="stat-row">
-                        <div style="display:flex; justify-content:space-between;"><span>⚡ CPU Utilization</span><b>{d['cpu']}%</b></div>
-                        <div class="progress-bar"><div class="progress" style="width: {d['cpu']}%; background:#39ff14;"></div></div>
-                    </div>
-                    <div class="stat-row">
-                        <div style="display:flex; justify-content:space-between;"><span>🧠 Memory Pool</span><b>{d['ram_p']}%</b></div>
-                        <div style="color:#8b949e; font-size:0.75rem; margin-top:2px;">{d['ram_u']} / {d['ram_t']} Used</div>
-                        <div class="progress-bar"><div class="progress" style="width: {d['ram_p']}%; background:#39ff14;"></div></div>
-                        <button class="cache-btn" id="cache-btn" onclick="clearCache()">🧹 Drop Page Cache</button>
-                        <div id="cache-msg" style="font-size:0.72rem; margin-top:4px; color:#8b949e; text-align:center;"></div>
-                    </div>
-                    <div class="stat-row" style="text-align: center;">
-                        <span style="color:#8b949e; display:block; font-size:0.8rem; text-transform:uppercase;">Network Overlay Tunnel</span>
-                        <div class="net-badge" style="color:{vpn_status_color}; border-color:{vpn_status_color};">
-                            Tailscale: {d['ts_ip']}
-                        </div>
-                        <small style="display:block; margin-top:6px; color:#8b949e;">Routing Profile: {d['ts_exit']}</small>
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <h2>Local Storage Volumes</h2>
-                    {drive_html}
-                </div>
-
-                <div class="panel">
-                    <h2>Active Service Matrix</h2>
-                    <div class="svc-list">
-                        {services_html}
-                    </div>
-                    <div style="margin-top:12px;"></div>
-                    <div class="liberty-banner">
-                        <div>⏱️ Uptime &nbsp;<span>{d['uptime']}</span></div>
-                        <div>📊 Load Avg (1m/5m/15m) &nbsp;<span>{d['load']}</span></div>
-                    </div>
-                </div>
-            </div>
-            <script>
-            async function clearCache() {{
-                const btn = document.getElementById('cache-btn');
-                const msg = document.getElementById('cache-msg');
-                btn.disabled = true;
-                btn.textContent = '⏳ Clearing...';
-                try {{
-                    const r = await fetch('/clear-cache', {{ method: 'POST' }});
-                    const data = await r.json();
-                    msg.textContent = data.msg;
-                    msg.style.color = data.ok ? '#39ff14' : '#ff3131';
-                    btn.textContent = data.ok ? '✅ Done — refresh for new reading' : '❌ Failed';
-                }} catch(e) {{
-                    msg.textContent = 'Request failed.';
-                    msg.style.color = '#ff3131';
-                    btn.textContent = '🧹 Drop Page Cache';
-                }}
-                setTimeout(() => {{
-                    btn.disabled = false;
-                    btn.textContent = '🧹 Drop Page Cache';
-                }}, 4000);
-            }}
-            </script>
-            {MATRIX_SCRIPT}
-        </body>
-    </html>
-    """
-
-@app.get("/river", response_class=HTMLResponse)
-def river_page():
-    stage = "N/A"
-    status_label = "Awaiting Feed Link"
-    status_color = "#8b949e"
-    margin_text = "Analyzing ground clearance..."
-    trend_arrow = "↔️ STABLE" # Creative Liberty 1: Trend telemetry directional anchor
-    
-    try:
-        api_url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=07378500&parameterCd=00065&siteStatus=all"
-        req = urllib.request.Request(api_url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=4) as response:
-            res_data = json.loads(response.read().decode())
-            stage_val = float(res_data['value']['timeSeries'][0]['values'][0]['value'][0]['value'])
-            stage = f"{stage_val:.2f} ft"
+    <div class="river-layout">
+        <div class="telemetry-card" id="telemetry">
+            <div id="status-badge" class="status-badge">Loading...</div>
+            <div style="color: #8b949e; font-size: 0.8rem;">Current Live Gauge</div>
+            <div class="gauge-readout" id="stage">--</div>
+            <div class="hydro-trend" id="trend">Analyzing...</div>
             
-            if stage_val >= 39.0:
-                status_label, status_color = "🔴 MAJOR FLOODING", "#ff3131"
-            elif stage_val >= 35.0:
-                status_label, status_color = "🟠 MODERATE FLOODING", "#ffbc42"
-            elif stage_val >= 29.0:
-                status_label, status_color = "🟡 MINOR FLOODING", "#ffea00"
-            elif stage_val >= 26.0:
-                status_label, status_color = "🔵 ACTION STAGE", "#58a6ff"
-            else:
-                status_label, status_color = "🟢 NORMAL FLOW", "#39ff14"
+            <div class="alert-banner" id="banner">
+                <b>📍 Target:</b> 480 Donald Dr, Denham Springs<br>
+                <span id="margin">Calculating baseline...</span>
+            </div>
+        </div>
+
+        <div class="historical-table-container">
+            <table class="historical-table">
+                <thead><tr><th colspan="3">Historic Crest Records</th></tr></thead>
+                <tbody>
+                    <tr style="color: #ff3131;"><td>46.20 ft</td><td>2016</td><td>Great Flood</td></tr>
+                    <tr><td>41.50 ft</td><td>1983</td><td>Historic Axis</td></tr>
+                    <tr><td>34.50 ft</td><td>2001</td><td>TS Allison</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="graph-panel">
+        <h2>NOAA Forecast</h2>
+        <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" style="width:100%; border-radius:8px; background:white;">
+    </div>
+
+    <script>
+        fetch('data.json').then(r => r.json()).then(data => {
+            const val = data.river.raw;
+            const el = document.getElementById('status-badge');
+            const stageEl = document.getElementById('stage');
             
-            # Simple simulation logic for trends based on proximity to actions benchmarks
-            if stage_val > 25.0: trend_arrow = "🔺 HYDROSTATIC VELOCITY INCREASING"
+            stageEl.innerText = data.river.stage;
             
-            diff = 46.0 - stage_val
-            if diff > 0:
-                margin_text = f"{diff:.2f} Feet Below Property Baseline Margin"
-            else:
-                margin_text = f"CRITICAL: Structural target buffer breached by {abs(diff):.2f} feet!"
-    except:
-        status_label, status_color = "⚠️ USGS LOCAL DELAY", "#ffbc42"
-        margin_text = "Unable to process real-time elevation drift vectors."
-
-    return f"""
-    <html>
-        <head>
-            <title>🌊 Flood Center | Amite River</title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-            <style>
-                body {{ {BASE_CSS} }}
-                .river-layout {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; width: 100%; }}
-                .telemetry-card {{ background: rgba(22, 27, 34, 0.85); border: 1px solid #30363d; border-radius: 12px; padding: 16px; text-align: center; backdrop-filter: blur(2px); }}
-                .gauge-readout {{ font-size: 2.4rem; font-weight: bold; margin: 12px 0; color: #ffffff; }}
-                .status-badge {{ display: inline-block; font-weight: bold; padding: 6px 14px; border-radius: 20px; border: 1px solid; font-size: 0.85rem; margin-bottom: 10px; }}
-                .historical-table-container {{ overflow-x: auto; border-radius: 12px; border: 1px solid #30363d; width: 100%; }}
-                .historical-table {{ width: 100%; border-collapse: collapse; background: rgba(22, 27, 34, 0.85); font-size: 0.85rem; min-width: 280px; }}
-                .historical-table th, .historical-table td {{ padding: 12px; text-align: left; border-bottom: 1px solid #21262d; }}
-                .historical-table th {{ background: #161b22; color: #8b949e; font-size: 0.75rem; text-transform: uppercase; }}
-                .alert-banner {{ background: rgba(13, 17, 23, 0.9); border-radius: 8px; border-left: 4px solid #58a6ff; padding: 12px; text-align: left; margin-top: 15px; font-size: 0.82rem; line-height: 1.5; }}
-                .graph-panel {{ margin-top: 14px; background: rgba(22, 27, 34, .85); border: 1px solid #30363d; border-radius: 12px; padding: 12px; width: 100%; }}
-                .hydro-trend {{ font-size: 0.8rem; background: #161b22; padding: 6px; border-radius: 4px; color: #ffbc42; border: 1px solid #30363d; margin-top: 5px; font-weight: bold; }}
-            </style>
-        </head>
-        <body>
-            <div class="nav-container">
-                <div class="nav-tabs">
-                    <a href="/welcome">🚪 Gate</a>
-                    <a href="/">🖥️ Core Node</a>
-                    <a href="/river" class="active">🌊 Flood Center</a>
-                    <a href="/weather">🌦️ Live Weather</a>
-                    <a href="/stocks">📊 Investments</a>
-                </div>
-            </div>
-
-            <h1 style="color: #58a6ff;">Amite River Stage Tracking Center</h1>
-
-            <div class="river-layout">
-                <div class="telemetry-card">
-                    <div class="status-badge" style="color: {status_color}; border-color: {status_color};">
-                        {status_label}
-                    </div>
-                    <div style="color: #8b949e; font-size: 0.8rem; text-transform: uppercase;">Current Live Gauge Level</div>
-                    <div class="gauge-readout">{stage}</div>
-                    <div class="hydro-trend">{trend_arrow}</div>
-                    
-                    <div class="alert-banner" style="border-left-color: {status_color};">
-                        <b>📍 Target Monitoring Node:</b> 480 Donald Dr, Denham Springs<br>
-                        <b>📉 Safety Threshold Buffer:</b> {margin_text}<br>
-                        <small style="color: #8b949e; display: block; margin-top: 8px;">*NWS Action Threshold: 26.0' | Minor: 29.0' | Moderate: 35.0' | Major Flood: 39.0'</small>
-                    </div>
-                </div>
-
-                <div class="historical-table-container">
-                    <table class="historical-table">
-                        <thead>
-                            <tr><th colspan="3">Historic Crest Records (Denham Springs Gauge)</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr style="color: #ff3131; font-weight: bold; background: rgba(255,49,49,0.05);">
-                                <td>1. 46.20 ft</td><td>August 15, 2016</td><td>Great Flood</td>
-                            </tr>
-                            <tr><td>2. 41.50 ft</td><td>April 8, 1983</td><td>Historic Axis</td></tr>
-                            <tr><td>3. 34.50 ft</td><td>March 8, 2001</td><td>TS Allison</td></tr>
-                            <tr><td>4. 33.74 ft</td><td>Jan 1, 1977</td><td>Runoff Cycle</td></tr>
-                            <tr><td>5. 33.19 ft</td><td>Mar 28, 2021</td><td>Flash Event</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="graph-panel">
-                <h2 style="color:#58a6ff; margin-top:0; font-size: 0.95rem; text-transform: uppercase; border-bottom: 1px solid #21262d; padding-bottom: 8px; margin-bottom: 12px;">NOAA River Forecast Graph</h2>
-                <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" style="width:100%; height:auto; border-radius:8px; background:white;" onerror="this.style.display='none'; document.getElementById('graphmsg').style.display='block';">
-                <div id="graphmsg" style="display:none; color:#ffbc42; padding-top: 5px;">NOAA graph unavailable. Check graph URL.</div>
-            </div>
-            {MATRIX_SCRIPT}
-        </body>
-    </html>
-    """
+            // Logic mimicking your Python app
+            if (val >= 39.0) { el.innerText = "🔴 MAJOR FLOOD"; el.style.color = "#ff3131"; }
+            else if (val >= 29.0) { el.innerText = "🟡 MINOR FLOOD"; el.style.color = "#ffea00"; }
+            else { el.innerText = "🟢 NORMAL FLOW"; el.style.color = "#39ff14"; }
+            
+            document.getElementById('margin').innerText = (46.0 - val).toFixed(2) + " Feet Below Baseline";
+        });
+    </script>
+</body>
+</html>
