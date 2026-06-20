@@ -9,37 +9,36 @@
 </head>
 <body>
     <div class="container">
-        <h1>🌊 Amite River Hydro-Metrics</h1>
+        <h1>🌊 Amite River Tracking</h1>
         
         <div class="nav-tabs">
-            <a href="index.html">Home Base</a>
+            <a href="index.html">Home</a>
             <a href="river.html" class="active">🌊 Amite River</a>
-            <a href="weather.html">🌦️ Weather Radar</a>
+            <a href="weather.html">🌦️ Weather</a>
         </div>
 
-        <div class="panel float-hover" style="text-align: center; padding: 24px;">
-            <div id="status-badge" class="status-badge" style="margin-bottom: 8px;">Ping Sensor...</div>
+        <div class="panel" style="text-align: center; padding: 24px;">
+            <div id="status-badge" class="status-badge" style="margin-bottom: 8px;">Checking status...</div>
             <div id="stage" class="metric" style="font-size: 3.2rem; margin: 4px 0;">Loading...</div>
-            <div id="delta-container" style="font-size: 0.9rem; margin-bottom: 5px; font-weight: 600; display: none;">
-                24h Trend: <span id="delta-trend" style="color: #ffffff;">--</span>
-            </div>
-            
-            <div id="ark-status" style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-bottom: 20px;">
-                Checking Ark requirements...
+            <div id="delta-container" style="font-size: 0.9rem; margin-bottom: 15px; font-weight: 600; display: none;">
+                24h Change: <span id="delta-trend" style="color: #ffffff;">--</span>
             </div>
 
             <div class="progress-container">
-                <div class="progress-marker tier-low" style="left: 0%;">0'</div>
+                <div class="progress-marker tier-low" style="left: 0%;">0ft</div>
                 <div class="progress-marker tier-high" style="left: 72.5%;">Action (29')</div>
                 <div class="progress-marker tier-low" style="left: 77.5%;">Minor (31')</div>
                 <div class="progress-marker tier-high" style="left: 87.5%;">Mod (35')</div>
                 <div class="progress-marker tier-low" style="left: 97.5%;">Major (39')</div>
+                
+                <div id="current-level-marker" class="progress-marker" style="top: 20px; font-weight: bold; color: var(--accent-blue);">▼</div>
+                
                 <div id="flood-meter" class="progress-bar"></div>
             </div>
         </div>
 
         <h3>📈 River Forecast Hydrograph</h3>
-        <div style="background: white; padding: 8px; border-radius: 16px; display: flex; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.15);">
+        <div style="background: white; padding: 8px; border-radius: 16px; display: flex; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);">
             <img id="hydrograph" src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" alt="Amite River Hydrograph" style="width:100%; border: none; border-radius: 8px;">
         </div>
     </div>
@@ -69,30 +68,26 @@
                 deltaBox.style.display = 'none';
             }
 
+            // Calculate level
             let waterLevel = data.river.raw || 0;
             let percentage = (waterLevel / 40) * 100;
             if (percentage > 100) percentage = 100;
             if (percentage < 0) percentage = 0;
+            
+            // Update bar and marker
             document.getElementById('flood-meter').style.width = percentage + '%';
+            const currentMarker = document.getElementById('current-level-marker');
+            currentMarker.style.left = percentage + '%';
             
             const status = document.getElementById('status-badge');
-            const arkStatus = document.getElementById('ark-status');
-            
-            if (waterLevel >= 35) {
-                status.innerText = "🚨 MAJOR FLOOD STAGE";
-                status.style.background = "rgba(248, 113, 113, 0.3)";
+            if (waterLevel >= 29) {
+                status.innerText = "⚠️ FLOOD STAGE";
+                status.style.background = "rgba(248, 113, 113, 0.15)";
                 status.style.color = "var(--status-red)";
-                arkStatus.innerText = "🛶 Time to start rounding up the animals two-by-two.";
-            } else if (waterLevel >= 29) {
-                status.innerText = "⚠️ ACTION STAGE";
-                status.style.background = "rgba(251, 146, 60, 0.15)";
-                status.style.color = "var(--status-orange)";
-                arkStatus.innerText = "👀 Keep an eye on the water line. It's getting up there.";
             } else {
-                status.innerText = "🟢 FLOW NOMINAL";
+                status.innerText = "🟢 NORMAL FLOW";
                 status.style.background = "rgba(74, 222, 128, 0.15)";
                 status.style.color = "var(--status-green)";
-                arkStatus.innerText = "🛠️ Ark construction suspended. We're safe for now.";
             }
         }).catch(err => console.log("Error updating hydrology center:", err));
 
