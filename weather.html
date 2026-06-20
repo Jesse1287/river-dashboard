@@ -62,47 +62,57 @@
         fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
-            // 1. Map Denham Springs Live Telemetry
-            document.getElementById('denham-temp').innerText = data.weather.denham.current.temp;
-            document.getElementById('denham-desc').innerText = data.weather.denham.current.desc;
-            document.getElementById('denham-feels').innerText = data.weather.denham.current.feels;
-            document.getElementById('denham-pop').innerText = data.weather.denham.current.pop;
-            document.getElementById('denham-hum').innerText = data.weather.denham.current.hum;
-            document.getElementById('denham-wind').innerText = data.weather.denham.current.wind;
-            
-            // Generate Denham Forecast Strip Cards
-            let denhamHtml = '';
-            data.weather.denham.forecast.forEach(f => {
-                denhamHtml += `
-                    <div class="forecast-card">
-                        <div>${f.time}</div>
-                        <strong>${f.temp}</strong>
-                        <div style="font-size:0.7rem; color:var(--accent-blue);">${f.pop} Rain</div>
-                    </div>
-                `;
-            });
-            document.getElementById('denham-forecast').innerHTML = denhamHtml;
+            if (!data.weather) return;
 
-            // 2. Map Donaldsonville Live Telemetry
-            document.getElementById('donaldsonville-temp').innerText = data.weather.donaldsonville.current.temp;
-            document.getElementById('donaldsonville-desc').innerText = data.weather.donaldsonville.current.desc;
-            document.getElementById('donaldsonville-feels').innerText = data.weather.donaldsonville.current.feels;
-            document.getElementById('donaldsonville-pop').innerText = data.weather.donaldsonville.current.pop;
-            document.getElementById('donaldsonville-hum').innerText = data.weather.donaldsonville.current.hum;
-            document.getElementById('donaldsonville-wind').innerText = data.weather.donaldsonville.current.wind;
+            // 1. Map Denham Springs Live Telemetry safely
+            if (data.weather.denham) {
+                const denhamCurrent = data.weather.denham.current ? data.weather.denham.current : data.weather.denham;
+                document.getElementById('denham-temp').innerText = denhamCurrent.temp || '--';
+                document.getElementById('denham-desc').innerText = denhamCurrent.desc || '--';
+                document.getElementById('denham-feels').innerText = denhamCurrent.feels || '--';
+                document.getElementById('denham-pop').innerText = denhamCurrent.pop || '--';
+                document.getElementById('denham-hum').innerText = denhamCurrent.hum || '--';
+                document.getElementById('denham-wind').innerText = denhamCurrent.wind || '--';
+                
+                let denhamHtml = '';
+                if (data.weather.denham.forecast) {
+                    data.weather.denham.forecast.forEach(f => {
+                        denhamHtml += `
+                            <div class="forecast-card">
+                                <div>${f.time}</div>
+                                <strong>${f.temp}</strong>
+                                <div style="font-size:0.7rem; color:var(--accent-blue);">${f.pop} Rain</div>
+                            </div>
+                        `;
+                    });
+                }
+                document.getElementById('denham-forecast').innerHTML = denhamHtml;
+            }
 
-            // Generate Donaldsonville Forecast Strip Cards
-            let donaldsonHtml = '';
-            data.weather.donaldsonville.forecast.forEach(f => {
-                donaldsonHtml += `
-                    <div class="forecast-card">
-                        <div>${f.time}</div>
-                        <strong>${f.temp}</strong>
-                        <div style="font-size:0.7rem; color:var(--accent-blue);">${f.pop} Rain</div>
-                    </div>
-                `;
-            });
-            document.getElementById('donaldsonville-forecast').innerHTML = donaldsonHtml;
+            // 2. Map Donaldsonville Live Telemetry safely
+            if (data.weather.donaldsonville) {
+                const donCurrent = data.weather.donaldsonville.current ? data.weather.donaldsonville.current : data.weather.donaldsonville;
+                document.getElementById('donaldsonville-temp').innerText = donCurrent.temp || '--';
+                document.getElementById('donaldsonville-desc').innerText = donCurrent.desc || '--';
+                document.getElementById('donaldsonville-feels').innerText = donCurrent.feels || '--';
+                document.getElementById('donaldsonville-pop').innerText = donCurrent.pop || '--';
+                document.getElementById('donaldsonville-hum').innerText = donCurrent.hum || '--';
+                document.getElementById('donaldsonville-wind').innerText = donCurrent.wind || '--';
+
+                let donaldsonHtml = '';
+                if (data.weather.donaldsonville.forecast) {
+                    data.weather.donaldsonville.forecast.forEach(f => {
+                        donaldsonHtml += `
+                            <div class="forecast-card">
+                                <div>${f.time}</div>
+                                <strong>${f.temp}</strong>
+                                <div style="font-size:0.7rem; color:var(--accent-blue);">${f.pop} Rain</div>
+                            </div>
+                        `;
+                    });
+                }
+                document.getElementById('donaldsonville-forecast').innerHTML = donaldsonHtml;
+            }
 
         }).catch(err => console.log("Error updating forecast dashboard rows:", err));
     }
