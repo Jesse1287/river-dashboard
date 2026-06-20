@@ -1,11 +1,11 @@
 {
     "system": {
-        "last_updated": "5:40 PM"
+        "last_updated": "6:16 PM"
     },
     "river": {
         "stage": "25.69 ft",
         "raw": 25.69,
-        "delta": "-2.15 ft"
+        "delta": "-2.04 ft"
     },
     "weather": {
         "denham": {
@@ -14,7 +14,7 @@
                 "feels": "85\u00b0F",
                 "desc": "Light Rain",
                 "pop": "100%",
-                "hum": "90%",
+                "hum": "91%",
                 "wind": "5.3 mph"
             },
             "forecast": [
@@ -40,17 +40,17 @@
         },
         "donaldsonville": {
             "current": {
-                "temp": "78\u00b0F",
-                "feels": "78\u00b0F",
+                "temp": "77\u00b0F",
+                "feels": "79\u00b0F",
                 "desc": "Light Rain",
                 "pop": "100%",
-                "hum": "95%",
+                "hum": "88%",
                 "wind": "6.2 mph"
             },
             "forecast": [
                 {
                     "time": "10 PM",
-                    "temp": "78\u00b0F",
+                    "temp": "77\u00b0F",
                     "desc": "Rain",
                     "pop": "30%"
                 },
