@@ -6,22 +6,36 @@
     <link rel="stylesheet" href="style.css">
     <title>🌦️ Weather Operations</title>
     <link rel="manifest" href="manifest.json">
+    <style>
+        /* Responsive Radar Container */
+        .radar-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        .radar-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>🌦️ Regional Weather Ops</h1>
+        <h1>🌦️ Regional Weather</h1>
         
         <div class="nav-tabs">
-            <a href="index.html">Home Base</a>
+            <a href="index.html">Home</a>
             <a href="river.html">🌊 Amite River</a>
-            <a href="weather.html" class="active">🌦️ Weather Radar</a>
+            <a href="weather.html" class="active">🌦️ Weather</a>
         </div>
 
-        <div id="family-weather-alert" style="margin-bottom: 15px; padding: 10px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); text-align: center; font-weight: bold;">
-            Checking the skies...
-        </div>
-
-        <div class="panel float-hover">
+        <div class="panel">
             <h2 style="color: var(--accent-blue);">🏡 Denham Springs</h2>
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
                 <div id="denham-temp" class="metric" style="margin:0;">--</div>
@@ -36,7 +50,7 @@
             <div id="denham-forecast" class="forecast-container"></div>
         </div>
 
-        <div class="panel float-hover">
+        <div class="panel">
             <h2 style="color: var(--status-green);">🏭 Donaldsonville</h2>
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
                 <div id="donaldsonville-temp" class="metric" style="margin:0;">--</div>
@@ -51,8 +65,8 @@
             <div id="donaldsonville-forecast" class="forecast-container"></div>
         </div>
 
-        <div class="panel float-hover" style="border-left: 4px solid var(--status-orange);">
-            <h2 style="color: var(--status-orange);">🏥 Ponchatoula</h2>
+        <div class="panel" style="border-left: 4px solid var(--status-orange);">
+            <h2 style="color: var(--status-orange);">🏥 Ponchatoula (Work)</h2>
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
                 <div id="ponchatoula-temp" class="metric" style="margin:0;">--</div>
                 <div id="ponchatoula-desc" style="font-weight: 600; text-transform: capitalize;">Loading...</div>
@@ -67,7 +81,9 @@
         </div>
 
         <div class="panel" style="padding: 0; overflow: hidden; border-radius: 16px;">
-            <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" height="400" frameborder="0" allowfullscreen style="border:none; vertical-align: bottom;"></iframe>
+            <div class="radar-container">
+                <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
 
@@ -76,8 +92,6 @@
         fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
-            let maxPop = 0; // Track highest rain chance for our family alert
-
             // Map Denham
             if(data.weather.denham) {
                 const denCurrent = data.weather.denham.current || data.weather.denham;
@@ -88,8 +102,6 @@
                 document.getElementById('denham-hum').innerText = denCurrent.hum || '--';
                 document.getElementById('denham-wind').innerText = denCurrent.wind || '--';
                 
-                maxPop = Math.max(maxPop, parseInt(denCurrent.pop) || 0);
-
                 let denhamHtml = '';
                 if(data.weather.denham.forecast) {
                     data.weather.denham.forecast.forEach(f => {
@@ -99,7 +111,7 @@
                 document.getElementById('denham-forecast').innerHTML = denhamHtml;
             }
 
-            // Map Donaldsonville (Fixed comment syntax here!)
+            // Map Donaldsonville
             if(data.weather.donaldsonville) {
                 const donCurrent = data.weather.donaldsonville.current || data.weather.donaldsonville;
                 document.getElementById('donaldsonville-temp').innerText = donCurrent.temp || '--';
@@ -135,20 +147,6 @@
                     });
                 }
                 document.getElementById('ponchatoula-forecast').innerHTML = ponchHtml;
-            }
-
-            // Fun Family Alert Logic
-            const alertBox = document.getElementById('family-weather-alert');
-            if (maxPop > 60) {
-                alertBox.innerText = "☔ Heads up! Grab an umbrella before you leave today!";
-                alertBox.style.background = "rgba(56, 189, 248, 0.2)";
-                alertBox.style.color = "var(--accent-blue)";
-            } else if (maxPop > 30) {
-                alertBox.innerText = "☁️ Might get a little dicey out there later. Keep an eye on the radar.";
-            } else {
-                alertBox.innerText = "☀️ Clear skies ahead! Great day for a drive.";
-                alertBox.style.background = "rgba(74, 222, 128, 0.1)";
-                alertBox.style.color = "var(--status-green)";
             }
 
         }).catch(err => console.log("Error updating weather grids:", err));
