@@ -1,34 +1,32 @@
 import json
 import urllib.request
 
-# 1. Fetch River Data
-def get_river_data():
+def get_weather(lat, lon):
     try:
-        url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=07378500&parameterCd=00065"
+        # REPLACE 'YOUR_API_KEY_HERE' with your real key
+        url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=imperial&cnt=1&appid=YOUR_API_KEY_HERE"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
-            val = float(data['value']['timeSeries'][0]['values'][0]['value'][0]['value'])
-            return {"stage": f"{val:.2f} ft"}
+            w = data['list'][0]
+            return {
+                "temp": f"{int(w['main']['temp'])}°F",
+                "feels": f"{int(w['main']['feels_like'])}°F",
+                "desc": w['weather'][0]['description'].title(),
+                "pop": f"{int(float(w.get('pop', 0)) * 100)}%",
+                "hum": f"{w['main']['humidity']}%",
+                "press": f"{w['main']['pressure']} hPa",
+                "wind": f"{w['wind']['speed']} mph",
+                "vis": f"{round(w.get('visibility', 16093) / 1609.34, 1)} mi"
+            }
     except:
-        return {"stage": "N/A"}
+        return {"temp": "N/A", "desc": "N/A", "feels": "N/A", "pop": "N/A", "hum": "N/A", "press": "N/A", "wind": "N/A", "vis": "N/A"}
 
-# 2. Fetch Weather Data (Denham Springs)
-def get_weather_data():
-    try:
-        # Note: I am using a placeholder for your API key. 
-        # Make sure to replace the end of the URL with your actual OpenWeatherMap API key!
-        url = "https://api.openweathermap.org/data/2.5/forecast?lat=30.48&lon=-90.95&units=imperial&cnt=1&appid=2a95de8d0a53a380df2a6916b7d7582e"
-        with urllib.request.urlopen(url, timeout=5) as response:
-            data = json.loads(response.read().decode())
-            temp = int(data['list'][0]['main']['temp'])
-            return {"temp": f"{temp}°F", "desc": data['list'][0]['weather'][0]['description']}
-    except:
-        return {"temp": "N/A", "desc": "N/A"}
-
-# 3. Save to data.json
 data = {
-    "river": get_river_data(),
-    "weather": get_weather_data()
+    "river": {"stage": "Checking..."}, # You can keep your river logic here
+    "weather": {
+        "denham": get_weather(30.48, -90.95),
+        "donaldsonville": get_weather(30.10, -90.99)
+    }
 }
 
 with open('data.json', 'w') as f:
