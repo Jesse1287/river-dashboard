@@ -22,10 +22,8 @@
 
         <div class="panel" style="border-left: 5px solid var(--accent-blue);">
             <h3>🌊 Amite River Status</h3>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div id="home-stage" class="metric">Loading...</div>
-                <div id="home-river-status" class="status-badge">Checking...</div>
-            </div>
+            <div id="home-stage" class="metric">Loading...</div>
+            <div id="home-river-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: var(--text-muted); display: inline-block; margin-top: 4px;">Checking...</div>
         </div>
 
         <div class="grid-2">
@@ -43,18 +41,12 @@
 
         <h3>🛠️ Infrastructure Control Center</h3>
         <div class="panel" style="padding: 14px;">
-            <div class="launch-grid">
-                <a href="http://openmediavault.local" target="_blank" class="launch-card">
-                    <span>💾</span> OMV Server
+            <div class="launch-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <a href="http://192.168.0.209" target="_blank" class="launch-card">
+                    <span>💾</span> OMV Server (Local)
                 </a>
-                <a href="http://portainer.local" target="_blank" class="launch-card">
-                    <span>🐋</span> Portainer
-                </a>
-                <a href="https://login.tailscale.com" target="_blank" class="launch-card">
-                    <span>🔒</span> Tailscale Node
-                </a>
-                <a href="http://pi.hole/admin" target="_blank" class="launch-card">
-                    <span>🛡️</span> Network AdGuard
+                <a href="http://100.72.186.52" target="_blank" class="launch-card">
+                    <span>🔒</span> OMV Server (Remote VPN)
                 </a>
             </div>
         </div>
@@ -65,10 +57,8 @@
         fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
-            // Safe system heartbeat clock check
             document.getElementById('sys-clock').innerText = (data.system && data.system.last_updated) ? data.system.last_updated : 'Syncing Backend...';
 
-            // Safe river metrics map
             if (data.river) {
                 document.getElementById('home-stage').innerText = data.river.stage || '--';
                 const status = document.getElementById('home-river-status');
@@ -84,7 +74,6 @@
                 }
             }
 
-            // Safe weather validation supporting both old flat objects and new nested blocks
             if (data.weather) {
                 if (data.weather.denham) {
                     const denham = data.weather.denham.current ? data.weather.denham.current : data.weather.denham;
