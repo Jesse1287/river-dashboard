@@ -19,17 +19,18 @@ body {
     justify-content: center;
 }
 
+/* The core container now scales up to a wide layout on desktop */
 .container {
     width: 100%;
-    max-width: 600px;
+    max-width: 1100px; /* Expands nicely on computers */
     margin-bottom: 40px;
 }
 
 h1 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 700;
     color: #ffffff;
-    margin: 24px 0 16px 0;
+    margin: 20px 0 16px 0;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -37,18 +38,18 @@ h1 {
 
 h2, h3 {
     margin: 0 0 12px 0;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     color: #ffffff;
 }
 
-/* Tab Navigation */
+/* Navigation Tabs */
 .nav-tabs {
     display: flex;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    padding: 6px;
+    padding: 5px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     gap: 4px;
 }
 
@@ -57,7 +58,7 @@ h2, h3 {
     text-align: center;
     color: var(--text-muted);
     text-decoration: none;
-    padding: 10px 8px;
+    padding: 12px 8px;
     font-weight: 600;
     font-size: 0.95rem;
     border-radius: 8px;
@@ -84,7 +85,6 @@ h2, h3 {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 }
 
-/* Metrics & Grid Layouts */
 .metric {
     font-size: 2.2rem;
     font-weight: 800;
@@ -102,12 +102,17 @@ h2, h3 {
     letter-spacing: 0.5px;
 }
 
+/* --- THE SMART RESPONSIVE MAGIC --- */
+
+/* Default for Mobile: Stack side-by-side items into one column */
 .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
 }
 
+/* Weather parameters grid inside cards */
 .weather-info-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -132,4 +137,29 @@ h2, h3 {
 iframe, img {
     border-radius: 12px;
     border: 1px solid var(--border-color);
+    max-width: 100%;
+    height: auto;
+}
+
+/* Desktop & Tablet Overrides (Screens wider than 768px) */
+@media (min-width: 768px) {
+    body {
+        padding: 32px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    /* On computers, layout blocks snap into side-by-side columns */
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    /* Expand the weather info sub-grid to 4 columns wide on big screens */
+    .weather-info-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
