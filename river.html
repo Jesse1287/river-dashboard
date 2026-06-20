@@ -5,31 +5,23 @@
     <title>🌊 Flood Center</title>
 </head>
 <body>
-    <div class="nav-container">
-        <div class="nav-tabs">
-            <a href="index.html">🚪 Gate</a>
-            <a href="river.html" class="active">🌊 Flood Center</a>
-            <a href="weather.html">🌦️ Live Weather</a>
-        </div>
+    <div class="nav-tabs">
+        <a href="index.html">🚪 Gate</a>
+        <a href="river.html" class="active">🌊 Flood Center</a>
+        <a href="weather.html">🌦️ Live Weather</a>
     </div>
     <h1>Amite River Tracking</h1>
     <div class="panel">
-        <div id="status-badge">Loading Status...</div>
-        <div id="stage" class="metric">--</div>
+        <div id="status-badge">Checking status...</div>
+        <div id="stage" class="metric">Loading...</div>
     </div>
-    <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" style="width:100%; border-radius:8px;">
-    
+    <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" style="width:100%; border-radius:8px; background:white;">
     <script>
         fetch('data.json').then(r => r.json()).then(data => {
-            const val = data.river.raw;
-            const stageEl = document.getElementById('stage');
-            const statusEl = document.getElementById('status-badge');
-            
-            stageEl.innerText = data.river.stage;
-            
-            if (val >= 39.0) { statusEl.innerText = "🔴 MAJOR FLOODING"; statusEl.style.color = "#ff3131"; }
-            else if (val >= 29.0) { statusEl.innerText = "🟡 MINOR FLOODING"; statusEl.style.color = "#ffea00"; }
-            else { statusEl.innerText = "🟢 NORMAL FLOW"; statusEl.style.color = "#39ff14"; }
+            document.getElementById('stage').innerText = data.river.stage;
+            const status = document.getElementById('status-badge');
+            status.innerText = data.river.raw >= 29 ? "⚠️ FLOOD STAGE" : "🟢 NORMAL FLOW";
+            status.style.color = data.river.raw >= 29 ? "#ff3131" : "#39ff14";
         });
     </script>
 </body>
