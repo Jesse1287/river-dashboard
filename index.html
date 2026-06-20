@@ -10,6 +10,9 @@
 <body>
     <div class="container">
         <h1>🏠 Family Watch</h1>
+        <div class="heartbeat-container">
+            <span class="pulse-dot"></span> Telemetry Active: <span id="sys-clock">--</span>
+        </div>
         
         <div class="nav-tabs">
             <a href="index.html" class="active">Home</a>
@@ -19,8 +22,10 @@
 
         <div class="panel" style="border-left: 5px solid var(--accent-blue);">
             <h3>🌊 Amite River Status</h3>
-            <div id="home-stage" class="metric">Loading...</div>
-            <div id="home-river-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">Checking...</div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div id="home-stage" class="metric">Loading...</div>
+                <div id="home-river-status" class="status-badge">Checking...</div>
+            </div>
         </div>
 
         <div class="grid-2">
@@ -35,15 +40,35 @@
                 <div id="home-donaldsonville-desc" style="color: var(--text-muted); text-transform: capitalize;">Loading...</div>
             </div>
         </div>
+
+        <h3>🛠️ Infrastructure Control Center</h3>
+        <div class="panel" style="padding: 14px;">
+            <div class="launch-grid">
+                <a href="http://openmediavault.local" target="_blank" class="launch-card">
+                    <span>💾</span> OMV Server
+                </a>
+                <a href="http://portainer.local" target="_blank" class="launch-card">
+                    <span>🐋</span> Portainer
+                </a>
+                <a href="https://login.tailscale.com" target="_blank" class="launch-card">
+                    <span>🔒</span> Tailscale Node
+                </a>
+                <a href="http://pi.hole/admin" target="_blank" class="launch-card">
+                    <span>🛡️</span> Network AdGuard
+                </a>
+            </div>
+        </div>
     </div>
 
     <script>
     function updateData() {
-        // The 't=' query string tricks the browser into bypassing cache for live telemetry
         fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
-            // 1. River Telemetry Update
+            // Map System Heartbeat Clock
+            document.getElementById('sys-clock').innerText = data.system.last_updated;
+
+            // Map River Data Metrics
             document.getElementById('home-stage').innerText = data.river.stage;
             const status = document.getElementById('home-river-status');
             if (data.river.raw >= 29) {
@@ -56,20 +81,17 @@
                 status.style.color = "var(--status-green)";
             }
 
-            // 2. Weather Telemetry Updates
-            document.getElementById('home-denham-temp').innerText = data.weather.denham.temp;
-            document.getElementById('home-denham-desc').innerText = data.weather.denham.desc;
+            // Map Weather Summaries
+            document.getElementById('home-denham-temp').innerText = data.weather.denham.current.temp;
+            document.getElementById('home-denham-desc').innerText = data.weather.denham.current.desc;
             
-            document.getElementById('home-donaldsonville-temp').innerText = data.weather.donaldsonville.temp;
-            document.getElementById('home-donaldsonville-desc').innerText = data.weather.donaldsonville.desc;
-        }).catch(err => console.log("Error fetching fresh telemetry."));
+            document.getElementById('home-donaldsonville-temp').innerText = data.weather.donaldsonville.current.temp;
+            document.getElementById('home-donaldsonville-desc').innerText = data.weather.donaldsonville.current.desc;
+        }).catch(err => console.log("Error reading homepage json."));
     }
 
-    // Run immediately when the page opens
     updateData();
-
-    // Automatically refresh data every 5 minutes (300,000 ms)
     setInterval(updateData, 300000);
-</script>
+    </script>
 </body>
 </html>
