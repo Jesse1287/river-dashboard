@@ -38,7 +38,6 @@
 
     <script>
         fetch('data.json').then(r => r.json()).then(data => {
-            // Populate River Summary
             document.getElementById('home-stage').innerText = data.river.stage;
             const status = document.getElementById('home-river-status');
             if (data.river.raw >= 29) {
@@ -51,7 +50,6 @@
                 status.style.color = "var(--status-green)";
             }
 
-            // Populate Weather Summaries
             document.getElementById('home-denham-temp').innerText = data.weather.denham.temp;
             document.getElementById('home-denham-desc').innerText = data.weather.denham.desc;
             
