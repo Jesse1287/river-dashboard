@@ -28,9 +28,12 @@ def get_river():
         url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=07378500&parameterCd=00065"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
-            val = float(data['value']['timeSeries'][0]['values'][0]['value'][0]['value'])
+            # USGS JSON path: value -> timeSeries -> [0] -> values -> [0] -> value -> [0] -> value
+            val_str = data['value']['timeSeries'][0]['values'][0]['value'][0]['value']
+            val = float(val_str)
             return {"stage": f"{val:.2f} ft", "raw": val}
-    except:
+    except Exception as e:
+        print(f"River Error: {e}") # This will help you debug if it fails
         return {"stage": "N/A", "raw": 0.0}
 
 # 3. Assemble and Save
