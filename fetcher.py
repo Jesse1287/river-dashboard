@@ -1,6 +1,7 @@
 import json
 import urllib.request
 
+# 1. Fetch Weather Function
 def get_weather(lat, lon):
     try:
         # REPLACE 'YOUR_API_KEY_HERE' with your real key
@@ -21,8 +22,20 @@ def get_weather(lat, lon):
     except:
         return {"temp": "N/A", "desc": "N/A", "feels": "N/A", "pop": "N/A", "hum": "N/A", "press": "N/A", "wind": "N/A", "vis": "N/A"}
 
+# 2. Fetch River Function
+def get_river():
+    try:
+        url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=07378500&parameterCd=00065"
+        with urllib.request.urlopen(url, timeout=5) as response:
+            data = json.loads(response.read().decode())
+            val = float(data['value']['timeSeries'][0]['values'][0]['value'][0]['value'])
+            return {"stage": f"{val:.2f} ft", "raw": val}
+    except:
+        return {"stage": "N/A", "raw": 0.0}
+
+# 3. Assemble and Save
 data = {
-    "river": {"stage": "Checking..."}, # You can keep your river logic here
+    "river": get_river(),
     "weather": {
         "denham": get_weather(30.48, -90.95),
         "donaldsonville": get_weather(30.10, -90.99)
