@@ -1,0 +1,7 @@
+body { background: #0d1117; color: #c9d1d9; font-family: -apple-system, sans-serif; margin: 0; padding: 20px; }
+.nav { display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
+.nav a { color: #58a6ff; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+.panel { background: rgba(22, 27, 34, 0.85); border: 1px solid #30363d; border-radius: 12px; padding: 16px; margin-bottom: 15px; backdrop-filter: blur(4px); }
+h2 { color: #8b949e; font-size: 0.9rem; text-transform: uppercase; border-bottom: 1px solid #21262d; padding-bottom: 8px; margin-top: 0; }
+.data { font-size: 2.2rem; font-weight: bold; color: #ffffff; margin: 10px 0; }
+.row { display: flex; justify-content: space-between; background: #0d1117; border: 1px solid #21262d; padding: 10px; border-radius: 6px; margin-bottom: 5px; font-size: 0.9rem; }
