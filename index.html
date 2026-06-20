@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Roux Studio | Mobile Node</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: sans-serif; background: #0d1117; color: #c9d1d9; padding: 20px; }
-        .card { background: #161b22; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #30363d; }
+        body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; margin: 0; padding: 10px; }
+        .nav { display: flex; gap: 10px; margin-bottom: 20px; }
+        .nav a { color: #58a6ff; text-decoration: none; font-weight: bold; }
+        .panel { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        h2 { color: #8b949e; font-size: 0.9rem; text-transform: uppercase; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
+        .data { font-size: 1.5rem; font-weight: bold; color: #fff; }
     </style>
 </head>
 <body>
-    <h1>Roux Studio Data</h1>
-    <div class="card">
-        <h3>🌊 Amite River</h3>
-        <p id="river">Loading...</p>
+    <div class="nav">
+        <a href="index.html">🖥️ Core</a>
+        <a href="river.html">🌊 River</a>
+        <a href="weather.html">🌦️ Weather</a>
     </div>
-    <div class="card">
-        <h3>🌦️ Weather</h3>
-        <p id="weather">Loading...</p>
-    </div>
+
+    <div id="content"></div>
+
     <script>
         fetch('data.json')
-            .then(response => response.json())
+            .then(r => r.json())
             .then(data => {
-                document.getElementById('river').innerText = data.river.stage;
-                document.getElementById('weather').innerText = data.weather.temp + " - " + data.weather.desc;
+                const page = window.location.pathname.split('/').pop() || 'index.html';
+                const content = document.getElementById('content');
+                if (page === 'river.html') {
+                    content.innerHTML = `<div class="panel"><h2>Amite River</h2><div class="data">${data.river.stage}</div></div>`;
+                } else if (page === 'weather.html') {
+                    content.innerHTML = `<div class="panel"><h2>Weather</h2><div class="data">${data.weather.temp} - ${data.weather.desc}</div></div>`;
+                } else {
+                    content.innerHTML = `<h1>Welcome</h1><p>Select a module above.</p>`;
+                }
             });
     </script>
 </body>
