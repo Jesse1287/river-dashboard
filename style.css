@@ -1,5 +1,7 @@
-body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; padding: 20px; }
+body { font-family: monospace; background: #0d1117; color: #c9d1d9; margin: 0; padding: 20px; }
 .nav { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
 .nav a { color: #58a6ff; text-decoration: none; font-weight: bold; }
-.panel { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 20px; }
+.nav a.active { color: #39ff14; }
+.panel { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
 h1 { color: #ffffff; }
+.metric { font-size: 1.2rem; margin: 10px 0; border-left: 3px solid #39ff14; padding-left: 10px; }
