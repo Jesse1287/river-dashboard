@@ -2,15 +2,14 @@ import urllib.request
 import json
 import os
 import datetime
+from zoneinfo import ZoneInfo
 
 def get_weather(lat, lon):
     try:
-        # Requesting 4 data points (current + next three 3-hour forecast blocks)
         url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=imperial&cnt=4&appid=2a95de8d0a53a380df2a6916b7d7582e"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
             
-            # 1. Map Current Metrics (Index 0)
             current_raw = data['list'][0]
             current_pack = {
                 "temp": f"{int(current_raw['main']['temp'])}°F",
@@ -21,11 +20,10 @@ def get_weather(lat, lon):
                 "wind": f"{round(current_raw['wind']['speed'], 1)} mph"
             }
             
-            # 2. Map Next Three 3-Hour Timelines
             forecast_list = []
             for item in data['list'][1:4]:
-                # Convert standard API epoch timestamps cleanly to display hours safely across all systems
-                timestamp = datetime.datetime.fromtimestamp(item['dt'])
+                # Map raw weather epoch times straight to local Central Time
+                timestamp = datetime.datetime.fromtimestamp(item['dt'], tz=ZoneInfo("America/Chicago"))
                 hour_str = timestamp.strftime('%I %p').lstrip('0')
                 
                 forecast_list.append({
@@ -46,15 +44,12 @@ def get_weather(lat, lon):
 
 def get_river():
     try:
-        # Appending period=P1D pulls the array of values tracked over the trailing 24 hours
         url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=07378500&parameterCd=00065&period=P1D"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
             time_series = data['value']['timeSeries'][0]['values'][0]['value']
             
-            # Extract current level (the last node in the time array)
             current_val = float(time_series[-1]['value'])
-            # Extract historical baseline (the very first node tracked 24 hours ago)
             historical_val = float(time_series[0]['value'])
             
             delta_val = current_val - historical_val
@@ -102,8 +97,8 @@ if __name__ == "__main__":
     river_pack = get_river()
     check_river_alerts(river_pack["raw"])
 
-    # Append structural local system timestamps during execution assembly
-    local_now = datetime.datetime.now().strftime("%I:%M %p").lstrip('0')
+    # Anchor systemic telemetry to Central Standard/Daylight boundaries cleanly
+    local_now = datetime.datetime.now(ZoneInfo("America/Chicago")).strftime("%I:%M %p").lstrip('0')
 
     composite_data = {
         "system": {
