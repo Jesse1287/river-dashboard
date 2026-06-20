@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: sans-serif; background: #0d1117; color: #c9d1d9; padding: 20px; }
+        .card { background: #161b22; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #30363d; }
+    </style>
+</head>
+<body>
+    <h1>Roux Studio Data</h1>
+    <div class="card">
+        <h3>🌊 Amite River</h3>
+        <p id="river">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>🌦️ Weather</h3>
+        <p id="weather">Loading...</p>
+    </div>
+    <script>
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('river').innerText = data.river.stage;
+                document.getElementById('weather').innerText = data.weather.temp + " - " + data.weather.desc;
+            });
+    </script>
+</body>
+</html>
