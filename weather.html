@@ -23,37 +23,47 @@
                 <div id="denham-temp" class="metric" style="margin:0;">--</div>
                 <div id="denham-desc" style="font-weight: 600; text-transform: capitalize;">Loading...</div>
             </div>
-            
             <div class="weather-info-grid">
                 <div class="info-item">Feels Like <strong id="denham-feels">--</strong></div>
                 <div class="info-item">Rain Chance <strong id="denham-pop">--</strong></div>
                 <div class="info-item">Humidity <strong id="denham-hum">--</strong></div>
                 <div class="info-item">Wind Speed <strong id="denham-wind">--</strong></div>
             </div>
-
-            <div id="denham-forecast" class="forecast-strip"></div>
+            <div id="denham-forecast" class="forecast-container"></div>
         </div>
 
         <div class="panel">
-            <h2 style="color: var(--accent-blue);">🏭 Donaldsonville</h2>
+            <h2 style="color: var(--status-green);">🏭 Donaldsonville</h2>
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
                 <div id="donaldsonville-temp" class="metric" style="margin:0;">--</div>
                 <div id="donaldsonville-desc" style="font-weight: 600; text-transform: capitalize;">Loading...</div>
             </div>
-            
             <div class="weather-info-grid">
                 <div class="info-item">Feels Like <strong id="donaldsonville-feels">--</strong></div>
                 <div class="info-item">Rain Chance <strong id="donaldsonville-pop">--</strong></div>
                 <div class="info-item">Humidity <strong id="donaldsonville-hum">--</strong></div>
                 <div class="info-item">Wind Speed <strong id="donaldsonville-wind">--</strong></div>
             </div>
-
-            <div id="donaldsonville-forecast" class="forecast-strip"></div>
+            <div id="donaldsonville-forecast" class="forecast-container"></div>
         </div>
 
-        <h3>🛰️ Live Interactive Radar</h3>
-        <div class="panel radar-container">
-            <iframe class="responsive-radar" src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" allowfullscreen style="height: 650px;"></iframe>
+        <div class="panel" style="border-left: 4px solid var(--status-orange);">
+            <h2 style="color: var(--status-orange);">🏥 Ponchatoula (Work)</h2>
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <div id="ponchatoula-temp" class="metric" style="margin:0;">--</div>
+                <div id="ponchatoula-desc" style="font-weight: 600; text-transform: capitalize;">Loading...</div>
+            </div>
+            <div class="weather-info-grid">
+                <div class="info-item">Feels Like <strong id="ponchatoula-feels">--</strong></div>
+                <div class="info-item">Rain Chance <strong id="ponchatoula-pop">--</strong></div>
+                <div class="info-item">Humidity <strong id="ponchatoula-hum">--</strong></div>
+                <div class="info-item">Wind Speed <strong id="ponchatoula-wind">--</strong></div>
+            </div>
+            <div id="ponchatoula-forecast" class="forecast-container"></div>
+        </div>
+
+        <div class="panel" style="padding: 0; overflow: hidden; border-radius: 16px;">
+            <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" height="400" frameborder="0" allowfullscreen style="border:none; vertical-align: bottom;"></iframe>
         </div>
     </div>
 
@@ -62,34 +72,28 @@
         fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
-            if (!data.weather) return;
-
-            if (data.weather.denham) {
-                const denhamCurrent = data.weather.denham.current ? data.weather.denham.current : data.weather.denham;
-                document.getElementById('denham-temp').innerText = denhamCurrent.temp || '--';
-                document.getElementById('denham-desc').innerText = denhamCurrent.desc || '--';
-                document.getElementById('denham-feels').innerText = denhamCurrent.feels || '--';
-                document.getElementById('denham-pop').innerText = denhamCurrent.pop || '--';
-                document.getElementById('denham-hum').innerText = denhamCurrent.hum || '--';
-                document.getElementById('denham-wind').innerText = denhamCurrent.wind || '--';
+            // Map Denham
+            if(data.weather.denham) {
+                const denCurrent = data.weather.denham.current || data.weather.denham;
+                document.getElementById('denham-temp').innerText = denCurrent.temp || '--';
+                document.getElementById('denham-desc').innerText = denCurrent.desc || '--';
+                document.getElementById('denham-feels').innerText = denCurrent.feels || '--';
+                document.getElementById('denham-pop').innerText = denCurrent.pop || '--';
+                document.getElementById('denham-hum').innerText = denCurrent.hum || '--';
+                document.getElementById('denham-wind').innerText = denCurrent.wind || '--';
                 
                 let denhamHtml = '';
-                if (data.weather.denham.forecast) {
+                if(data.weather.denham.forecast) {
                     data.weather.denham.forecast.forEach(f => {
-                        denhamHtml += `
-                            <div class="forecast-card">
-                                <div>${f.time}</div>
-                                <strong>${f.temp}</strong>
-                                <div style="font-size:0.7rem; color:var(--accent-blue);">${f.pop} Rain</div>
-                            </div>
-                        `;
+                        denhamHtml += `<div class="forecast-card"><div>${f.time}</div><strong>${f.temp}</strong><div style="font-size:0.7rem; color:var(--accent-blue);">${f.pop} Rain</div></div>`;
                     });
                 }
                 document.getElementById('denham-forecast').innerHTML = denhamHtml;
             }
 
-            if (data.weather.donaldsonville) {
-                const donCurrent = data.weather.donaldsonville.current ? data.weather.donaldsonville.current : data.weather.donaldsonville;
+            # Map Donaldsonville
+            if(data.weather.donaldsonville) {
+                const donCurrent = data.weather.donaldsonville.current || data.weather.donaldsonville;
                 document.getElementById('donaldsonville-temp').innerText = donCurrent.temp || '--';
                 document.getElementById('donaldsonville-desc').innerText = donCurrent.desc || '--';
                 document.getElementById('donaldsonville-feels').innerText = donCurrent.feels || '--';
@@ -100,19 +104,32 @@
                 let donaldsonHtml = '';
                 if (data.weather.donaldsonville.forecast) {
                     data.weather.donaldsonville.forecast.forEach(f => {
-                        donaldsonHtml += `
-                            <div class="forecast-card">
-                                <div>${f.time}</div>
-                                <strong>${f.temp}</strong>
-                                <div style="font-size:0.7rem; color:var(--accent-blue);">${f.pop} Rain</div>
-                            </div>
-                        `;
+                        donaldsonHtml += `<div class="forecast-card"><div>${f.time}</div><strong>${f.temp}</strong><div style="font-size:0.7rem; color:var(--accent-blue);">${f.pop} Rain</div></div>`;
                     });
                 }
                 document.getElementById('donaldsonville-forecast').innerHTML = donaldsonHtml;
             }
 
-        }).catch(err => console.log("Error updating forecast dashboard rows:", err));
+            // Map Ponchatoula
+            if(data.weather.ponchatoula) {
+                const ponCurrent = data.weather.ponchatoula.current || data.weather.ponchatoula;
+                document.getElementById('ponchatoula-temp').innerText = ponCurrent.temp || '--';
+                document.getElementById('ponchatoula-desc').innerText = ponCurrent.desc || '--';
+                document.getElementById('ponchatoula-feels').innerText = ponCurrent.feels || '--';
+                document.getElementById('ponchatoula-pop').innerText = ponCurrent.pop || '--';
+                document.getElementById('ponchatoula-hum').innerText = ponCurrent.hum || '--';
+                document.getElementById('ponchatoula-wind').innerText = ponCurrent.wind || '--';
+
+                let ponchHtml = '';
+                if (data.weather.ponchatoula.forecast) {
+                    data.weather.ponchatoula.forecast.forEach(f => {
+                        ponchHtml += `<div class="forecast-card"><div>${f.time}</div><strong>${f.temp}</strong><div style="font-size:0.7rem; color:var(--accent-blue);">${f.pop} Rain</div></div>`;
+                    });
+                }
+                document.getElementById('ponchatoula-forecast').innerHTML = ponchHtml;
+            }
+
+        }).catch(err => console.log("Error updating weather grids:", err));
     }
 
     updateWeatherData();
