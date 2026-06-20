@@ -3,43 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel=\"stylesheet\" href=\"style.css\">
-    <title>🏠 Family Dashboard</title>\n    <link rel=\"manifest\" href=\"manifest.json\">\n</head>
+    <link rel="stylesheet" href="style.css">
+    <title>🏠 Roux Command Center</title>
+    <link rel="manifest" href="manifest.json">
+</head>
 <body>
     <div class="container">
-        <h1>🏠 Family Watch</h1>
+        <h1>🚀 Roux Family Command Center</h1>
         <div class="heartbeat-container">
-            <span class="pulse-dot"></span> Telemetry Active: <span id="sys-clock">--</span>
+            <span class="pulse-dot"></span> Signal Flow Active: <span id="sys-clock">--</span>
         </div>
         
         <div class="nav-tabs">
-            <a href="index.html" class="active">Home</a>
+            <a href="index.html" class="active">Home Base</a>
             <a href="river.html">🌊 Amite River</a>
-            <a href="weather.html">🌦️ Weather</a>
+            <a href="weather.html">🌦️ Weather Radar</a>
         </div>
 
-        <div class="panel" style="border-left: 5px solid var(--accent-blue);">
+        <div class="panel float-hover" style="border-left: 5px solid var(--accent-blue);">
             <h3>🌊 Amite River Status</h3>
             <div id="home-stage" class="metric">Loading...</div>
-            <div id="home-river-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: var(--text-muted); display: inline-block; margin-top: 4px;">Checking...</div>
+            <div id="home-river-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: var(--text-muted); display: inline-block; margin-top: 4px;">Checking Sensors...</div>
         </div>
 
         <div class="grid-3">
-            <div class="panel">
+            <div class="panel float-hover">
                 <h3>🏡 Denham Springs</h3>
                 <div id="home-denham-temp" class="metric">--</div>
-                <div id="home-denham-desc" style="color: var(--text-muted); text-transform: capitalize;">Loading...</div>
+                <div id="home-denham-desc" style="color: var(--text-muted); text-transform: capitalize;">Calibrating...</div>
             </div>
-            <div class="panel">
+            <div class="panel float-hover">
                 <h3>🏭 Donaldsonville</h3>
                 <div id="home-donaldsonville-temp" class="metric">--</div>
-                <div id="home-donaldsonville-desc" style="color: var(--text-muted); text-transform: capitalize;">Loading...</div>
+                <div id="home-donaldsonville-desc" style="color: var(--text-muted); text-transform: capitalize;">Calibrating...</div>
             </div>
-            <div class="panel" style="border-top: 3px solid var(--status-orange);">
-                <h3>🏥 Ponchatoula (Work)</h3>
+            <div class="panel float-hover" style="border-top: 3px solid var(--status-orange);">
+                <h3>🏥 Ponchatoula</h3>
                 <div id="home-ponchatoula-temp" class="metric">--</div>
-                <div id="home-ponchatoula-desc" style="color: var(--text-muted); text-transform: capitalize;">Loading...</div>
+                <div id="home-ponchatoula-desc" style="color: var(--text-muted); text-transform: capitalize;">Calibrating...</div>
             </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; font-size: 0.8rem; color: var(--text-muted);">
+            <em>All systems nominal. Have a great day!</em>
         </div>
     </div>
 
@@ -54,11 +60,11 @@
             const status = document.getElementById('home-river-status');
             const rawVal = data.river.raw || 0;
             if (rawVal >= 29) {
-                status.innerText = "⚠️ FLOOD STAGE";
+                status.innerText = "⚠️ ACTION STAGE DETECTED";
                 status.style.background = "rgba(248, 113, 113, 0.15)";
                 status.style.color = "var(--status-red)";
             } else {
-                status.innerText = "🟢 NORMAL FLOW";
+                status.innerText = "🟢 FLOW NOMINAL";
                 status.style.background = "rgba(74, 222, 128, 0.15)";
                 status.style.color = "var(--status-green)";
             }
