@@ -39,9 +39,11 @@
 
     <script>
     function updateData() {
-        fetch('data.json?t=' + Date.now()) // The 't=' prevents the browser from caching the json file
+        // The 't=' query string tricks the browser into bypassing cache for live telemetry
+        fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
+            // 1. River Telemetry Update
             document.getElementById('home-stage').innerText = data.river.stage;
             const status = document.getElementById('home-river-status');
             if (data.river.raw >= 29) {
@@ -54,6 +56,7 @@
                 status.style.color = "var(--status-green)";
             }
 
+            // 2. Weather Telemetry Updates
             document.getElementById('home-denham-temp').innerText = data.weather.denham.temp;
             document.getElementById('home-denham-desc').innerText = data.weather.denham.desc;
             
@@ -62,10 +65,10 @@
         }).catch(err => console.log("Error fetching fresh telemetry."));
     }
 
-    // Run it immediately when the page opens
+    // Run immediately when the page opens
     updateData();
 
-    // Automatically run it every 5 minutes (300,000 milliseconds)
+    // Automatically refresh data every 5 minutes (300,000 ms)
     setInterval(updateData, 300000);
 </script>
 </body>
