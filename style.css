@@ -234,7 +234,7 @@ h2, h3 {
     border: none;
     vertical-align: bottom;
     width: 100%;
-    height: 400px; /* Perfect scale for large desktop screens */
+    height: 800px; /* Perfect scale for large desktop screens */
 }
 
 /* Mobile Layout Default Rules (Stacked Viewports) */
