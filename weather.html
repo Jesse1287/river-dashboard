@@ -1,32 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>🌦️ Weather Operations</title>
 </head>
 <body>
-    <div class="nav-tabs">
-        <a href="index.html">🚪 Gate</a>
-        <a href="river.html">🌊 Flood Center</a>
-        <a href="weather.html" class="active">🌦️ Live Weather</a>
+    <div class="container">
+        <h1>🌦️ Regional Weather</h1>
+        
+        <div class="nav-tabs">
+            <a href="index.html">Home</a>
+            <a href="river.html">🌊 Amite River</a>
+            <a href="weather.html" class="active">🌦️ Weather</a>
+        </div>
+
+        <div class="panel">
+            <h2 style="color: var(--accent-blue);">🏡 Denham Springs</h2>
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <div id="denham-temp" class="metric" style="margin:0;">--</div>
+                <div id="denham-desc" style="font-weight: 600; text-transform: capitalize;">Loading...</div>
+            </div>
+            
+            <div class="weather-info-grid">
+                <div class="info-item">Feels Like <strong id="denham-feels">--</strong></div>
+                <div class="info-item">Rain Chance <strong id="denham-pop">--</strong></div>
+                <div class="info-item">Humidity <strong id="denham-hum">--</strong></div>
+                <div class="info-item">Wind Speed <strong id="denham-wind">--</strong></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2 style="color: var(--accent-blue);">🏭 Donaldsonville</h2>
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <div id="donaldsonville-temp" class="metric" style="margin:0;">--</div>
+                <div id="donaldsonville-desc" style="font-weight: 600; text-transform: capitalize;">Loading...</div>
+            </div>
+            
+            <div class="weather-info-grid">
+                <div class="info-item">Feels Like <strong id="donaldsonville-feels">--</strong></div>
+                <div class="info-item">Rain Chance <strong id="donaldsonville-pop">--</strong></div>
+                <div class="info-item">Humidity <strong id="donaldsonville-hum">--</strong></div>
+                <div class="info-item">Wind Speed <strong id="donaldsonville-wind">--</strong></div>
+            </div>
+        </div>
+
+        <h3>🛰️ Live Interactive Radar</h3>
+        <div class="panel" style="padding: 0; overflow: hidden; height: 400px; position: relative;">
+            <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" height="400" frameborder="0" allowfullscreen style="border:none; vertical-align: bottom;"></iframe>
+        </div>
     </div>
-    <h1>Weather Operations</h1>
-    <div class="panel">
-        <h3>🏡 Denham Springs</h3>
-        <div id="denham" class="metric">Loading...</div>
-    </div>
-    <div class="panel">
-        <h3>🏭 Donaldsonville</h3>
-        <div id="donaldsonville" class="metric">Loading...</div>
-    </div>
-    <div class="panel">
-        <h3>🛰️ Radar</h3>
-        <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
-    </div>
+
     <script>
         fetch('data.json').then(r => r.json()).then(data => {
-            document.getElementById('denham').innerHTML = `${data.weather.denham.temp} - ${data.weather.denham.desc}`;
-            document.getElementById('donaldsonville').innerHTML = `${data.weather.donaldsonville.temp} - ${data.weather.donaldsonville.desc}`;
+            // Populate Denham Details
+            document.getElementById('denham-temp').innerText = data.weather.denham.temp;
+            document.getElementById('denham-desc').innerText = data.weather.denham.desc;
+            document.getElementById('denham-feels').innerText = data.weather.denham.feels;
+            document.getElementById('denham-pop').innerText = data.weather.denham.pop;
+            document.getElementById('denham-hum').innerText = data.weather.denham.hum;
+            document.getElementById('denham-wind').innerText = data.weather.denham.wind;
+
+            // Populate Donaldsonville Details
+            document.getElementById('donaldsonville-temp').innerText = data.weather.donaldsonville.temp;
+            document.getElementById('donaldsonville-desc').innerText = data.weather.donaldsonville.desc;
+            document.getElementById('donaldsonville-feels').innerText = data.weather.donaldsonville.feels;
+            document.getElementById('donaldsonville-pop').innerText = data.weather.donaldsonville.pop;
+            document.getElementById('donaldsonville-hum').innerText = data.weather.donaldsonville.hum;
+            document.getElementById('donaldsonville-wind').innerText = data.weather.donaldsonville.wind;
         });
     </script>
 </body>
