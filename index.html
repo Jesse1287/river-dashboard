@@ -65,29 +65,39 @@
         fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
-            // Map System Heartbeat Clock
-            document.getElementById('sys-clock').innerText = data.system.last_updated;
+            // Safe system heartbeat clock check
+            document.getElementById('sys-clock').innerText = (data.system && data.system.last_updated) ? data.system.last_updated : 'Syncing Backend...';
 
-            // Map River Data Metrics
-            document.getElementById('home-stage').innerText = data.river.stage;
-            const status = document.getElementById('home-river-status');
-            if (data.river.raw >= 29) {
-                status.innerText = "⚠️ FLOOD STAGE";
-                status.style.background = "rgba(248, 113, 113, 0.15)";
-                status.style.color = "var(--status-red)";
-            } else {
-                status.innerText = "🟢 NORMAL FLOW";
-                status.style.background = "rgba(74, 222, 128, 0.15)";
-                status.style.color = "var(--status-green)";
+            // Safe river metrics map
+            if (data.river) {
+                document.getElementById('home-stage').innerText = data.river.stage || '--';
+                const status = document.getElementById('home-river-status');
+                const rawVal = data.river.raw || 0;
+                if (rawVal >= 29) {
+                    status.innerText = "⚠️ FLOOD STAGE";
+                    status.style.background = "rgba(248, 113, 113, 0.15)";
+                    status.style.color = "var(--status-red)";
+                } else {
+                    status.innerText = "🟢 NORMAL FLOW";
+                    status.style.background = "rgba(74, 222, 128, 0.15)";
+                    status.style.color = "var(--status-green)";
+                }
             }
 
-            // Map Weather Summaries
-            document.getElementById('home-denham-temp').innerText = data.weather.denham.current.temp;
-            document.getElementById('home-denham-desc').innerText = data.weather.denham.current.desc;
-            
-            document.getElementById('home-donaldsonville-temp').innerText = data.weather.donaldsonville.current.temp;
-            document.getElementById('home-donaldsonville-desc').innerText = data.weather.donaldsonville.current.desc;
-        }).catch(err => console.log("Error reading homepage json."));
+            // Safe weather validation supporting both old flat objects and new nested blocks
+            if (data.weather) {
+                if (data.weather.denham) {
+                    const denham = data.weather.denham.current ? data.weather.denham.current : data.weather.denham;
+                    document.getElementById('home-denham-temp').innerText = denham.temp || '--';
+                    document.getElementById('home-denham-desc').innerText = denham.desc || '--';
+                }
+                if (data.weather.donaldsonville) {
+                    const dville = data.weather.donaldsonville.current ? data.weather.donaldsonville.current : data.weather.donaldsonville;
+                    document.getElementById('home-donaldsonville-temp').innerText = dville.temp || '--';
+                    document.getElementById('home-donaldsonville-desc').innerText = dville.desc || '--';
+                }
+            }
+        }).catch(err => console.log("Error reading homepage json:", err));
     }
 
     updateData();
