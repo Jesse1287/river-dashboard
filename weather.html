@@ -71,4 +71,17 @@
             document.getElementById('donaldsonville-temp').innerText = data.weather.donaldsonville.temp;
             document.getElementById('donaldsonville-desc').innerText = data.weather.donaldsonville.desc;
             document.getElementById('donaldsonville-feels').innerText = data.weather.donaldsonville.feels;
-            document.getElementById('donaldsonville-pop').innerText = data.weather.
+            document.getElementById('donaldsonville-pop').innerText = data.weather.donaldsonville.pop;
+            document.getElementById('donaldsonville-hum').innerText = data.weather.donaldsonville.hum;
+            document.getElementById('donaldsonville-wind').innerText = data.weather.donaldsonville.wind;
+        }).catch(err => console.log("Error updating weather data:", err));
+    }
+
+    // Run immediately when the page opens
+    updateWeatherData();
+
+    // Automatically refresh data every 5 minutes
+    setInterval(updateWeatherData, 300000);
+    </script>
+</body>
+</html>
