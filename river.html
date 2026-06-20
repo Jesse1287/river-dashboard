@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🌊 Flood Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; padding: 20px; }
+        .panel { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+        .data { font-size: 2.4rem; font-weight: bold; color: #ffffff; margin: 12px 0; }
+        .nav { margin-bottom: 20px; }
+        .nav a { color: #58a6ff; text-decoration: none; font-weight: bold; margin-right: 15px; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="index.html">🖥️ Core</a>
+        <a href="river.html">🌊 River</a>
+        <a href="weather.html">🌦️ Weather</a>
+    </div>
+
+    <div class="panel">
+        <h2>Amite River Stage</h2>
+        <div id="river-data" class="data">Loading...</div>
+    </div>
+
+    <div class="panel">
+        <h2>NOAA River Forecast</h2>
+        <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" style="width:100%; border-radius:8px; background:white;">
+    </div>
+
+    <script>
+        fetch('data.json')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('river-data').innerText = data.river.stage;
+            });
+    </script>
+</body>
+</html>
