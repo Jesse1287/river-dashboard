@@ -5,7 +5,7 @@ import urllib.request
 def get_weather(lat, lon):
     try:
         # REPLACE 'YOUR_API_KEY_HERE' with your real key
-        url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=imperial&cnt=1&appid=YOUR_API_KEY_HERE"
+        url = f"https://api.openweathermap.org/data/2.5/forecast?lat=30.48&lon=-90.95&units=imperial&cnt=1&appid=2a95de8d0a53a380df2a6916b7d7582e"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
             w = data['list'][0]
