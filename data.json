@@ -1,24 +1,72 @@
 {
+    "system": {
+        "last_updated": "10:05 PM"
+    },
     "river": {
         "stage": "25.79 ft",
-        "raw": 25.79
+        "raw": 25.79,
+        "delta": "-2.13 ft"
     },
     "weather": {
         "denham": {
-            "temp": "79\u00b0F",
-            "feels": "79\u00b0F",
-            "desc": "Light Rain",
-            "pop": "100%",
-            "hum": "88%",
-            "wind": "5.3 mph"
+            "current": {
+                "temp": "80\u00b0F",
+                "feels": "86\u00b0F",
+                "desc": "Light Rain",
+                "pop": "100%",
+                "hum": "88%",
+                "wind": "5.3 mph"
+            },
+            "forecast": [
+                {
+                    "time": "3 AM",
+                    "temp": "78\u00b0F",
+                    "desc": "Rain",
+                    "pop": "100%"
+                },
+                {
+                    "time": "6 AM",
+                    "temp": "75\u00b0F",
+                    "desc": "Clouds",
+                    "pop": "87%"
+                },
+                {
+                    "time": "9 AM",
+                    "temp": "75\u00b0F",
+                    "desc": "Clouds",
+                    "pop": "0%"
+                }
+            ]
         },
         "donaldsonville": {
-            "temp": "79\u00b0F",
-            "feels": "79\u00b0F",
-            "desc": "Light Rain",
-            "pop": "100%",
-            "hum": "92%",
-            "wind": "6.2 mph"
+            "current": {
+                "temp": "79\u00b0F",
+                "feels": "79\u00b0F",
+                "desc": "Light Rain",
+                "pop": "100%",
+                "hum": "91%",
+                "wind": "6.2 mph"
+            },
+            "forecast": [
+                {
+                    "time": "3 AM",
+                    "temp": "77\u00b0F",
+                    "desc": "Rain",
+                    "pop": "30%"
+                },
+                {
+                    "time": "6 AM",
+                    "temp": "75\u00b0F",
+                    "desc": "Clouds",
+                    "pop": "0%"
+                },
+                {
+                    "time": "9 AM",
+                    "temp": "76\u00b0F",
+                    "desc": "Clouds",
+                    "pop": "0%"
+                }
+            ]
         }
     }
 }
