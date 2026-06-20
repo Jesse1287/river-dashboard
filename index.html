@@ -55,7 +55,6 @@
         fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
-            // Display cute message if one exists in the JSON
             const banner = document.getElementById('status-banner');
             if (data.system && data.system.message) {
                 banner.style.display = 'block';
@@ -64,7 +63,6 @@
                 banner.style.display = 'none';
             }
 
-            // Standard updates
             document.getElementById('sys-clock').innerText = data.system.last_updated;
             document.getElementById('home-stage').innerText = data.river.stage;
             
@@ -99,7 +97,6 @@
             }
         }).catch(err => console.log("Error reading homepage json:", err));
     }
-
     updateData();
     setInterval(updateData, 300000);
     </script>
