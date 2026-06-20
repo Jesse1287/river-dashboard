@@ -19,8 +19,19 @@
 
         <div class="panel" style="text-align: center; padding: 24px;">
             <div id="status-badge" class="status-badge" style="margin-bottom: 8px;">Checking status...</div>
-            <div id="stage" class="metric" style="font-size: 3rem; margin: 4px 0;">Loading...</div>
-            <div style="font-size: 0.85rem; color: var(--text-muted);">Flood Stage Action Level: 29.00 ft</div>
+            <div id="stage" class="metric" style="font-size: 3.2rem; margin: 4px 0;">Loading...</div>
+            <div style="font-size: 0.9rem; margin-bottom: 15px; font-weight: 600;">
+                24h Change: <span id="delta-trend" style="color: #ffffff;">--</span>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-marker" style="left: 0%;">0ft</div>
+                <div class="progress-marker" style="left: 72.5%;">Action (29')</div>
+                <div class="progress-marker" style="left: 77.5%;">Minor (31')</div>
+                <div class="progress-marker" style="left: 87.5%;">Mod (35')</div>
+                <div class="progress-marker" style="left: 97.5%;">Major (39')</div>
+                <div id="flood-meter" class="progress-bar"></div>
+            </div>
         </div>
 
         <h3>📈 5-Day Hydrograph Predictor</h3>
@@ -33,11 +44,26 @@
     function updateRiverData() {
         const timestamp = Date.now();
 
-        // 1. Fetch fresh telemetry data numbers
         fetch('data.json?t=' + timestamp)
         .then(r => r.json())
         .then(data => {
             document.getElementById('stage').innerText = data.river.stage;
+            
+            // Map 24h Delta text indicators
+            const deltaElement = document.getElementById('delta-trend');
+            deltaElement.innerText = data.river.delta;
+            if(data.river.delta.startsWith('+')) {
+                deltaElement.style.color = "var(--status-red)"; // Rising water warning indicator
+            } else {
+                deltaElement.style.color = "var(--status-green)";
+            }
+
+            // Compute dynamic progress slider sizing width (cap between 0ft and 40ft gauge values)
+            let waterLevel = data.river.raw;
+            let percentage = (waterLevel / 40) * 100;
+            if (percentage > 100) percentage = 100;
+            if (percentage < 0) percentage = 0;
+            document.getElementById('flood-meter').style.width = percentage + '%';
             
             const status = document.getElementById('status-badge');
             if (data.river.raw >= 29) {
@@ -49,17 +75,13 @@
                 status.style.background = "rgba(74, 222, 128, 0.15)";
                 status.style.color = "var(--status-green)";
             }
-        }).catch(err => console.log("Error updating flood center data."));
+        }).catch(err => console.log("Error updating hydrology center."));
 
-        // 2. Force refresh the NOAA hydrograph image bypass cache
         document.getElementById('hydrograph').src = 'https://water.noaa.gov/resources/hydrographs/denl1_hg.png?t=' + timestamp;
     }
 
-    // Run immediately when the page opens
     updateRiverData();
-
-    // Refresh everything every 5 minutes (300,000 ms)
     setInterval(updateRiverData, 300000);
-</script>
+    </script>
 </body>
 </html>
