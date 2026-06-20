@@ -2,62 +2,27 @@
 <html>
 <head>
     <link rel="stylesheet" href="style.css">
-    <title>🌊 Flood Center</title>
+    <title>🌊 River Dashboard</title>
 </head>
 <body>
     <div class="nav">
-        <a href="index.html">🖥️ Core</a>
-        <a href="river.html" style="color:white;">🌊 River</a>
+        <a href="index.html">🖥️ Core Node</a>
+        <a href="river.html">🌊 River</a>
         <a href="weather.html">🌦️ Weather</a>
     </div>
-
     <h1>Amite River Tracking</h1>
-
-    <div class="river-layout">
-        <div class="telemetry-card" id="telemetry">
-            <div id="status-badge" class="status-badge">Loading...</div>
-            <div style="color: #8b949e; font-size: 0.8rem;">Current Live Gauge</div>
-            <div class="gauge-readout" id="stage">--</div>
-            <div class="hydro-trend" id="trend">Analyzing...</div>
-            
-            <div class="alert-banner" id="banner">
-                <b>📍 Target:</b> 480 Donald Dr, Denham Springs<br>
-                <span id="margin">Calculating baseline...</span>
-            </div>
-        </div>
-
-        <div class="historical-table-container">
-            <table class="historical-table">
-                <thead><tr><th colspan="3">Historic Crest Records</th></tr></thead>
-                <tbody>
-                    <tr style="color: #ff3131;"><td>46.20 ft</td><td>2016</td><td>Great Flood</td></tr>
-                    <tr><td>41.50 ft</td><td>1983</td><td>Historic Axis</td></tr>
-                    <tr><td>34.50 ft</td><td>2001</td><td>TS Allison</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="graph-panel">
-        <h2>NOAA Forecast</h2>
+    <div class="panel">
+        <h2 id="status">Loading...</h2>
+        <div id="stage" style="font-size: 2rem; font-weight: bold; margin: 10px 0;">--</div>
         <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" style="width:100%; border-radius:8px; background:white;">
     </div>
-
     <script>
-        fetch('data.json').then(r => r.json()).then(data => {
-            const val = data.river.raw;
-            const el = document.getElementById('status-badge');
-            const stageEl = document.getElementById('stage');
-            
-            stageEl.innerText = data.river.stage;
-            
-            // Logic mimicking your Python app
-            if (val >= 39.0) { el.innerText = "🔴 MAJOR FLOOD"; el.style.color = "#ff3131"; }
-            else if (val >= 29.0) { el.innerText = "🟡 MINOR FLOOD"; el.style.color = "#ffea00"; }
-            else { el.innerText = "🟢 NORMAL FLOW"; el.style.color = "#39ff14"; }
-            
-            document.getElementById('margin').innerText = (46.0 - val).toFixed(2) + " Feet Below Baseline";
-        });
+        fetch('data.json')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('stage').innerText = data.river.stage;
+                document.getElementById('status').innerText = data.river.raw > 29 ? "⚠️ FLOOD STAGE" : "🟢 NORMAL FLOW";
+            });
     </script>
 </body>
 </html>
