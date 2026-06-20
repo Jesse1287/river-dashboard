@@ -1,103 +1,120 @@
 import urllib.request
 import json
 import os
+import datetime
 
 def get_weather(lat, lon):
     try:
-        # Using OpenWeatherMap 5-day/3-hour forecast API to extract the 'pop' (rain chance) field
-        url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=imperial&cnt=1&appid=2a95de8d0a53a380df2a6916b7d7582e"
+        # Requesting 4 data points (current + next three 3-hour forecast blocks)
+        url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=imperial&cnt=4&appid=2a95de8d0a53a380df2a6916b7d7582e"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
-            w = data['list'][0]
             
-            # Extract rain probability (pop is given as a float between 0 and 1)
-            pop_val = int(w.get('pop', 0) * 100)
+            # 1. Map Current Metrics (Index 0)
+            current_raw = data['list'][0]
+            current_pack = {
+                "temp": f"{int(current_raw['main']['temp'])}°F",
+                "feels": f"{int(current_raw['main']['feels_like'])}°F",
+                "desc": current_raw['weather'][0]['description'].title(),
+                "pop": f"{int(current_raw.get('pop', 0) * 100)}%",
+                "hum": f"{current_raw['main']['humidity']}%",
+                "wind": f"{round(current_raw['wind']['speed'], 1)} mph"
+            }
             
+            # 2. Map Next Three 3-Hour Timelines
+            forecast_list = []
+            for item in data['list'][1:4]:
+                # Convert standard API epoch timestamps cleanly to display hours safely across all systems
+                timestamp = datetime.datetime.fromtimestamp(item['dt'])
+                hour_str = timestamp.strftime('%I %p').lstrip('0')
+                
+                forecast_list.append({
+                    "time": hour_str,
+                    "temp": f"{int(item['main']['temp'])}°F",
+                    "desc": item['weather'][0]['main'],
+                    "pop": f"{int(item.get('pop', 0) * 100)}%"
+                })
+                
             return {
-                "temp": f"{int(w['main']['temp'])}°F",
-                "feels": f"{int(w['main']['feels_like'])}°F",
-                "desc": w['weather'][0]['description'].title(),
-                "pop": f"{pop_val}%",
-                "hum": f"{w['main']['humidity']}%",
-                "wind": f"{round(w['wind']['speed'], 1)} mph"
+                "current": current_pack,
+                "forecast": forecast_list
             }
     except Exception as e:
-        print(f"Weather fetch error for {lat}, {lon}: {e}")
-        return {
-            "temp": "N/A", "feels": "N/A", "desc": "Error fetching", 
-            "pop": "N/A", "hum": "N/A", "wind": "N/A"
-        }
+        print(f"Weather error for {lat}, {lon}: {e}")
+        blank_current = {"temp": "N/A", "feels": "N/A", "desc": "Error", "pop": "N/A", "hum": "N/A", "wind": "N/A"}
+        return {"current": blank_current, "forecast": []}
 
 def get_river():
     try:
-        # USGS Amite River Gauge at Denham Springs
-        url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=07378500&parameterCd=00065"
+        # Appending period=P1D pulls the array of values tracked over the trailing 24 hours
+        url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=07378500&parameterCd=00065&period=P1D"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
-            val = float(data['value']['timeSeries'][0]['values'][0]['value'][0]['value'])
-            return {"stage": f"{val:.2f} ft", "raw": val}
+            time_series = data['value']['timeSeries'][0]['values'][0]['value']
+            
+            # Extract current level (the last node in the time array)
+            current_val = float(time_series[-1]['value'])
+            # Extract historical baseline (the very first node tracked 24 hours ago)
+            historical_val = float(time_series[0]['value'])
+            
+            delta_val = current_val - historical_val
+            delta_str = f"+{delta_val:.2f} ft" if delta_val >= 0 else f"{delta_val:.2f} ft"
+            
+            return {
+                "stage": f"{current_val:.2f} ft",
+                "raw": current_val,
+                "delta": delta_str
+            }
     except Exception as e:
-        print(f"River fetch error: {e}")
-        return {"stage": "N/A", "raw": 0.0}
+        print(f"River extraction error: {e}")
+        return {"stage": "N/A", "raw": 0.0, "delta": "--"}
 
 def check_river_alerts(river_val):
     state_file = 'alert_state.txt'
     already_alerted = os.path.exists(state_file)
-    
-    # Custom topic name for ntfy phone notifications
     ntfy_topic = "my_private_dashboard_river_alerts" 
     url = f"https://ntfy.sh/{ntfy_topic}"
 
-    # Trigger alert if river hits or crosses action/flood stage (29.0 ft)
     if river_val >= 29.0:
         if not already_alerted:
             try:
-                # Send the high water push notification
                 req = urllib.request.Request(
                     url, 
-                    data=f"⚠️ ALERT: Amite River has crossed action stage! Current Level: {river_val} ft.".encode('utf-8'),
+                    data=f"⚠️ ALERT: Amite River has crossed action stage! Level: {river_val} ft.".encode('utf-8'),
                     headers={'Title': 'River Level Warning', 'Priority': 'high', 'Tags': 'warning,ocean'}
                 )
                 urllib.request.urlopen(req, timeout=5)
-                
-                # Create the temporary state file so it doesn't spam every 5 minutes
-                with open(state_file, 'w') as f:
-                    f.write('alerted')
-            except Exception as e:
-                print("Alert notification failed:", e)
+                with open(state_file, 'w') as f: f.write('alerted')
+            except Exception as e: print("Alert notification failed:", e)
     else:
-        # If the river dropped below flood stage but we had previously alerted, send an all-clear
         if already_alerted:
             try:
                 req = urllib.request.Request(
                     url, 
-                    data=f"🟢 All Clear: Amite River has receded back down to {river_val} ft.".encode('utf-8'),
+                    data=f"🟢 All Clear: Amite River has receded to {river_val} ft.".encode('utf-8'),
                     headers={'Title': 'River Level Normal', 'Priority': 'default', 'Tags': 'white_check_mark'}
                 )
                 urllib.request.urlopen(req, timeout=5)
-            except:
-                pass
-            
-            # Remove the temporary state file so it's ready to trip the alarm next time
-            if os.path.exists(state_file):
-                os.remove(state_file)
+            except: pass
+            if os.path.exists(state_file): os.remove(state_file)
 
-# --- MAIN EXECUTION ---
 if __name__ == "__main__":
-    river_data = get_river()
-    
-    # Run the live alert check logic
-    check_river_alerts(river_data["raw"])
+    river_pack = get_river()
+    check_river_alerts(river_pack["raw"])
 
-    # Build composite data structure for data.json
-    data = {
-        "river": river_data,
+    # Append structural local system timestamps during execution assembly
+    local_now = datetime.datetime.now().strftime("%I:%M %p").lstrip('0')
+
+    composite_data = {
+        "system": {
+            "last_updated": local_now
+        },
+        "river": river_pack,
         "weather": {
             "denham": get_weather(30.48, -90.95),
             "donaldsonville": get_weather(30.10, -90.99)
         }
     }
 
-    # Safely write out the JSON file with clean formatting
     with open('data.json', 'w') as f:
-        json.dump(data, f, indent=4)
+        json.dump(composite_data, f, indent=4)
