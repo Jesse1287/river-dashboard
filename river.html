@@ -20,7 +20,7 @@
         <div class="panel" style="text-align: center; padding: 24px;">
             <div id="status-badge" class="status-badge" style="margin-bottom: 8px;">Checking status...</div>
             <div id="stage" class="metric" style="font-size: 3.2rem; margin: 4px 0;">Loading...</div>
-            <div style="font-size: 0.9rem; margin-bottom: 15px; font-weight: 600;">
+            <div id="delta-container" style="font-size: 0.9rem; margin-bottom: 15px; font-weight: 600; display: none;">
                 24h Change: <span id="delta-trend" style="color: #ffffff;">--</span>
             </div>
 
@@ -51,16 +51,19 @@
 
             document.getElementById('stage').innerText = data.river.stage || '--';
             
-            // Safe handling for missing delta value configurations
+            // Gracefully handle displaying the delta trend text block depending on JSON backend revisions
             const deltaElement = document.getElementById('delta-trend');
-            const deltaVal = data.river.delta || '--';
-            deltaElement.innerText = deltaVal;
-            if(deltaVal.startsWith('+')) {
-                deltaElement.style.color = "var(--status-red)";
-            } else if (deltaVal.startsWith('-')) {
-                deltaElement.style.color = "var(--status-green)";
+            const deltaBox = document.getElementById('delta-container');
+            if (data.river.delta) {
+                deltaBox.style.display = 'block';
+                deltaElement.innerText = data.river.delta;
+                if(String(data.river.delta).startsWith('+')) {
+                    deltaElement.style.color = "var(--status-red)";
+                } else if (String(data.river.delta).startsWith('-')) {
+                    deltaElement.style.color = "var(--status-green)";
+                }
             } else {
-                deltaElement.style.color = "#ffffff";
+                deltaBox.style.display = 'none';
             }
 
             let waterLevel = data.river.raw || 0;
