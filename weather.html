@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🌦️ Live Weather | Regional Ops</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; padding: 20px; margin: 0; }
+        .nav { display: flex; gap: 15px; margin-bottom: 20px; }
+        .nav a { color: #58a6ff; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 15px; }
+        h2 { color: #8b949e; font-size: 0.9rem; text-transform: uppercase; border-bottom: 1px solid #21262d; padding-bottom: 8px; margin-top: 0; }
+        .row { display: flex; justify-content: space-between; background: #0d1117; border: 1px solid #21262d; padding: 10px; border-radius: 6px; margin-bottom: 5px; font-size: 0.9rem; }
+        .radar-panel { margin-top: 15px; height: 400px; }
+        iframe { width: 100%; height: 100%; border: none; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+        <a href="index.html">🖥️ Core</a>
+        <a href="river.html">🌊 River</a>
+        <a href="weather.html" style="color:#ffffff;">🌦️ Weather</a>
+    </div>
+
+    <h1>Regional Operations</h1>
+
+    <div class="grid">
+        <div class="card">
+            <h2>🏡 Denham Springs (Home)</h2>
+            <div class="row"><span>Temp</span><span id="ds-temp">Loading...</span></div>
+            <div class="row"><span>Condition</span><span id="ds-desc">Loading...</span></div>
+        </div>
+
+        <div class="card">
+            <h2>🏭 Donaldsonville (Work)</h2>
+            <div class="row"><span>Temp</span><span id="cf-temp">Loading...</span></div>
+            <div class="row"><span>Condition</span><span id="cf-desc">Loading...</span></div>
+        </div>
+    </div>
+
+    <div class="radar-panel">
+        <h2>Live Radar</h2>
+        <iframe src="https://www.ventusky.com/?p=30.36;-91.07;9&l=radar"></iframe>
+    </div>
+
+    <script>
+        fetch('data.json')
+            .then(r => r.json())
+            .then(data => {
+                // Update Denham Springs
+                document.getElementById('ds-temp').innerText = data.weather.temp;
+                document.getElementById('ds-desc').innerText = data.weather.desc;
+                
+                // Update Donaldsonville (Using same data for now, or update fetcher.py later)
+                document.getElementById('cf-temp').innerText = data.weather.temp;
+                document.getElementById('cf-desc').innerText = data.weather.desc;
+            });
+    </script>
+</body>
+</html>
