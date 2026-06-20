@@ -2,27 +2,23 @@
 <html>
 <head>
     <link rel="stylesheet" href="style.css">
-    <title>🌊 River Dashboard</title>
+    <title>🌊 River | Roux Studio</title>
 </head>
 <body>
     <div class="nav">
-        <a href="index.html">🖥️ Core Node</a>
-        <a href="river.html">🌊 River</a>
+        <a href="index.html">🚪 Gate</a>
+        <a href="river.html" class="active">🌊 River</a>
         <a href="weather.html">🌦️ Weather</a>
     </div>
     <h1>Amite River Tracking</h1>
     <div class="panel">
-        <h2 id="status">Loading...</h2>
-        <div id="stage" style="font-size: 2rem; font-weight: bold; margin: 10px 0;">--</div>
-        <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" style="width:100%; border-radius:8px; background:white;">
+        <div id="river-stage" class="metric">Loading stage...</div>
     </div>
+    <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" style="width:100%; border-radius:8px;">
     <script>
-        fetch('data.json')
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById('stage').innerText = data.river.stage;
-                document.getElementById('status').innerText = data.river.raw > 29 ? "⚠️ FLOOD STAGE" : "🟢 NORMAL FLOW";
-            });
+        fetch('data.json').then(r => r.json()).then(data => {
+            document.getElementById('river-stage').innerText = "Current Stage: " + data.river.stage;
+        });
     </script>
 </body>
 </html>
