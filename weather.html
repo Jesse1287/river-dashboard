@@ -53,7 +53,7 @@
 
         <h3>🛰️ Live Interactive Radar</h3>
         <div class="panel radar-container">
-            <iframe class="responsive-radar" src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" allowfullscreen></iframe>
+            <iframe class="responsive-radar" src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" allowfullscreen style="height: 650px;"></iframe>
         </div>
     </div>
 
@@ -64,7 +64,6 @@
         .then(data => {
             if (!data.weather) return;
 
-            // 1. Map Denham Springs Live Telemetry safely
             if (data.weather.denham) {
                 const denhamCurrent = data.weather.denham.current ? data.weather.denham.current : data.weather.denham;
                 document.getElementById('denham-temp').innerText = denhamCurrent.temp || '--';
@@ -89,7 +88,6 @@
                 document.getElementById('denham-forecast').innerHTML = denhamHtml;
             }
 
-            // 2. Map Donaldsonville Live Telemetry safely
             if (data.weather.donaldsonville) {
                 const donCurrent = data.weather.donaldsonville.current ? data.weather.donaldsonville.current : data.weather.donaldsonville;
                 document.getElementById('donaldsonville-temp').innerText = donCurrent.temp || '--';
