@@ -49,31 +49,26 @@
 
         <h3>🛰️ Live Interactive Radar</h3>
         <div class="panel" style="padding: 0; overflow: hidden; position: relative;">
-            <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" frameborder="0" allowfullscreen style="border:none; vertical-align: bottom;"></iframe>
+            <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" height="400" frameborder="0" allowfullscreen style="border:none; vertical-align: bottom;"></iframe>
         </div>
     </div>
 
     <script>
     function updateWeatherData() {
+        // The timestamp query prevents the browser from loading stale cached telemetry
         fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
-            // Updates Denham Springs card text
-            document.getElementById('denham').innerHTML = 
-                `${data.weather.denham.temp} — ${data.weather.denham.desc}`;
+            // 1. Denham Springs Telemetry Mapping
+            document.getElementById('denham-temp').innerText = data.weather.denham.temp;
+            document.getElementById('denham-desc').innerText = data.weather.denham.desc;
+            document.getElementById('denham-feels').innerText = data.weather.denham.feels;
+            document.getElementById('denham-pop').innerText = data.weather.denham.pop;
+            document.getElementById('denham-hum').innerText = data.weather.denham.hum;
+            document.getElementById('denham-wind').innerText = data.weather.denham.wind;
             
-            // Updates Donaldsonville card text
-            document.getElementById('donaldsonville').innerHTML = 
-                `${data.weather.donaldsonville.temp} — ${data.weather.donaldsonville.desc}`;
-                
-        }).catch(err => console.log("Error updating weather operations data."));
-    }
-
-    // Run immediately when the page opens
-    updateWeatherData();
-
-    // Refresh every 5 minutes (300,000 ms)
-    setInterval(updateWeatherData, 300000);
-</script>
-</body>
-</html>
+            // 2. Donaldsonville Telemetry Mapping
+            document.getElementById('donaldsonville-temp').innerText = data.weather.donaldsonville.temp;
+            document.getElementById('donaldsonville-desc').innerText = data.weather.donaldsonville.desc;
+            document.getElementById('donaldsonville-feels').innerText = data.weather.donaldsonville.feels;
+            document.getElementById('donaldsonville-pop').innerText = data.weather.
