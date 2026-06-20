@@ -1,12 +1,12 @@
 {
     "system": {
-        "last_updated": "6:23 PM",
-        "message": "Sensors online and calibrated. \ud83d\udef0\ufe0f"
+        "last_updated": "6:28 PM",
+        "message": "System active. All stations nominal. \ud83d\ude80"
     },
     "river": {
-        "stage": "25.69 ft",
-        "raw": 25.69,
-        "delta": "-2.04 ft"
+        "stage": "25.61 ft",
+        "raw": 25.61,
+        "delta": "-2.12 ft"
     },
     "weather": {
         "denham": {
@@ -41,17 +41,17 @@
         },
         "donaldsonville": {
             "current": {
-                "temp": "77\u00b0F",
-                "feels": "79\u00b0F",
+                "temp": "78\u00b0F",
+                "feels": "78\u00b0F",
                 "desc": "Light Rain",
                 "pop": "100%",
-                "hum": "88%",
+                "hum": "94%",
                 "wind": "6.2 mph"
             },
             "forecast": [
                 {
                     "time": "10 PM",
-                    "temp": "77\u00b0F",
+                    "temp": "78\u00b0F",
                     "desc": "Rain",
                     "pop": "30%"
                 },
@@ -71,7 +71,7 @@
         },
         "ponchatoula": {
             "current": {
-                "temp": "77\u00b0F",
+                "temp": "76\u00b0F",
                 "feels": "78\u00b0F",
                 "desc": "Light Rain",
                 "pop": "100%",
