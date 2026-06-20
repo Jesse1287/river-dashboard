@@ -1,12 +1,12 @@
 {
     "system": {
-        "last_updated": "6:55 PM",
+        "last_updated": "6:57 PM",
         "message": "Watching the river. Stay dry! \ud83c\udf0a"
     },
     "river": {
-        "stage": "N/A",
-        "raw": 0.0,
-        "delta": "--"
+        "stage": "25.61 ft",
+        "raw": 25.61,
+        "delta": "-2.04 ft"
     },
     "weather": {
         "denham": {
@@ -45,7 +45,7 @@
                 "feels": "79\u00b0F",
                 "desc": "Light Rain",
                 "pop": "100%",
-                "hum": "92%",
+                "hum": "91%",
                 "wind": "6.2 mph"
             },
             "forecast": [
