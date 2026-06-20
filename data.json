@@ -1,1 +1,24 @@
-{"river": {"stage": "25.95 ft", "raw": 25.95}, "weather": {"denham": {"temp": "79\u00b0F", "feels": "79\u00b0F", "desc": "Moderate Rain", "pop": "100%", "hum": "89%", "press": "1014 hPa", "wind": "2.62 mph", "vis": "6.2 mi"}, "donaldsonville": {"temp": "79\u00b0F", "feels": "79\u00b0F", "desc": "Moderate Rain", "pop": "100%", "hum": "89%", "press": "1014 hPa", "wind": "2.62 mph", "vis": "6.2 mi"}}}
+{
+    "river": {
+        "stage": "25.79 ft",
+        "raw": 25.79
+    },
+    "weather": {
+        "denham": {
+            "temp": "79\u00b0F",
+            "feels": "79\u00b0F",
+            "desc": "Light Rain",
+            "pop": "100%",
+            "hum": "88%",
+            "wind": "5.3 mph"
+        },
+        "donaldsonville": {
+            "temp": "79\u00b0F",
+            "feels": "79\u00b0F",
+            "desc": "Light Rain",
+            "pop": "100%",
+            "hum": "92%",
+            "wind": "6.2 mph"
+        }
+    }
+}
