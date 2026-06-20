@@ -1,62 +1,111 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="style.css">
-    <title>🌦️ Live Weather | Regional Ops</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { background: #0d1117; color: #c9d1d9; font-family: sans-serif; padding: 20px; margin: 0; }
-        .nav { display: flex; gap: 15px; margin-bottom: 20px; }
-        .nav a { color: #58a6ff; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
-        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 15px; }
-        h2 { color: #8b949e; font-size: 0.9rem; text-transform: uppercase; border-bottom: 1px solid #21262d; padding-bottom: 8px; margin-top: 0; }
-        .row { display: flex; justify-content: space-between; background: #0d1117; border: 1px solid #21262d; padding: 10px; border-radius: 6px; margin-bottom: 5px; font-size: 0.9rem; }
-        .radar-panel { margin-top: 15px; height: 400px; }
-        iframe { width: 100%; height: 100%; border: none; border-radius: 8px; }
-    </style>
-</head>
-<body>
+@app.get("/weather", response_class=HTMLResponse)
+def weather_page():
+    # Setup rich fallback elements
+    ds_temp, ds_hum, ds_wind, ds_desc, ds_pop, ds_feels, ds_press, ds_vis = "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A"
+    cf_temp, cf_hum, cf_wind, cf_desc, cf_pop, cf_feels, cf_press, cf_vis = "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A"
+    
+    # Acoustic metric calculation helpers (Creative Liberty 1: Sonic Tracking)
+    ds_speed_of_sound = "Calculating..."
+    
+    # 1. Denham Springs Processing
+    try:
+        ds_url = "https://api.openweathermap.org/data/2.5/forecast?lat=30.48&lon=-90.95&units=imperial&cnt=1&appid=2a95de8d0a53a380df2a6916b7d7582e"
+        with urllib.request.urlopen(ds_url, timeout=2) as response:
+            wd = json.loads(response.read().decode())
+            current_f = wd['list'][0]
+            t_raw = current_f['main']['temp']
+            ds_temp = f"{int(t_raw)}°F"
+            ds_feels = f"{int(current_f['main']['feels_like'])}°F"
+            ds_press = f"{current_f['main']['pressure']} hPa"
+            ds_vis = f"{round(current_f.get('visibility', 16093) / 1609.34, 1)} mi"
+            ds_hum = f"{current_f['main']['humidity']}%"
+            ds_wind = f"{current_f['wind']['speed']} mph"
+            ds_desc = current_f['weather'][0]['description'].title()
+            ds_pop = f"{int(float(current_f.get('pop', 0)) * 100)}%"
+            
+            # Acoustic Math: Speed of Sound dynamic velocity parsing
+            ds_speed_of_sound = f"{round(1052.3 + (1.106 * t_raw), 1)} ft/s"
+    except: pass
 
-    <div class="nav">
-        <a href="index.html">🖥️ Core</a>
-        <a href="river.html">🌊 River</a>
-        <a href="weather.html" style="color:#ffffff;">🌦️ Weather</a>
-    </div>
+    # 2. Donaldsonville Processing
+    try:
+        cf_url = "https://api.openweathermap.org/data/2.5/forecast?lat=30.10&lon=-90.99&units=imperial&cnt=1&appid=2a95de8d0a53a380df2a6916b7d7582e"
+        with urllib.request.urlopen(cf_url, timeout=2) as response:
+            wd = json.loads(response.read().decode())
+            current_f = wd['list'][0]
+            cf_temp = f"{int(current_f['main']['temp'])}°F"
+            cf_feels = f"{int(current_f['main']['feels_like'])}°F"
+            cf_press = f"{current_f['main']['pressure']} hPa"
+            cf_vis = f"{round(current_f.get('visibility', 16093) / 1609.34, 1)} mi"
+            cf_hum = f"{current_f['main']['humidity']}%"
+            cf_wind = f"{current_f['wind']['speed']} mph"
+            cf_desc = current_f['weather'][0]['description'].title()
+            cf_pop = f"{int(float(current_f.get('pop', 0)) * 100)}%"
+    except: pass
 
-    <h1>Regional Operations</h1>
-
-    <div class="grid">
-        <div class="card">
-            <h2>🏡 Denham Springs (Home)</h2>
-            <div class="row"><span>Temp</span><span id="ds-temp">Loading...</span></div>
-            <div class="row"><span>Condition</span><span id="ds-desc">Loading...</span></div>
-        </div>
-
-        <div class="card">
-            <h2>🏭 Donaldsonville (Work)</h2>
-            <div class="row"><span>Temp</span><span id="cf-temp">Loading...</span></div>
-            <div class="row"><span>Condition</span><span id="cf-desc">Loading...</span></div>
-        </div>
-    </div>
-
-    <div class="radar-panel">
-        <h2>Live Radar</h2>
-        <iframe src="https://www.ventusky.com/?p=30.36;-91.07;9&l=radar"></iframe>
-    </div>
-
-    <script>
-        fetch('data.json')
-            .then(r => r.json())
-            .then(data => {
-                // Update Denham Springs
-                document.getElementById('ds-temp').innerText = data.weather.temp;
-                document.getElementById('ds-desc').innerText = data.weather.desc;
+    return f"""
+    <html>
+        <head>
+            <title>🌦️ Live Weather | Regional Ops</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <style>
+                body {{ {BASE_CSS} }}
+                .weather-metrics-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; width: 100%; margin-bottom: 14px; }}
+                .location-card {{ background: rgba(22, 27, 34, 0.85); border: 1px solid #30363d; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; backdrop-filter: blur(2px); }}
+                .loc-title {{ font-size: 0.95rem; font-weight: bold; padding-bottom: 6px; border-bottom: 1px solid #21262d; }}
+                .home-accent {{ color: #58a6ff; }}
+                .work-accent {{ color: #ffbc42; }}
+                .metric-row {{ display: flex; justify-content: space-between; background: #0d1117; border: 1px solid #21262d; padding: 10px 12px; border-radius: 6px; font-size: 0.85rem; }}
+                .metric-row small {{ color: #8b949e; text-transform: uppercase; font-size: 0.7rem; }}
                 
-                // Update Donaldsonville (Using same data for now, or update fetcher.py later)
-                document.getElementById('cf-temp').innerText = data.weather.temp;
-                document.getElementById('cf-desc').innerText = data.weather.desc;
-            });
-    </script>
-</body>
-</html>
+                /* Layout Modification: Massive Full Width Radar View Panel matching River Forecast Module */
+                .radar-panel {{ margin-top: 14px; background: rgba(22, 27, 34, .85); border: 1px solid #30363d; border-radius: 12px; padding: 12px; width: 100%; height: auto-fit; }}
+                iframe {{ width: 100%; height: 100%; border: none; border-radius: 8px; }}
+                .acoustic-badge {{ background: rgba(88, 166, 255, 0.05); border: 1px dashed #58a6ff; border-radius: 6px; padding: 10px; font-size: 0.8rem; text-align: center; color: #58a6ff; margin-top: 4px; font-weight: bold; }}
+            </style>
+        </head>
+        <body>
+            <div class="nav-container">
+                <div class="nav-tabs">
+                    <a href="/welcome">🚪 Gate</a>
+                    <a href="/">🖥️ Core Node</a>
+                    <a href="/river">🌊 Flood Center</a>
+                    <a href="/weather" class="active">🌦️ Live Weather</a>
+                    <a href="/stocks">📊 Investments</a>
+                </div>
+            </div>
+
+            <h1 style="color: #58a6ff;">Regional Weather Operations</h1>
+
+            <div class="weather-metrics-grid">
+                <div class="location-card" style="border-top: 4px solid #58a6ff;">
+                    <div class="loc-title home-accent">🏡 Denham Springs (Home)</div>
+                    <div class="metric-row"><small>Temperature / Feels Like</small><span>{ds_temp} / {ds_feels}</span></div>
+                    <div class="metric-row"><small>Condition</small><span>{ds_desc}</span></div>
+                    <div class="metric-row"><small>Chance of Rain</small><span style="color: #58a6ff; font-weight: bold;">{ds_pop}</span></div>
+                    <div class="metric-row"><small>Humidity / Pressure</small><span>{ds_hum} / {ds_press}</span></div>
+                    <div class="metric-row"><small>Wind / Visibility</small><span>{ds_wind} / {ds_vis}</span></div>
+                    
+                    <div class="acoustic-badge">🔊 Sonic Wave Velocity: {ds_speed_of_sound}</div>
+                </div>
+                
+                <div class="location-card" style="border-top: 4px solid #ffbc42;">
+                    <div class="loc-title work-accent">🏭 Donaldsonville (Work)</div>
+                    <div class="metric-row"><small>Temperature / Feels Like</small><span>{cf_temp} / {cf_feels}</span></div>
+                    <div class="metric-row"><small>Condition</small><span>{cf_desc}</span></div>
+                    <div class="metric-row"><small>Chance of Rain</small><span style="color: #ffbc42; font-weight: bold;">{cf_pop}</span></div>
+                    <div class="metric-row"><small>Humidity / Pressure</small><span>{cf_hum} / {cf_press}</span></div>
+                    <div class="metric-row"><small>Wind / Visibility</small><span>{cf_wind} / {cf_vis}</span></div>
+                    
+                    <div class="acoustic-badge" style="color:#ffbc42; border-color:#ffbc42; background:rgba(255,188,66,0.02)">📍 Microclimate Baseline: Operations Shield Active</div>
+                </div>
+            </div>
+            
+            <div class="radar-panel">
+                <h2 style="color:#58a6ff; margin-top:0; font-size: 0.95rem; text-transform: uppercase; border-bottom: 1px solid #21262d; padding-bottom: 8px; margin-bottom: 12px;">Live High-Resolution Ventusky Interactive Radar Grid</h2>
+                <iframe src="https://www.ventusky.com/?p=30.36;-91.07;9&l=radar" allowfullscreen></iframe>
+            </div>
+            {MATRIX_SCRIPT}
+        </body>
+    </html>
+    """
