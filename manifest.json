@@ -1,0 +1,16 @@
+{
+  "name": "Family Watch Dashboard",
+  "short_name": "FamilyWatch",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f141c",
+  "theme_color": "#38bdf8",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/4052/4052984.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
