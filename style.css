@@ -245,8 +245,9 @@ h2, h3 {
     height: 16px;
     width: 100%;
     position: relative;
-    margin: 50px 0 20px 0; 
+    margin: 45px 0 35px 0;
     border: 1px solid var(--border-color);
+    overflow: hidden;
 }
 
 .progress-bar {
@@ -256,7 +257,6 @@ h2, h3 {
     width: 0%;
     transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden; /* Ensures the shimmer stays inside the rounded corners */
 }
 
 /* Make the river water "flow" */
@@ -280,8 +280,6 @@ h2, h3 {
     color: var(--text-muted);
     transform: translateX(-50%);
     white-space: nowrap;
-    background: #0b1017;
-    padding: 0 4px;
 }
 
 .progress-marker.tier-high { top: -38px; }
