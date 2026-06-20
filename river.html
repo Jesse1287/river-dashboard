@@ -25,14 +25,16 @@
 
         <h3>📈 5-Day Hydrograph Predictor</h3>
         <div style="background: white; padding: 8px; border-radius: 16px; display: flex; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);">
-            <img src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" alt="Amite River Hydrograph" style="width:100%; border: none; border-radius: 8px;">
+            <img id="hydrograph" src="https://water.noaa.gov/resources/hydrographs/denl1_hg.png" alt="Amite River Hydrograph" style="width:100%; border: none; border-radius: 8px;">
         </div>
     </div>
 
     <script>
     function updateRiverData() {
-        // The '?t=' string tricks the browser into bypassing the cache to get live data
-        fetch('data.json?t=' + Date.now())
+        const timestamp = Date.now();
+
+        // 1. Fetch fresh telemetry data numbers
+        fetch('data.json?t=' + timestamp)
         .then(r => r.json())
         .then(data => {
             document.getElementById('stage').innerText = data.river.stage;
@@ -48,12 +50,15 @@
                 status.style.color = "var(--status-green)";
             }
         }).catch(err => console.log("Error updating flood center data."));
+
+        // 2. Force refresh the NOAA hydrograph image bypass cache
+        document.getElementById('hydrograph').src = 'https://water.noaa.gov/resources/hydrographs/denl1_hg.png?t=' + timestamp;
     }
 
     // Run immediately when the page opens
     updateRiverData();
 
-    // Refresh every 5 minutes (300,000 ms)
+    // Refresh everything every 5 minutes (300,000 ms)
     setInterval(updateRiverData, 300000);
 </script>
 </body>
