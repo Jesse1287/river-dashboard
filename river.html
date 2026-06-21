@@ -48,7 +48,7 @@
     function updateRiverData() {
         const timestamp = Date.now();
 
-        fetch('data.json?t=' + timestamp)
+        fetch('data.json?t=' + new Date().getTime())
         .then(r => r.json())
         .then(data => {
             if (!data.river) return;
