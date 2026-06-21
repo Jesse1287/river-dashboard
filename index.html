@@ -11,12 +11,12 @@
     <div class="container">
         <h1>🚀 Roux Family Command Center</h1>
         
-        <div id="status-banner" style="display:none; background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: 600; text-align: center;">
-            📢 <span id="custom-message"></span>
+        <div id="status-banner" style="display:none; background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 12px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; text-align: center;">
+            💡 <span id="custom-message">Loading wisdom...</span>
         </div>
 
         <div class="heartbeat-container">
-            <span class="pulse-dot"></span> Signal Flow Active: <span id="sys-clock">--</span>
+            <span class="pulse-dot"></span> Signal Flow Active: <span id="sys-clock">--:-- -- ---</span>
         </div>
         
         <div class="nav-tabs">
@@ -36,17 +36,33 @@
                 <h3>🏡 Denham Springs</h3>
                 <div id="home-denham-temp" class="metric">--</div>
                 <div id="home-denham-desc" style="color: var(--text-muted); text-transform: capitalize;">Calibrating...</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
+                    💧 <span id="home-denham-hum">--</span> | 
+                    💨 <span id="home-denham-wind">--</span>
+                </div>
             </div>
             <div class="panel float-hover">
                 <h3>🏭 Donaldsonville</h3>
                 <div id="home-donaldsonville-temp" class="metric">--</div>
                 <div id="home-donaldsonville-desc" style="color: var(--text-muted); text-transform: capitalize;">Calibrating...</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
+                    💧 <span id="home-donaldsonville-hum">--</span> | 
+                    💨 <span id="home-donaldsonville-wind">--</span>
+                </div>
             </div>
             <div class="panel float-hover" style="border-top: 3px solid var(--status-orange);">
                 <h3>🏥 Ponchatoula</h3>
                 <div id="home-ponchatoula-temp" class="metric">--</div>
                 <div id="home-ponchatoula-desc" style="color: var(--text-muted); text-transform: capitalize;">Calibrating...</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
+                    💧 <span id="home-ponchatoula-hum">--</span> | 
+                    💨 <span id="home-ponchatoula-wind">--</span>
+                </div>
             </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-muted);">
+            🔄 Auto-updating every 5 minutes | Powered by science
         </div>
     </div>
 
@@ -80,26 +96,49 @@
             }
 
             if (data.weather) {
+                // Denham
                 if (data.weather.denham) {
-                    const denham = data.weather.denham.current || data.weather.denham;
-                    document.getElementById('home-denham-temp').innerText = data.weather.denham.temp;
-                    document.getElementById('home-denham-desc').innerText = data.weather.denham.desc;
+                    const denham = data.weather.denham;
+                    document.getElementById('home-denham-temp').innerText = denham.temp || '--';
+                    document.getElementById('home-denham-desc').innerText = denham.desc || '--';
+                    document.getElementById('home-denham-hum').innerText = denham.hum || '--';
+                    document.getElementById('home-denham-wind').innerText = denham.wind || '--';
                 }
+                // Donaldsonville
                 if (data.weather.donaldsonville) {
-                    const dville = data.weather.donaldsonville.current || data.weather.donaldsonville;
+                    const dville = data.weather.donaldsonville;
                     document.getElementById('home-donaldsonville-temp').innerText = dville.temp || '--';
                     document.getElementById('home-donaldsonville-desc').innerText = dville.desc || '--';
+                    document.getElementById('home-donaldsonville-hum').innerText = dville.hum || '--';
+                    document.getElementById('home-donaldsonville-wind').innerText = dville.wind || '--';
                 }
+                // Ponchatoula
                 if (data.weather.ponchatoula) {
-                    const ponch = data.weather.ponchatoula.current || data.weather.ponchatoula;
+                    const ponch = data.weather.ponchatoula;
                     document.getElementById('home-ponchatoula-temp').innerText = ponch.temp || '--';
                     document.getElementById('home-ponchatoula-desc').innerText = ponch.desc || '--';
+                    document.getElementById('home-ponchatoula-hum').innerText = ponch.hum || '--';
+                    document.getElementById('home-ponchatoula-wind').innerText = ponch.wind || '--';
                 }
             }
         }).catch(err => console.log("Error reading homepage json:", err));
     }
+    
+    // Initial update
     updateData();
+    
+    // Auto-update every 5 minutes
     setInterval(updateData, 300000);
+    
+    // Update clock every second for smooth time display
+    function updateClock() {
+        fetch('data.json?t=' + Date.now())
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('sys-clock').innerText = data.system.last_updated;
+        });
+    }
+    setInterval(updateClock, 60000); // Update time every minute
     </script>
 </body>
 </html>
