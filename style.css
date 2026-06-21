@@ -293,3 +293,23 @@ h2, h3 {
     content: ''; position: absolute; bottom: -20px; left: 50%;
     width: 2px; height: 14px; background: var(--border-color); z-index: 1;
 }
+/* Progress Bar Stage Markers */
+.stage-marker {
+    position: absolute;
+    top: -5px;
+    bottom: -5px;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.4);
+    z-index: 10;
+}
+
+.marker-label {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    font-weight: bold;
+    white-space: nowrap;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
