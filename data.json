@@ -1,24 +1,24 @@
 {
     "system": {
-        "last_updated": "09:50 PM CDT",
-        "message": "\ud83d\udcca Just some wet data for ya"
+        "last_updated": "07:00 AM CDT",
+        "message": "\ud83d\udef0\ufe0f Satellite brain activated"
     },
     "river": {
-        "stage": "25.35 ft",
-        "raw": 25.35
+        "stage": "24.30 ft",
+        "raw": 24.3
     },
     "weather": {
         "denham": {
-            "temp": "75\u00b0F",
-            "feels": "77\u00b0F",
-            "desc": "Overcast Clouds",
-            "hum": "90%",
-            "wind": "4.7 mph",
+            "temp": "77\u00b0F",
+            "feels": "78\u00b0F",
+            "desc": "Light Rain",
+            "hum": "91%",
+            "wind": "4.4 mph",
             "pop": "0%"
         },
         "donaldsonville": {
-            "temp": "75\u00b0F",
-            "feels": "77\u00b0F",
+            "temp": "78\u00b0F",
+            "feels": "80\u00b0F",
             "desc": "Overcast Clouds",
             "hum": "96%",
             "wind": "5.8 mph",
@@ -26,10 +26,10 @@
         },
         "ponchatoula": {
             "temp": "75\u00b0F",
-            "feels": "76\u00b0F",
+            "feels": "77\u00b0F",
             "desc": "Overcast Clouds",
-            "hum": "96%",
-            "wind": "4.8 mph",
+            "hum": "97%",
+            "wind": "6.5 mph",
             "pop": "0%"
         }
     }
