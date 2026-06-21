@@ -1,12 +1,12 @@
 {
     "system": {
-        "last_updated": "7:46 PM",
+        "last_updated": "8:12 PM",
         "message": "Command Center standing by. \ud83c\udfe0"
     },
     "river": {
-        "stage": "N/A",
-        "raw": 0.0,
-        "delta": "--"
+        "stage": "25.52 ft",
+        "raw": 25.52,
+        "delta": "-1.97 ft"
     },
     "weather": {
         "denham": {
@@ -41,8 +41,8 @@
         },
         "donaldsonville": {
             "current": {
-                "temp": "77\u00b0F",
-                "feels": "79\u00b0F",
+                "temp": "76\u00b0F",
+                "feels": "78\u00b0F",
                 "desc": "Light Rain",
                 "pop": "28%",
                 "hum": "92%",
@@ -51,7 +51,7 @@
             "forecast": [
                 {
                     "time": "1 AM",
-                    "temp": "76\u00b0F",
+                    "temp": "75\u00b0F",
                     "desc": "Clouds",
                     "pop": "0%"
                 },
@@ -75,13 +75,13 @@
                 "feels": "77\u00b0F",
                 "desc": "Overcast Clouds",
                 "pop": "0%",
-                "hum": "91%",
+                "hum": "92%",
                 "wind": "4.8 mph"
             },
             "forecast": [
                 {
                     "time": "1 AM",
-                    "temp": "74\u00b0F",
+                    "temp": "75\u00b0F",
                     "desc": "Clouds",
                     "pop": "0%"
                 },
