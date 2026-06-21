@@ -10,6 +10,11 @@
 <body>
     <div class="container">
         <h1>🚀 Roux Family Command Center</h1>
+        
+        <div id="status-banner" style="display:none; background: rgba(56, 189, 248, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: 600; text-align: center;">
+            📢 <span id="custom-message"></span>
+        </div>
+
         <div class="heartbeat-container">
             <span class="pulse-dot"></span> Signal Flow Active: <span id="sys-clock">--</span>
         </div>
@@ -43,17 +48,22 @@
                 <div id="home-ponchatoula-desc" style="color: var(--text-muted); text-transform: capitalize;">Calibrating...</div>
             </div>
         </div>
-        
-        <div style="text-align: center; margin-top: 30px; font-size: 0.8rem; color: var(--text-muted);">
-            <em>All systems nominal. Have a great day!</em>
-        </div>
     </div>
 
     <script>
     function updateData() {
-        fetch('data.json?t=' + new Date().getTime())
+        // Hard Cache Buster
+        fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
+            const banner = document.getElementById('status-banner');
+            if (data.system && data.system.message) {
+                banner.style.display = 'block';
+                document.getElementById('custom-message').innerText = data.system.message;
+            } else {
+                banner.style.display = 'none';
+            }
+
             document.getElementById('sys-clock').innerText = data.system.last_updated;
             document.getElementById('home-stage').innerText = data.river.stage;
             
@@ -88,7 +98,6 @@
             }
         }).catch(err => console.log("Error reading homepage json:", err));
     }
-
     updateData();
     setInterval(updateData, 300000);
     </script>
