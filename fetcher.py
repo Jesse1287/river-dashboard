@@ -2,7 +2,6 @@ import urllib.request
 import json
 import os
 import datetime
-import pytz
 import random
 
 # Fun messages for the dashboard
@@ -57,11 +56,30 @@ def get_river():
 
 def get_central_time():
     """Convert UTC to Central Time (handles CST/CDT automatically)"""
-    central = pytz.timezone('America/Chicago')
-    now = datetime.datetime.now(central)
-    # Format: "2:34 PM CST" or "2:34 PM CDT"
-    tz_label = now.strftime('%Z')
-    time_str = now.strftime("%I:%M %p")
+    # Get UTC time and manually calculate Central Time offset
+    utc_now = datetime.datetime.utcnow()
+    
+    # Determine if we're in Daylight Saving Time (DST)
+    # US DST: 2nd Sunday in March to 1st Sunday in November
+    def is_dst(dt):
+        # Check if date is between 2nd Sunday in March and 1st Sunday in November
+        march = datetime.datetime(dt.year, 3, 1)
+        # Find 2nd Sunday in March
+        march_second_sunday = march + datetime.timedelta(days=(6-march.weekday()) + 7)
+        
+        november = datetime.datetime(dt.year, 11, 1)
+        # Find 1st Sunday in November
+        november_first_sunday = november + datetime.timedelta(days=(6-november.weekday()))
+        
+        return march_second_sunday <= dt < november_first_sunday
+    
+    # Apply offset: CST is UTC-6, CDT is UTC-5
+    offset = datetime.timedelta(hours=-5 if is_dst(utc_now) else -6)
+    central_now = utc_now + offset
+    
+    # Get timezone name
+    tz_label = "CDT" if is_dst(utc_now) else "CST"
+    time_str = central_now.strftime("%I:%M %p")
     return f"{time_str} {tz_label}"
 
 if __name__ == "__main__":
