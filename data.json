@@ -1,103 +1,23 @@
 {
     "system": {
-        "last_updated": "8:12 PM",
-        "message": "Command Center standing by. \ud83c\udfe0"
+        "last_updated": "02:06 AM"
     },
     "river": {
-        "stage": "25.52 ft",
-        "raw": 25.52,
-        "delta": "-1.97 ft"
+        "stage": "25.44 ft",
+        "raw": 25.44,
+        "delta": "-2.01 ft"
     },
     "weather": {
         "denham": {
             "current": {
                 "temp": "76\u00b0F",
-                "feels": "78\u00b0F",
+                "feels": "77\u00b0F",
                 "desc": "Light Rain",
                 "pop": "79%",
-                "hum": "88%",
+                "hum": "89%",
                 "wind": "4.7 mph"
             },
-            "forecast": [
-                {
-                    "time": "1 AM",
-                    "temp": "75\u00b0F",
-                    "desc": "Clouds",
-                    "pop": "59%"
-                },
-                {
-                    "time": "4 AM",
-                    "temp": "76\u00b0F",
-                    "desc": "Clouds",
-                    "pop": "0%"
-                },
-                {
-                    "time": "7 AM",
-                    "temp": "77\u00b0F",
-                    "desc": "Clouds",
-                    "pop": "0%"
-                }
-            ]
-        },
-        "donaldsonville": {
-            "current": {
-                "temp": "76\u00b0F",
-                "feels": "78\u00b0F",
-                "desc": "Light Rain",
-                "pop": "28%",
-                "hum": "92%",
-                "wind": "5.8 mph"
-            },
-            "forecast": [
-                {
-                    "time": "1 AM",
-                    "temp": "75\u00b0F",
-                    "desc": "Clouds",
-                    "pop": "0%"
-                },
-                {
-                    "time": "4 AM",
-                    "temp": "77\u00b0F",
-                    "desc": "Clouds",
-                    "pop": "0%"
-                },
-                {
-                    "time": "7 AM",
-                    "temp": "77\u00b0F",
-                    "desc": "Clouds",
-                    "pop": "0%"
-                }
-            ]
-        },
-        "ponchatoula": {
-            "current": {
-                "temp": "76\u00b0F",
-                "feels": "77\u00b0F",
-                "desc": "Overcast Clouds",
-                "pop": "0%",
-                "hum": "92%",
-                "wind": "4.8 mph"
-            },
-            "forecast": [
-                {
-                    "time": "1 AM",
-                    "temp": "75\u00b0F",
-                    "desc": "Clouds",
-                    "pop": "0%"
-                },
-                {
-                    "time": "4 AM",
-                    "temp": "75\u00b0F",
-                    "desc": "Rain",
-                    "pop": "30%"
-                },
-                {
-                    "time": "7 AM",
-                    "temp": "77\u00b0F",
-                    "desc": "Clouds",
-                    "pop": "22%"
-                }
-            ]
+            "forecast": []
         }
     }
 }
