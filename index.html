@@ -51,7 +51,7 @@
 
     <script>
     function updateData() {
-        fetch('data.json?t=' + Date.now())
+        fetch('data.json?t=' + new Date().getTime())
         .then(r => r.json())
         .then(data => {
             document.getElementById('sys-clock').innerText = data.system.last_updated;
