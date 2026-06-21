@@ -1,39 +1,39 @@
 {
     "system": {
-        "last_updated": "6:57 PM",
-        "message": "Watching the river. Stay dry! \ud83c\udf0a"
+        "last_updated": "7:46 PM",
+        "message": "Command Center standing by. \ud83c\udfe0"
     },
     "river": {
-        "stage": "25.61 ft",
-        "raw": 25.61,
-        "delta": "-2.04 ft"
+        "stage": "N/A",
+        "raw": 0.0,
+        "delta": "--"
     },
     "weather": {
         "denham": {
             "current": {
-                "temp": "77\u00b0F",
+                "temp": "76\u00b0F",
                 "feels": "78\u00b0F",
                 "desc": "Light Rain",
-                "pop": "100%",
-                "hum": "86%",
-                "wind": "5.3 mph"
+                "pop": "79%",
+                "hum": "88%",
+                "wind": "4.7 mph"
             },
             "forecast": [
                 {
-                    "time": "10 PM",
-                    "temp": "77\u00b0F",
-                    "desc": "Rain",
-                    "pop": "100%"
-                },
-                {
                     "time": "1 AM",
-                    "temp": "76\u00b0F",
+                    "temp": "75\u00b0F",
                     "desc": "Clouds",
-                    "pop": "87%"
+                    "pop": "59%"
                 },
                 {
                     "time": "4 AM",
-                    "temp": "75\u00b0F",
+                    "temp": "76\u00b0F",
+                    "desc": "Clouds",
+                    "pop": "0%"
+                },
+                {
+                    "time": "7 AM",
+                    "temp": "77\u00b0F",
                     "desc": "Clouds",
                     "pop": "0%"
                 }
@@ -44,17 +44,11 @@
                 "temp": "77\u00b0F",
                 "feels": "79\u00b0F",
                 "desc": "Light Rain",
-                "pop": "100%",
-                "hum": "91%",
-                "wind": "6.2 mph"
+                "pop": "28%",
+                "hum": "92%",
+                "wind": "5.8 mph"
             },
             "forecast": [
-                {
-                    "time": "10 PM",
-                    "temp": "77\u00b0F",
-                    "desc": "Rain",
-                    "pop": "30%"
-                },
                 {
                     "time": "1 AM",
                     "temp": "76\u00b0F",
@@ -63,7 +57,13 @@
                 },
                 {
                     "time": "4 AM",
-                    "temp": "76\u00b0F",
+                    "temp": "77\u00b0F",
+                    "desc": "Clouds",
+                    "pop": "0%"
+                },
+                {
+                    "time": "7 AM",
+                    "temp": "77\u00b0F",
                     "desc": "Clouds",
                     "pop": "0%"
                 }
@@ -72,30 +72,30 @@
         "ponchatoula": {
             "current": {
                 "temp": "76\u00b0F",
-                "feels": "78\u00b0F",
-                "desc": "Light Rain",
-                "pop": "100%",
-                "hum": "93%",
-                "wind": "6.2 mph"
+                "feels": "77\u00b0F",
+                "desc": "Overcast Clouds",
+                "pop": "0%",
+                "hum": "91%",
+                "wind": "4.8 mph"
             },
             "forecast": [
                 {
-                    "time": "10 PM",
-                    "temp": "77\u00b0F",
-                    "desc": "Clouds",
-                    "pop": "24%"
-                },
-                {
                     "time": "1 AM",
-                    "temp": "76\u00b0F",
+                    "temp": "74\u00b0F",
                     "desc": "Clouds",
-                    "pop": "9%"
+                    "pop": "0%"
                 },
                 {
                     "time": "4 AM",
-                    "temp": "76\u00b0F",
+                    "temp": "75\u00b0F",
+                    "desc": "Rain",
+                    "pop": "30%"
+                },
+                {
+                    "time": "7 AM",
+                    "temp": "77\u00b0F",
                     "desc": "Clouds",
-                    "pop": "0%"
+                    "pop": "22%"
                 }
             ]
         }
