@@ -6,17 +6,21 @@ import random
 
 def get_weather(lat, lon):
     try:
-        url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=imperial&cnt=4&appid=2a95de8d0a53a380df2a6916b7d7582e"
+        # Simplified URL to get ONLY current weather, reducing API load
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=imperial&appid=2a95de8d0a53a380df2a6916b7d7582e"
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         with urllib.request.urlopen(req, timeout=10) as response:
             data = json.loads(response.read().decode())
-            curr = data['list'][0]
             return {
-                "temp": f"{int(curr['main']['temp'])}°F",
-                "desc": curr['weather'][0]['description'].title()
+                "temp": f"{int(data['main']['temp'])}°F",
+                "feels": f"{int(data['main']['feels_like'])}°F",
+                "desc": data['weather'][0]['description'].title(),
+                "hum": f"{data['main']['humidity']}%",
+                "wind": f"{round(data['wind']['speed'], 1)} mph"
             }
-    except:
-        return {"temp": "N/A", "desc": "Offline"}
+    except Exception as e:
+        print(f"Weather error for {lat}: {e}")
+        return {"temp": "N/A", "feels": "N/A", "desc": "Offline", "hum": "N/A", "wind": "N/A"}
 
 def get_river():
     try:
