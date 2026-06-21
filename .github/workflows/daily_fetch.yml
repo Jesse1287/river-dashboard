@@ -2,7 +2,7 @@ name: Fetch Data
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -12,30 +12,16 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
-          
       - name: Run Fetcher
         run: python fetcher.py
-        
-      - name: Commit data and state
+      - name: Commit data.json
         run: |
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
-          
-          # Add data.json
           git add data.json
-          
-          # Safely add or remove alert_state.txt without crashing
-          if [ -f alert_state.txt ]; then
-            git add alert_state.txt
-          else
-            git rm --cached alert_state.txt || true
-          fi
-          
-          # Commit and push
-          git commit -m "Auto-update dashboard data [skip ci]" || exit 0
+          git commit -m "Auto-update data [skip ci]" || exit 0
           git push
