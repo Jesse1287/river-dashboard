@@ -9,7 +9,6 @@ def get_weather(lat, lon):
         url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=imperial&cnt=4&appid=2a95de8d0a53a380df2a6916b7d7582e"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
-            
             current_raw = data['list'][0]
             current_pack = {
                 "temp": f"{int(current_raw['main']['temp'])}°F",
@@ -19,47 +18,46 @@ def get_weather(lat, lon):
                 "hum": f"{current_raw['main']['humidity']}%",
                 "wind": f"{round(current_raw['wind']['speed'], 1)} mph"
             }
-            
-            forecast_list = []
-            for item in data['list'][1:4]:
-                utc_ts = datetime.datetime.fromtimestamp(item['dt'], datetime.timezone.utc)
-                local_ts = utc_ts - datetime.timedelta(hours=5)
-                hour_str = local_ts.strftime('%I %p').lstrip('0')
-                
-                forecast_list.append({
-                    "time": hour_str,
-                    "temp": f"{int(item['main']['temp'])}°F",
-                    "desc": item['weather'][0]['main'],
-                    "pop": f"{int(item.get('pop', 0) * 100)}%"
-                })
-                
-            return {
-                "current": current_pack,
-                "forecast": forecast_list
-            }
+            return {"current": current_pack, "forecast": []}
     except Exception as e:
-        print(f"Weather error for {lat}, {lon}: {e}")
-        blank_current = {"temp": "N/A", "feels": "N/A", "desc": "Error", "pop": "N/A", "hum": "N/A", "wind": "N/A"}
-        return {"current": blank_current, "forecast": []}
+        print(f"Weather error: {e}")
+        return {"current": {"temp": "N/A", "desc": "Error"}, "forecast": []}
 
 def get_river():
     try:
         url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=07378500&parameterCd=00065&period=P1D"
         with urllib.request.urlopen(url, timeout=5) as response:
             data = json.loads(response.read().decode())
-            time_series = data['value']['timeSeries'][0]['values'][0]['value']
-            
-            current_val = float(time_series[-1]['value'])
-            historical_val = float(time_series[0]['value'])
-            
-            delta_val = current_val - historical_val
-            delta_str = f"+{delta_val:.2f} ft" if delta_val >= 0 else f"{delta_val:.2f} ft"
-            
-            return {
-                "stage": f"{current_val:.2f} ft",
-                "raw": current_val,
-                "delta": delta_str
-            }
+            val_list = data['value']['timeSeries'][0]['values'][0]['value']
+            curr = float(val_list[-1]['value'])
+            prev = float(val_list[0]['value'])
+            delta = f"{'+' if curr-prev >=0 else ''}{(curr-prev):.2f} ft"
+            return {"stage": f"{curr:.2f} ft", "raw": curr, "delta": delta}
     except Exception as e:
-        print(f"River extraction error: {e}")
-        return {"stage": "N
+        print(f"River error: {e}")
+        return {"stage": "N/A", "raw": 0.0, "delta": "--"}
+
+def check_river_alerts(river_val):
+    state_file = 'alert_state.txt'
+    url = "https://ntfy.sh/roux-amite-alerts-8821"
+    if float(river_val) >= 29.0:
+        if not os.path.exists(state_file):
+            try:
+                msg = f"⚠️ ACTION STAGE: Amite River is at {river_val} ft!"
+                req = urllib.request.Request(url, data=msg.encode('utf-8'), headers={'Title': 'Amite Alert', 'Priority': 'high'})
+                urllib.request.urlopen(req, timeout=5)
+                with open(state_file, 'w') as f: f.write(str(river_val))
+            except: pass
+    elif os.path.exists(state_file):
+        os.remove(state_file)
+
+if __name__ == "__main__":
+    r = get_river()
+    check_river_alerts(r["raw"])
+    data = {
+        "system": {"last_updated": datetime.datetime.now().strftime("%I:%M %p")},
+        "river": r,
+        "weather": {"denham": get_weather(30.48, -90.95)}
+    }
+    with open('data.json', 'w') as f:
+        json.dump(data, f, indent=4)
