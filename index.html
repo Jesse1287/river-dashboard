@@ -130,15 +130,14 @@
     // Auto-update every 5 minutes
     setInterval(updateData, 300000);
     
-    // Update clock every second for smooth time display
-    function updateClock() {
+    // Update clock every minute for smooth time display
+    setInterval(() => {
         fetch('data.json?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
             document.getElementById('sys-clock').innerText = data.system.last_updated;
         });
-    }
-    setInterval(updateClock, 60000); // Update time every minute
+    }, 60000);
     </script>
 </body>
 </html>

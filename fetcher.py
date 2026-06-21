@@ -2,7 +2,22 @@ import urllib.request
 import json
 import os
 import datetime
+import pytz
 import random
+
+# Fun messages for the dashboard
+FUN_MESSAGES = [
+    "🌊 The river is speaking... let's listen.",
+    "☔ Mother Nature is in charge here.",
+    "🚀 Data flowing like the Amite!",
+    "⚡ Real-time hydro-updates, baby!",
+    "🎯 Science rules! 🧪",
+    "🌍 Stay dry out there!",
+    "💧 Monitoring the flow since 2026",
+    "🛰️ Satellite brain activated",
+    "📊 Just some wet data for ya",
+    "⛅ Check before you wreck"
+]
 
 def get_weather(lat, lon):
     try:
@@ -16,11 +31,19 @@ def get_weather(lat, lon):
                 "feels": f"{int(data['main']['feels_like'])}°F",
                 "desc": data['weather'][0]['description'].title(),
                 "hum": f"{data['main']['humidity']}%",
-                "wind": f"{round(data['wind']['speed'], 1)} mph"
+                "wind": f"{round(data['wind']['speed'], 1)} mph",
+                "pop": "0%"  # Default to 0%, OpenWeather free tier doesn't have PoP
             }
     except Exception as e:
         print(f"Weather error for {lat}: {e}")
-        return {"temp": "N/A", "feels": "N/A", "desc": "Offline", "hum": "N/A", "wind": "N/A"}
+        return {
+            "temp": "N/A",
+            "feels": "N/A",
+            "desc": "Offline",
+            "hum": "N/A",
+            "wind": "N/A",
+            "pop": "N/A"
+        }
 
 def get_river():
     try:
@@ -32,14 +55,21 @@ def get_river():
     except:
         return {"stage": "N/A", "raw": 0.0}
 
+def get_central_time():
+    """Convert UTC to Central Time (handles CST/CDT automatically)"""
+    central = pytz.timezone('America/Chicago')
+    now = datetime.datetime.now(central)
+    # Format: "2:34 PM CST" or "2:34 PM CDT"
+    tz_label = now.strftime('%Z')
+    time_str = now.strftime("%I:%M %p")
+    return f"{time_str} {tz_label}"
+
 if __name__ == "__main__":
-    # Use UTC for consistency, then label it as such so you know it's not local
-    now = datetime.datetime.now(datetime.timezone.utc)
-    # Just show the time in UTC, or adjust to your preference
-    timestamp_str = now.strftime("%I:%M %p UTC")
-    
     final_data = {
-        "system": {"last_updated": timestamp_str},
+        "system": {
+            "last_updated": get_central_time(),
+            "message": random.choice(FUN_MESSAGES)
+        },
         "river": get_river(),
         "weather": {
             "denham": get_weather(30.48, -90.95),
