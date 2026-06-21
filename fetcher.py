@@ -47,6 +47,7 @@ if __name__ == "__main__":
             "ponchatoula": get_weather(30.44, -90.40)
         }
     }
+    try:
         with open('data.json', 'w') as f:
             json.dump(final_data, f, indent=4)
     except Exception as e:
