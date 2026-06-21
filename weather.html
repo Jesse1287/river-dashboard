@@ -35,8 +35,8 @@
             <a href="weather.html" class="active">🌦️ Weather Radar</a>
         </div>
 
-        <div id="family-weather-alert" style="margin-bottom: 15px; padding: 10px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); text-align: center; font-weight: bold;">
-            Checking the skies...
+        <div id="family-weather-alert" style="margin-bottom: 15px; padding: 12px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); text-align: center; font-weight: 600;">
+            ☁️ Checking the skies...
         </div>
 
         <div class="panel float-hover">
@@ -47,9 +47,9 @@
             </div>
             <div class="weather-info-grid">
                 <div class="info-item">Feels Like <strong id="denham-feels">--</strong></div>
-                <div class="info-item">Rain Chance <strong id="denham-pop">--</strong></div>
                 <div class="info-item">Humidity <strong id="denham-hum">--</strong></div>
                 <div class="info-item">Wind Speed <strong id="denham-wind">--</strong></div>
+                <div class="info-item">Rain Chance <strong id="denham-pop">--</strong></div>
             </div>
             <div id="denham-forecast" class="forecast-container"></div>
         </div>
@@ -62,9 +62,9 @@
             </div>
             <div class="weather-info-grid">
                 <div class="info-item">Feels Like <strong id="donaldsonville-feels">--</strong></div>
-                <div class="info-item">Rain Chance <strong id="donaldsonville-pop">--</strong></div>
                 <div class="info-item">Humidity <strong id="donaldsonville-hum">--</strong></div>
                 <div class="info-item">Wind Speed <strong id="donaldsonville-wind">--</strong></div>
+                <div class="info-item">Rain Chance <strong id="donaldsonville-pop">--</strong></div>
             </div>
             <div id="donaldsonville-forecast" class="forecast-container"></div>
         </div>
@@ -77,15 +77,19 @@
             </div>
             <div class="weather-info-grid">
                 <div class="info-item">Feels Like <strong id="ponchatoula-feels">--</strong></div>
-                <div class="info-item">Rain Chance <strong id="ponchatoula-pop">--</strong></div>
                 <div class="info-item">Humidity <strong id="ponchatoula-hum">--</strong></div>
                 <div class="info-item">Wind Speed <strong id="ponchatoula-wind">--</strong></div>
+                <div class="info-item">Rain Chance <strong id="ponchatoula-pop">--</strong></div>
             </div>
             <div id="ponchatoula-forecast" class="forecast-container"></div>
         </div>
 
         <div class="panel" style="padding: 0; overflow: hidden; border-radius: 16px;">
             <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" height="800" frameborder="0" allowfullscreen style="border:none; vertical-align: bottom;"></iframe>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-muted);">
+            🔄 Auto-updating every 5 minutes | Weather data courtesy of OpenWeatherMap
         </div>
     </div>
 
@@ -98,7 +102,7 @@
 
             // Map Denham
             if(data.weather.denham) {
-                const denCurrent = data.weather.denham.current || data.weather.denham;
+                const denCurrent = data.weather.denham;
                 document.getElementById('denham-temp').innerText = denCurrent.temp || '--';
                 document.getElementById('denham-desc').innerText = denCurrent.desc || '--';
                 document.getElementById('denham-feels').innerText = denCurrent.feels || '--';
@@ -117,9 +121,9 @@
                 document.getElementById('denham-forecast').innerHTML = denhamHtml;
             }
 
-            // Map Donaldsonville (Fixed comment syntax here!)
+            // Map Donaldsonville
             if(data.weather.donaldsonville) {
-                const donCurrent = data.weather.donaldsonville.current || data.weather.donaldsonville;
+                const donCurrent = data.weather.donaldsonville;
                 document.getElementById('donaldsonville-temp').innerText = donCurrent.temp || '--';
                 document.getElementById('donaldsonville-desc').innerText = donCurrent.desc || '--';
                 document.getElementById('donaldsonville-feels').innerText = donCurrent.feels || '--';
@@ -134,11 +138,13 @@
                     });
                 }
                 document.getElementById('donaldsonville-forecast').innerHTML = donaldsonHtml;
+                
+                maxPop = Math.max(maxPop, parseInt(donCurrent.pop) || 0);
             }
 
             // Map Ponchatoula
             if(data.weather.ponchatoula) {
-                const ponCurrent = data.weather.ponchatoula.current || data.weather.ponchatoula;
+                const ponCurrent = data.weather.ponchatoula;
                 document.getElementById('ponchatoula-temp').innerText = ponCurrent.temp || '--';
                 document.getElementById('ponchatoula-desc').innerText = ponCurrent.desc || '--';
                 document.getElementById('ponchatoula-feels').innerText = ponCurrent.feels || '--';
@@ -153,18 +159,22 @@
                     });
                 }
                 document.getElementById('ponchatoula-forecast').innerHTML = ponchHtml;
+                
+                maxPop = Math.max(maxPop, parseInt(ponCurrent.pop) || 0);
             }
 
             // Fun Family Alert Logic
             const alertBox = document.getElementById('family-weather-alert');
             if (maxPop > 60) {
-                alertBox.innerText = "☔ Heads up! Grab an umbrella before you leave today!";
+                alertBox.innerText = "☔ Heads up! Grab an umbrella before you leave today! Mother Nature's got jokes.";
                 alertBox.style.background = "rgba(56, 189, 248, 0.2)";
                 alertBox.style.color = "var(--accent-blue)";
             } else if (maxPop > 30) {
-                alertBox.innerText = "☁️ Might get a little dicey out there later. Keep an eye on the radar.";
+                alertBox.innerText = "☁️ Might get a little dicey out there. Keep an eye on the radar and bring a light jacket!";
+                alertBox.style.background = "rgba(251, 146, 60, 0.15)";
+                alertBox.style.color = "var(--status-orange)";
             } else {
-                alertBox.innerText = "☀️ Clear skies ahead! Great day for a drive.";
+                alertBox.innerText = "☀️ Clear skies ahead! Great day for a drive. Go touch grass!";
                 alertBox.style.background = "rgba(74, 222, 128, 0.1)";
                 alertBox.style.color = "var(--status-green)";
             }
@@ -172,7 +182,10 @@
         }).catch(err => console.log("Error updating weather grids:", err));
     }
 
+    // Initial update
     updateWeatherData();
+    
+    // Auto-update every 5 minutes
     setInterval(updateWeatherData, 300000);
     </script>
 </body>
