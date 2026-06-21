@@ -33,16 +33,20 @@ def get_river():
         return {"stage": "N/A", "raw": 0.0}
 
 if __name__ == "__main__":
-    try:
-        final_data = {
-            "system": {"last_updated": datetime.datetime.now().strftime("%I:%M %p")},
-            "river": get_river(),
-            "weather": {
-                "denham": get_weather(30.48, -90.95),
-                "donaldsonville": get_weather(30.10, -90.99),
-                "ponchatoula": get_weather(30.44, -90.40)
-            }
+    # Use UTC for consistency, then label it as such so you know it's not local
+    now = datetime.datetime.now(datetime.timezone.utc)
+    # Just show the time in UTC, or adjust to your preference
+    timestamp_str = now.strftime("%I:%M %p UTC")
+    
+    final_data = {
+        "system": {"last_updated": timestamp_str},
+        "river": get_river(),
+        "weather": {
+            "denham": get_weather(30.48, -90.95),
+            "donaldsonville": get_weather(30.10, -90.99),
+            "ponchatoula": get_weather(30.44, -90.40)
         }
+    }
         with open('data.json', 'w') as f:
             json.dump(final_data, f, indent=4)
     except Exception as e:
