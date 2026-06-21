@@ -28,16 +28,13 @@
                 Checking Ark requirements...
             </div>
 
-            <div class="progress-container">
-                <div class="progress-marker tier-low" style="left: 0%;">0ft</div>
-                <div class="progress-marker tier-high" style="left: 72.5%;">Action (29')</div>
-                <div class="progress-marker tier-low" style="left: 77.5%;">Minor (31')</div>
-                <div class="progress-marker tier-high" style="left: 87.5%;">Mod (35')</div>
-                <div class="progress-marker tier-low" style="left: 97.5%;">Major (39')</div>
-    
-                <div id="current-level-marker" class="progress-marker" style="top: 20px; font-weight: bold; color: var(--accent-blue);">▼</div>
-    
-                <div id="flood-meter" class="progress-bar"></div>
+            <div class="progress-bar-container">
+            <div id="flood-meter" class="progress-bar"></div>
+            <div class="stage-marker" style="left: 72.5%;">
+                <div class="marker-label" style="color: var(--status-orange);">Action (29')</div>
+            </div>
+            <div class="stage-marker" style="left: 87.5%;">
+                <div class="marker-label" style="color: var(--status-red);">Major (35')</div>
             </div>
         </div>
 
