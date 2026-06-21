@@ -1,35 +1,35 @@
 {
     "system": {
-        "last_updated": "10:30 AM CDT",
-        "message": "\u26a1 Real-time hydro-updates, baby!"
+        "last_updated": "01:08 PM CDT",
+        "message": "\ud83d\udcca Just some wet data for ya"
     },
     "river": {
-        "stage": "23.62 ft",
-        "raw": 23.62
+        "stage": "23.23 ft",
+        "raw": 23.23
     },
     "weather": {
         "denham": {
-            "temp": "81\u00b0F",
-            "feels": "89\u00b0F",
-            "desc": "Light Rain",
-            "hum": "87%",
-            "wind": "4 mph",
+            "temp": "85\u00b0F",
+            "feels": "98\u00b0F",
+            "desc": "Overcast Clouds",
+            "hum": "81%",
+            "wind": "8.0 mph",
             "pop": "0%"
         },
         "donaldsonville": {
-            "temp": "81\u00b0F",
-            "feels": "92\u00b0F",
-            "desc": "Light Rain",
-            "hum": "96%",
-            "wind": "8.9 mph",
+            "temp": "86\u00b0F",
+            "feels": "99\u00b0F",
+            "desc": "Overcast Clouds",
+            "hum": "81%",
+            "wind": "12.0 mph",
             "pop": "0%"
         },
         "ponchatoula": {
-            "temp": "84\u00b0F",
+            "temp": "85\u00b0F",
             "feels": "97\u00b0F",
-            "desc": "Light Rain",
+            "desc": "Moderate Rain",
             "hum": "83%",
-            "wind": "1.0 mph",
+            "wind": "10.6 mph",
             "pop": "0%"
         }
     }
