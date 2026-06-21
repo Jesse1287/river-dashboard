@@ -67,8 +67,8 @@ def get_river():
 def check_river_alerts(river_val):
     state_file = 'alert_state.txt'
     already_alerted = os.path.exists(state_file)
-    ntfy_topic = "my_private_dashboard_river_alerts" 
-    url = f"https://ntfy.sh/{ntfy_topic}"
+    ntfy_topic = "roux-amite-alerts-8821" 
+        url = f"https://ntfy.sh/{ntfy_topic}"
 
     if river_val >= 29.0:
         if not already_alerted:
