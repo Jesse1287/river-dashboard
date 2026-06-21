@@ -82,8 +82,8 @@
             if (data.weather) {
                 if (data.weather.denham) {
                     const denham = data.weather.denham.current || data.weather.denham;
-                    document.getElementById('home-denham-temp').innerText = denham.temp || '--';
-                    document.getElementById('home-denham-desc').innerText = denham.desc || '--';
+                    document.getElementById('home-denham-temp').innerText = data.weather.denham.temp;
+                    document.getElementById('home-denham-desc').innerText = data.weather.denham.desc;
                 }
                 if (data.weather.donaldsonville) {
                     const dville = data.weather.donaldsonville.current || data.weather.donaldsonville;
