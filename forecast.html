@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>📅 5-Day Forecast Projection</title>
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <h1>📅 5-Day Projection Matrix</h1>
+        
+        <div class="heartbeat-container">
+            <span class="pulse-dot"></span> Signal Flow Active: <span class="sys-clock">--:-- -- ---</span>
+        </div>
+
+        <div class="nav-tabs">
+            <a href="index.html">Home Base</a>
+            <a href="river.html">🌊 Amite River</a>
+            <a href="weather.html">🌦️ Current Radar</a>
+            <a href="forecast.html" class="active">📅 5-Day Forecast</a>
+        </div>
+
+        <div class="panel float-hover">
+            <h2 style="color: var(--accent-blue);">🏡 Denham Springs Projection</h2>
+            <div id="denham-forecast" class="forecast-grid">Loading arrays...</div>
+        </div>
+
+        <div class="panel float-hover">
+            <h2 style="color: var(--status-green);">🏭 Donaldsonville Projection</h2>
+            <div id="don-forecast" class="forecast-grid">Loading arrays...</div>
+        </div>
+
+        <div class="panel float-hover">
+            <h2 style="color: var(--status-orange);">🏥 Ponchatoula Projection</h2>
+            <div id="ponch-forecast" class="forecast-grid">Loading arrays...</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Formats date string to day name
+        const getDayName = (dateStr, index) => {
+            if (index === 0) return "Today";
+            const date = new Date(dateStr + 'T12:00:00Z'); 
+            return date.toLocaleDateString('en-US', { weekday: 'short' });
+        };
+
+        // Renders the 5 day matrix
+        function renderForecast(daily, containerId) {
+            let html = '';
+            // Arrays are 7 days, limit to 5
+            for(let i = 0; i < 5; i++) {
+                const dayName = getDayName(daily.time[i], i);
+                const maxT = Math.round(daily.temperature_2m_max[i]);
+                const minT = Math.round(daily.temperature_2m_min[i]);
+                const pop = daily.precipitation_probability_max[i];
+                const wmo = getWMO(daily.weather_code[i]);
+                
+                // Calculate position for temp bar (assuming scale 30 to 110 degrees for visual mapping)
+                const leftPos = Math.max(0, ((minT - 30) / 80) * 100);
+                const widthPct = Math.max(5, ((maxT - minT) / 80) * 100);
+
+                const popClass = pop >= 50 ? 'rain-risk-high' : '';
+
+                html += `
+                <div class="day-card">
+                    <div class="date">${dayName}</div>
+                    <div class="icon-desc"><span>${wmo.icon}</span> <span style="font-size:0.85rem; color:var(--text-muted);">${wmo.desc}</span></div>
+                    
+                    <div class="temp-bar-container">
+                        <span style="font-weight:600; width: 30px; text-align: right;">${minT}°</span>
+                        <div class="temp-bar">
+                            <div class="temp-fill" style="left: ${leftPos}%; width: ${widthPct}%;"></div>
+                        </div>
+                        <span style="font-weight:600; width: 30px;">${maxT}°</span>
+                    </div>
+
+                    <div class="pop ${popClass}">${pop}% 💧</div>
+                </div>`;
+            }
+            document.getElementById(containerId).innerHTML = html;
+        }
+
+        async function initForecast() {
+            updateClock();
+            const locations = [
+                { lat: 30.48, lon: -90.95, prefix: 'denham' },
+                { lat: 30.10, lon: -90.99, prefix: 'don' },
+                { lat: 30.44, lon: -90.40, prefix: 'ponch' }
+            ];
+
+            for (const loc of locations) {
+                const w = await fetchWeather(loc.lat, loc.lon);
+                if (w && w.daily) {
+                    renderForecast(w.daily, `${loc.prefix}-forecast`);
+                }
+            }
+        }
+
+        initForecast();
+    </script>
+</body>
+</html>
