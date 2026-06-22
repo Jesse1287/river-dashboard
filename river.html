@@ -11,111 +11,106 @@
     <div class="container">
         <h1>🌊 Amite River Hydro-Metrics</h1>
         
+        <div class="heartbeat-container">
+            <span class="pulse-dot"></span> Signal Flow Active: <span class="sys-clock">--:-- -- ---</span>
+        </div>
+
         <div class="nav-tabs">
             <a href="index.html">Home Base</a>
             <a href="river.html" class="active">🌊 Amite River</a>
-            <a href="weather.html">🌦️ Weather Radar</a>
+            <a href="weather.html">🌦️ Current Radar</a>
+            <a href="forecast.html">📅 5-Day Forecast</a>
         </div>
 
-        <div class="panel float-hover" style="text-align: center; padding: 24px;">
+        <div id="river-main-panel" class="panel float-hover" style="text-align: center; padding: 24px;">
             <div id="status-badge" class="status-badge" style="margin-bottom: 8px;">Ping Sensor...</div>
-            <div id="stage" class="metric" style="font-size: 3.2rem; margin: 4px 0;">Loading...</div>
-            <div id="delta-container" style="font-size: 0.9rem; margin-bottom: 5px; font-weight: 600; display: none;">
-                24h Trend: <span id="delta-trend" style="color: #ffffff;">--</span>
+            <div id="stage" class="metric" style="font-size: 3.8rem; margin: 4px 0; font-family: monospace;">0.00</div>
+            
+            <div id="delta-container" style="font-size: 0.9rem; margin-bottom: 5px; font-weight: 600;">
+                24h Trend: <span id="delta-trend">--</span>
             </div>
             
             <div id="ark-status" style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-bottom: 20px;">
                 Checking requirements...
             </div>
 
-            <div style="position: relative; background: #0b1017; border-radius: 10px; height: 16px; margin: 45px 0 35px 0; border: 1px solid var(--border-color);">
-                
-                <div id="flood-meter" style="background: linear-gradient(90deg, var(--status-green) 60%, var(--status-orange) 85%, var(--status-red) 100%); height: 100%; border-radius: 9px; width: 0%; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative;">
-                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%); animation: shimmer 3s infinite linear; border-radius: 9px;"></div>
-                </div>
-
+            <div class="progress-container">
+                <div id="flood-meter" class="progress-bar"></div>
                 <div style="position: absolute; left: 72.5%; top: -5px; bottom: -5px; width: 2px; background: rgba(255, 255, 255, 0.4); z-index: 10;">
-                    <div style="position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: bold; white-space: nowrap; color: var(--status-orange); text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Action Stage (29 ft)</div>
+                    <div style="position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: bold; color: var(--status-orange);">Action (29ft)</div>
                 </div>
-
                 <div style="position: absolute; left: 87.5%; top: -5px; bottom: -5px; width: 2px; background: rgba(255, 255, 255, 0.4); z-index: 10;">
-                    <div style="position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: bold; white-space: nowrap; color: var(--status-red); text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Major Flood (35 ft)</div>
+                    <div style="position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: bold; color: var(--status-red);">Major (35ft)</div>
                 </div>
             </div>
         </div>
 
         <h3>📈 River Forecast Hydrograph</h3>
-        <div style="background: white; padding: 8px; border-radius: 16px; display: flex; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.15);">
+        <div style="background: rgba(255,255,255,0.9); padding: 8px; border-radius: 16px; display: flex; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.15);">
             <img id="hydrograph" src="" alt="Amite River Hydrograph" style="width:100%; border: none; border-radius: 8px;">
-        </div>
-
-        <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-muted);">
-            🔄 Auto-updating every 5 minutes | Data courtesy of USGS Water Services
         </div>
     </div>
 
+    <script src="app.js"></script>
     <script>
-    function updateRiverData() {
-        const timestamp = Date.now();
-
-        // Hard Cache Buster
-        fetch('data.json?t=' + timestamp)
-        .then(r => r.json())
-        .then(data => {
-            if (!data.river) return;
-
-            document.getElementById('stage').innerText = data.river.stage || '--';
-            
-            const deltaElement = document.getElementById('delta-trend');
-            const deltaBox = document.getElementById('delta-container');
-            if (data.river.delta) {
-                deltaBox.style.display = 'block';
-                deltaElement.innerText = data.river.delta;
-                if(String(data.river.delta).startsWith('+')) {
-                    deltaElement.style.color = "var(--status-red)";
-                } else if (String(data.river.delta).startsWith('-')) {
-                    deltaElement.style.color = "var(--status-green)";
+        // Number Roll Animation
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = (progress * (end - start) + start).toFixed(2) + ' ft';
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
                 }
-            } else {
-                deltaBox.style.display = 'none';
-            }
+            };
+            window.requestAnimationFrame(step);
+        }
 
-            let waterLevel = data.river.raw || 0;
-            let percentage = (waterLevel / 40) * 100;
-            if (percentage > 100) percentage = 100;
-            if (percentage < 0) percentage = 0;
-            document.getElementById('flood-meter').style.width = percentage + '%';
-            
+        async function initRiver() {
+            updateClock();
+            const r = await fetchRiver();
+            if (!r) return;
+
+            const stageEl = document.getElementById('stage');
+            animateValue(stageEl, 0, r.raw, 1000);
+
+            const deltaEl = document.getElementById('delta-trend');
+            deltaEl.innerText = r.delta;
+            deltaEl.style.color = r.delta.startsWith('+') ? "var(--status-red)" : "var(--status-green)";
+
+            let pct = (r.raw / 40) * 100;
+            document.getElementById('flood-meter').style.width = Math.min(Math.max(pct, 0), 100) + '%';
+
             const status = document.getElementById('status-badge');
-            const arkStatus = document.getElementById('ark-status');
-            
-            if (waterLevel >= 35) {
-                status.innerText = "🚨 MAJOR FLOOD STAGE";
+            const ark = document.getElementById('ark-status');
+            const panel = document.getElementById('river-main-panel');
+
+            if (r.raw >= 35) {
+                status.innerText = "🚨 MAJOR FLOOD";
                 status.style.background = "rgba(248, 113, 113, 0.3)";
                 status.style.color = "var(--status-red)";
-                arkStatus.innerText = "🛶 Time to start rounding up the animals. Noah's Ark protocol: ACTIVATED";
-            } else if (waterLevel >= 29) {
+                panel.classList.add('critical-state');
+                ark.innerText = "Noah's Ark protocol: ACTIVATED. Severe overflow occurring.";
+            } else if (r.raw >= 29) {
                 status.innerText = "⚠️ ACTION STAGE";
                 status.style.background = "rgba(251, 146, 60, 0.15)";
                 status.style.color = "var(--status-orange)";
-                arkStatus.innerText = "👀 Keep an eye on this. Get your water wings ready!";
+                panel.classList.remove('critical-state');
+                ark.innerText = "Water entering low-lying areas. Monitor continuously.";
             } else {
                 status.innerText = "🟢 FLOW NOMINAL";
                 status.style.background = "rgba(74, 222, 128, 0.15)";
                 status.style.color = "var(--status-green)";
-                arkStatus.innerText = "🛠️ Safe for now. No Ark required. You're good to go!";
+                panel.classList.remove('critical-state');
+                ark.innerText = "Discharge rate and stage depth within normal operating parameters.";
             }
-        }).catch(err => console.log("Error updating hydrology center:", err));
 
-        // Ensure NOAA graph bypasses cache too
-        document.getElementById('hydrograph').src = 'https://water.noaa.gov/resources/hydrographs/denl1_hg.png?t=' + timestamp;
-    }
+            document.getElementById('hydrograph').src = 'https://water.noaa.gov/resources/hydrographs/denl1_hg.png?t=' + Date.now();
+        }
 
-    // Initial update
-    updateRiverData();
-    
-    // Auto-update every 5 minutes
-    setInterval(updateRiverData, 300000);
+        initRiver();
+        setInterval(initRiver, 300000);
     </script>
 </body>
 </html>
