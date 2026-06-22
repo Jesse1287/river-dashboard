@@ -1,6 +1,6 @@
 :root {
     --bg-dark: #070a0e;
-    --card-bg: rgba(22, 31, 43, 0.85);
+    --card-bg: rgba(22, 31, 43, 0.6); /* Adjusted for stronger glass effect */
     --border-color: #243245;
     --text-main: #e2e8f0;
     --text-muted: #94a3b8;
@@ -22,7 +22,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Sci-Fi Matrix Grid Backdrop Layer with gentle breathing effect */
 body::before {
     content: "";
     position: fixed;
@@ -81,26 +80,35 @@ h2, h3 {
     border-radius: 16px;
     padding: 18px;
     margin-bottom: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-/* Fun hover pop effect for panels */
 .float-hover:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 30px rgba(56, 189, 248, 0.15);
     border-color: rgba(56, 189, 248, 0.4);
 }
 
-/* Navigation Tabs */
+@keyframes critical-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.4); border-color: rgba(248, 113, 113, 0.6); }
+    70% { box-shadow: 0 0 20px 10px rgba(248, 113, 113, 0); border-color: var(--border-color); }
+    100% { box-shadow: 0 0 0 0 rgba(248, 113, 113, 0); border-color: rgba(248, 113, 113, 0.6); }
+}
+
+.critical-state {
+    animation: critical-pulse 2s infinite;
+}
+
 .nav-tabs {
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 8px;
+    flex-wrap: wrap;
 }
 
 .nav-tabs a {
@@ -141,7 +149,6 @@ h2, h3 {
     letter-spacing: 0.5px;
 }
 
-/* Heartbeat Data Engine Line */
 .heartbeat-container {
     font-size: 0.8rem;
     color: var(--text-muted);
@@ -167,14 +174,6 @@ h2, h3 {
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
 }
 
-/* Flexible Grid Systems */
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-
 .grid-3 {
     display: grid;
     grid-template-columns: 1fr;
@@ -183,7 +182,6 @@ h2, h3 {
 }
 
 @media (min-width: 768px) {
-    .grid-2 { grid-template-columns: repeat(2, 1fr); }
     .grid-3 { grid-template-columns: repeat(3, 1fr); }
 }
 
@@ -196,49 +194,61 @@ h2, h3 {
     padding-top: 14px;
 }
 
-.info-item {
-    font-size: 0.9rem;
-    color: var(--text-muted);
+.info-item { font-size: 0.9rem; color: var(--text-muted); }
+.info-item strong { color: var(--text-main); display: block; font-size: 1rem; margin-top: 2px; }
+
+/* 5-Day Forecast Components */
+.forecast-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.info-item strong {
-    color: var(--text-main);
-    display: block;
-    font-size: 1rem;
-    margin-top: 2px;
-}
-
-/* Forecast strip horizontal engine cards */
-.forecast-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-top: 14px;
-}
-
-.forecast-card {
-    background: rgba(11, 16, 23, 0.7);
+.day-card {
+    background: rgba(11, 16, 23, 0.5);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 8px;
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--text-muted);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     transition: background 0.2s ease;
 }
 
-.forecast-card:hover {
-    background: rgba(56, 189, 248, 0.1);
+.day-card:hover {
+    background: rgba(56, 189, 248, 0.05);
 }
 
-.forecast-card strong {
-    color: var(--text-main);
-    display: block;
-    font-size: 0.95rem;
-    margin: 2px 0;
+.day-card .date { width: 80px; font-weight: 600; font-size: 0.95rem; }
+.day-card .icon-desc { display: flex; align-items: center; gap: 8px; width: 140px; }
+.day-card .pop { width: 60px; text-align: right; font-size: 0.9rem; font-weight: 600;}
+
+.temp-bar-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 15px;
 }
 
-/* Flood Stage Multi-Tier Progress Tracker */
+.temp-bar {
+    flex-grow: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+
+.temp-fill {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(90deg, var(--status-blue, #60a5fa), var(--status-orange));
+    border-radius: 3px;
+}
+
+.rain-risk-high { color: var(--accent-blue); text-shadow: 0 0 8px rgba(56, 189, 248, 0.4); }
+
 .progress-container {
     background: #0b1017;
     border-radius: 10px;
@@ -257,59 +267,4 @@ h2, h3 {
     width: 0%;
     transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-}
-
-/* Make the river water "flow" */
-.progress-bar::after {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 3s infinite linear;
-}
-
-@keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
-
-.progress-marker {
-    position: absolute;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    transform: translateX(-50%);
-    white-space: nowrap;
-}
-
-.progress-marker.tier-high { top: -38px; }
-.progress-marker.tier-high::after {
-    content: ''; position: absolute; bottom: -38px; left: 50%;
-    width: 2px; height: 32px; background: var(--border-color); z-index: 1;
-}
-
-.progress-marker.tier-low { top: -20px; }
-.progress-marker.tier-low::after {
-    content: ''; position: absolute; bottom: -20px; left: 50%;
-    width: 2px; height: 14px; background: var(--border-color); z-index: 1;
-}
-/* Progress Bar Stage Markers */
-.stage-marker {
-    position: absolute;
-    top: -5px;
-    bottom: -5px;
-    width: 2px;
-    background: rgba(255, 255, 255, 0.4);
-    z-index: 10;
-}
-
-.marker-label {
-    position: absolute;
-    top: -22px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.75rem;
-    font-weight: bold;
-    white-space: nowrap;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
