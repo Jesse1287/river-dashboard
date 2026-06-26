@@ -20,9 +20,9 @@
         <div class="nav-tabs">
             <a href="index.html"><span class="icon">🏠</span> <span>HQ</span></a>
             <a href="river.html"><span class="icon">🌊</span> <span>Flood</span></a>
+            <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
             <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
             <a href="forecast.html" class="active"><span class="icon">📅</span> <span>Forecast</span></a>
-            <a href="prep.html"><span class="icon">🌪️</span> <span>Ready</span></a>
         </div>
 
         <div class="panel float-hover">
@@ -57,26 +57,19 @@
                 const minT = Math.round(daily.temperature_2m_min[i]);
                 const pop = daily.precipitation_probability_max[i];
                 const wmo = getWMO(daily.weather_code[i]);
-                
                 const leftPos = Math.max(0, ((minT - 30) / 80) * 100);
                 const widthPct = Math.max(5, ((maxT - minT) / 80) * 100);
-                const popColor = pop >= 50 ? 'var(--accent-blue)' : 'inherit';
-                const popShadow = pop >= 50 ? '0 0 8px rgba(56, 189, 248, 0.4)' : 'none';
 
                 html += `
-                <div style="background: rgba(11, 16, 23, 0.5); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
-                    <div style="width: 80px; font-weight: 600; font-size: 0.95rem;">${dayName}</div>
-                    <div style="display: flex; align-items: center; gap: 8px; width: 140px;"><span>${wmo.icon}</span> <span style="font-size:0.85rem; color:var(--text-muted);">${wmo.desc}</span></div>
-                    
-                    <div style="flex-grow: 1; display: flex; align-items: center; gap: 10px; padding: 0 15px;">
-                        <span style="font-weight:600; width: 30px; text-align: right;">${minT}°</span>
-                        <div style="flex-grow: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; position: relative; overflow: hidden;">
-                            <div style="position: absolute; height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--status-orange)); border-radius: 3px; left: ${leftPos}%; width: ${widthPct}%;"></div>
-                        </div>
-                        <span style="font-weight:600; width: 30px;">${maxT}°</span>
+                <div class="forecast-row">
+                    <div class="forecast-day">${dayName}</div>
+                    <div class="forecast-cond">${wmo.icon} <span>${wmo.desc}</span></div>
+                    <div class="forecast-bar">
+                        <span class="forecast-temp-min">${minT}°</span>
+                        <div class="forecast-track"><div class="forecast-fill" style="left:${leftPos}%;width:${widthPct}%;"></div></div>
+                        <span class="forecast-temp-max">${maxT}°</span>
                     </div>
-
-                    <div style="width: 60px; text-align: right; font-size: 0.9rem; font-weight: 600; color: ${popColor}; text-shadow: ${popShadow};">${pop}% 💧</div>
+                    <div class="forecast-pop ${pop >= 50 ? 'pop-high' : ''}">${pop}% 💧</div>
                 </div>`;
             }
             document.getElementById(containerId).innerHTML = html;
