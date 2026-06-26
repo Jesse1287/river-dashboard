@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>🏠 Roux Command Center</title>
+    <title>🏠 HQ | Roux Command</title>
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -12,22 +12,22 @@
         <h1>🚀 <span id="dynamic-greeting">Roux Family</span> Command</h1>
         
         <div class="heartbeat-container">
-            <span class="pulse-dot"></span> System Live: <span class="sys-clock">--:-- -- ---</span>
+            <span class="pulse-dot"></span>             All Systems Nominal: <span class="sys-clock">--:-- -- ---</span>
         </div>
         
         <div class="nav-tabs">
-            <a href="index.html" class="active"><span class="icon">🏠</span> <span>Base</span></a>
-            <a href="river.html"><span class="icon">🌊</span> <span>River</span></a>
-            <a href="weather.html"><span class="icon">🌦️</span> <span>Radar</span></a>
-            <a href="forecast.html"><span class="icon">📅</span> <span>5-Day</span></a>
-            <a href="prep.html"><span class="icon">🌪️</span> <span>Prep</span></a>
+            <a href="index.html" class="active"><span class="icon">🏠</span> <span>HQ</span></a>
+            <a href="river.html"><span class="icon">🌊</span> <span>Flood</span></a>
+            <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
+            <a href="forecast.html"><span class="icon">📅</span> <span>Forecast</span></a>
+            <a href="prep.html"><span class="icon">🌪️</span> <span>Ready</span></a>
         </div>
 
         <div class="panel float-hover" id="home-river-panel" style="border-left: 5px solid var(--accent-blue);">
             <h3>🌊 Amite River Status</h3>
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
                 <div id="home-stage" class="metric">Loading...</div>
-                <div id="home-river-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">Sensors Active...</div>
+                <div id="home-river-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">Awaiting telemetry...</div>
             </div>
             <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 10px; overflow: hidden; position: relative;">
                 <div id="mini-river-fill" style="height: 100%; background: var(--status-green); width: 0%; transition: width 1s ease, background 0.5s;"></div>
@@ -41,7 +41,7 @@
                     <div id="denham-icon" style="font-size: 1.8rem;"></div>
                     <div id="denham-temp" class="metric">--°</div>
                 </div>
-                <div id="denham-desc" style="color: var(--text-muted);">Calibrating...</div>
+                <div id="denham-desc" style="color: var(--text-muted);">Syncing sensors...</div>
             </div>
             <div class="panel float-hover">
                 <h3>🏭 Donaldsonville</h3>
@@ -49,7 +49,7 @@
                     <div id="don-icon" style="font-size: 1.8rem;"></div>
                     <div id="don-temp" class="metric">--°</div>
                 </div>
-                <div id="don-desc" style="color: var(--text-muted);">Calibrating...</div>
+                <div id="don-desc" style="color: var(--text-muted);">Syncing sensors...</div>
             </div>
             <div class="panel float-hover">
                 <h3>🏥 Ponchatoula</h3>
@@ -57,7 +57,7 @@
                     <div id="ponch-icon" style="font-size: 1.8rem;"></div>
                     <div id="ponch-temp" class="metric">--°</div>
                 </div>
-                <div id="ponch-desc" style="color: var(--text-muted);">Calibrating...</div>
+                <div id="ponch-desc" style="color: var(--text-muted);">Syncing sensors...</div>
             </div>
         </div>
     </div>
@@ -66,10 +66,10 @@
     <script>
         const hour = new Date().getHours();
         let greeting = "Roux Family";
-        if (hour < 12) greeting = "Morning Ops |";
-        else if (hour < 18) greeting = "Afternoon Ops |";
-        else greeting = "Night Cycle |";
-        document.getElementById('dynamic-greeting').innerText = greeting;
+        if (hour < 12) greeting = "☕ Morning Ops";
+        else if (hour < 18) greeting = "☀️ Afternoon Ops";
+        else greeting = "🌙 Night Cycle";
+        document.getElementById('dynamic-greeting').innerHTML = greeting;
 
         async function initDashboard() {
             updateClock();
@@ -84,20 +84,24 @@
                 let percent = (riverData.raw / 40) * 100;
                 fill.style.width = Math.min(percent, 100) + '%';
 
-                if (riverData.raw >= 29) {
-                    status.innerText = "⚠️ ACTION STAGE";
-                    status.style.color = "var(--status-orange)";
-                    fill.style.background = "var(--status-orange)";
-                    panel.style.borderLeftColor = "var(--status-orange)";
-                } else if (riverData.raw >= 35) {
+                if (riverData.raw >= 35) {
                     status.innerText = "🚨 MAJOR FLOOD";
                     status.style.color = "var(--status-red)";
                     fill.style.background = "var(--status-red)";
                     panel.style.borderLeftColor = "var(--status-red)";
                     panel.classList.add('critical-state');
+                } else if (riverData.raw >= 29) {
+                    status.innerText = "⚠️ ACTION STAGE";
+                    status.style.color = "var(--status-orange)";
+                    fill.style.background = "var(--status-orange)";
+                    panel.style.borderLeftColor = "var(--status-orange)";
+                    panel.classList.remove('critical-state');
                 } else {
                     status.innerText = "🟢 NOMINAL";
                     status.style.color = "var(--status-green)";
+                    fill.style.background = "var(--status-green)";
+                    panel.style.borderLeftColor = "var(--accent-blue)";
+                    panel.classList.remove('critical-state');
                 }
             }
 
@@ -122,3 +126,4 @@
     </script>
 </body>
 </html>
+
