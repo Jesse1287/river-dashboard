@@ -4,27 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>🌦️ Current Weather Operations</title>
+    <title>🌦️ Weather Ops | Roux Command</title>
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <div class="container">
-        <h1>🌦️ Regional Weather Ops</h1>
+        <h1>🌦️ Weather Operations</h1>
         
         <div class="heartbeat-container">
-            <span class="pulse-dot"></span> Signal Flow Active: <span class="sys-clock">--:-- -- ---</span>
+            <span class="pulse-dot"></span>             Satellite Uplink: <span class="sys-clock">--:-- -- ---</span>
         </div>
 
         <div class="nav-tabs">
-            <a href="index.html"><span class="icon">🏠</span> <span>Base</span></a>
-            <a href="river.html"><span class="icon">🌊</span> <span>River</span></a>
-            <a href="weather.html" class="active"><span class="icon">🌦️</span> <span>Radar</span></a>
-            <a href="forecast.html"><span class="icon">📅</span> <span>5-Day</span></a>
-            <a href="prep.html"><span class="icon">🌪️</span> <span>Prep</span></a>
+            <a href="index.html"><span class="icon">🏠</span> <span>HQ</span></a>
+            <a href="river.html"><span class="icon">🌊</span> <span>Flood</span></a>
+            <a href="weather.html" class="active"><span class="icon">🌦️</span> <span>Weather</span></a>
+            <a href="forecast.html"><span class="icon">📅</span> <span>Forecast</span></a>
+            <a href="prep.html"><span class="icon">🌪️</span> <span>Ready</span></a>
         </div>
 
         <div id="family-weather-alert" style="margin-bottom: 15px; padding: 12px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); text-align: center; font-weight: 600;">
-            ☁️ Initializing Sensor Grids...
+            ☁️ Scanning atmospheric arrays...
         </div>
 
         <div class="grid-3">
@@ -32,7 +32,7 @@
                 <h2 style="color: var(--accent-blue);">🏡 Denham Springs</h2>
                 <div class="metric" id="denham-temp">--°</div>
                 <div style="font-weight: 600; color: var(--text-main);">
-                    <span id="denham-icon"></span> <span id="denham-desc">Loading...</span>
+                    <span id="denham-icon"></span> <span id="denham-desc">Awaiting feed...</span>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="denham-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
@@ -46,7 +46,7 @@
                 <h2 style="color: var(--status-green);">🏭 Donaldsonville</h2>
                 <div class="metric" id="don-temp">--°</div>
                 <div style="font-weight: 600; color: var(--text-main);">
-                    <span id="don-icon"></span> <span id="don-desc">Loading...</span>
+                    <span id="don-icon"></span> <span id="don-desc">Awaiting feed...</span>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="don-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
@@ -60,7 +60,7 @@
                 <h2 style="color: var(--status-orange);">🏥 Ponchatoula</h2>
                 <div class="metric" id="ponch-temp">--°</div>
                 <div style="font-weight: 600; color: var(--text-main);">
-                    <span id="ponch-icon"></span> <span id="ponch-desc">Loading...</span>
+                    <span id="ponch-icon"></span> <span id="ponch-desc">Awaiting feed...</span>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="ponch-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
@@ -121,3 +121,4 @@
     </script>
 </body>
 </html>
+
