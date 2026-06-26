@@ -282,6 +282,33 @@ button {
 }
 .emergency-btn:hover { background: rgba(248, 113, 113, 0.3); color: #fff; }
 
+/* Forecast Rows */
+.forecast-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px;
+    background: rgba(11, 16, 23, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+.forecast-day { min-width: 55px; font-weight: 600; font-size: 0.9rem; }
+.forecast-cond { min-width: 105px; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--text-muted); }
+.forecast-bar { flex: 1; display: flex; align-items: center; gap: 8px; }
+.forecast-track { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; position: relative; overflow: hidden; }
+.forecast-fill { position: absolute; height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--status-orange)); border-radius: 3px; }
+.forecast-temp-min { font-weight: 600; width: 26px; text-align: right; font-size: 0.85rem; }
+.forecast-temp-max { font-weight: 600; width: 26px; font-size: 0.85rem; }
+.forecast-pop { min-width: 45px; text-align: right; font-size: 0.85rem; font-weight: 600; }
+.pop-high { color: var(--accent-blue); text-shadow: 0 0 8px rgba(56,189,248,0.4); }
+@media (max-width: 600px) {
+    .forecast-row { flex-wrap: wrap; gap: 4px; padding: 8px 10px; }
+    .forecast-day { min-width: 40px; font-size: 0.8rem; }
+    .forecast-cond { min-width: 0; font-size: 0.75rem; }
+    .forecast-cond span { display: none; }
+    .forecast-bar { width: 100%; order: 10; margin-top: 2px; }
+    .forecast-temp-min, .forecast-temp-max { font-size: 0.8rem; }
+    .forecast-pop { min-width: 35px; font-size: 0.75rem; }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
