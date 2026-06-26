@@ -16,10 +16,11 @@
         </div>
 
         <div class="nav-tabs">
-            <a href="index.html">Home Base</a>
-            <a href="river.html">🌊 Amite River</a>
-            <a href="weather.html" class="active">🌦️ Current Radar</a>
-            <a href="forecast.html">📅 5-Day Forecast</a>
+            <a href="index.html"><span class="icon">🏠</span> <span>Base</span></a>
+            <a href="river.html"><span class="icon">🌊</span> <span>River</span></a>
+            <a href="weather.html" class="active"><span class="icon">🌦️</span> <span>Radar</span></a>
+            <a href="forecast.html"><span class="icon">📅</span> <span>5-Day</span></a>
+            <a href="prep.html"><span class="icon">🌪️</span> <span>Prep</span></a>
         </div>
 
         <div id="family-weather-alert" style="margin-bottom: 15px; padding: 12px; border-radius: 8px; background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); text-align: center; font-weight: 600;">
@@ -33,11 +34,11 @@
                 <div style="font-weight: 600; color: var(--text-main);">
                     <span id="denham-icon"></span> <span id="denham-desc">Loading...</span>
                 </div>
-                <div class="weather-info-grid">
-                    <div class="info-item">Feels Like <strong id="denham-feels">--°</strong></div>
-                    <div class="info-item">Humidity <strong id="denham-hum">--%</strong></div>
-                    <div class="info-item">Wind <strong id="denham-wind">-- mph <span id="denham-wdir">⬆</span></strong></div>
-                    <div class="info-item">Rain Chance <strong id="denham-pop">--%</strong></div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="denham-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="denham-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="denham-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="denham-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
                 </div>
             </div>
 
@@ -47,11 +48,11 @@
                 <div style="font-weight: 600; color: var(--text-main);">
                     <span id="don-icon"></span> <span id="don-desc">Loading...</span>
                 </div>
-                <div class="weather-info-grid">
-                    <div class="info-item">Feels Like <strong id="don-feels">--°</strong></div>
-                    <div class="info-item">Humidity <strong id="don-hum">--%</strong></div>
-                    <div class="info-item">Wind <strong id="don-wind">-- mph <span id="don-wdir">⬆</span></strong></div>
-                    <div class="info-item">Rain Chance <strong id="don-pop">--%</strong></div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="don-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="don-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="don-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="don-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
                 </div>
             </div>
 
@@ -61,11 +62,11 @@
                 <div style="font-weight: 600; color: var(--text-main);">
                     <span id="ponch-icon"></span> <span id="ponch-desc">Loading...</span>
                 </div>
-                <div class="weather-info-grid">
-                    <div class="info-item">Feels Like <strong id="ponch-feels">--°</strong></div>
-                    <div class="info-item">Humidity <strong id="ponch-hum">--%</strong></div>
-                    <div class="info-item">Wind <strong id="ponch-wind">-- mph <span id="ponch-wdir">⬆</span></strong></div>
-                    <div class="info-item">Rain Chance <strong id="ponch-pop">--%</strong></div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="ponch-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="ponch-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="ponch-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="ponch-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
                 </div>
             </div>
         </div>
@@ -79,15 +80,12 @@
     <script>
         async function initCurrentWeather() {
             updateClock();
-            
             const locations = [
                 { lat: 30.48, lon: -90.95, prefix: 'denham' },
                 { lat: 30.10, lon: -90.99, prefix: 'don' },
                 { lat: 30.44, lon: -90.40, prefix: 'ponch' }
             ];
-
             let maxPop = 0;
-
             for (const loc of locations) {
                 const w = await fetchWeather(loc.lat, loc.lon);
                 if (w) {
@@ -99,7 +97,6 @@
                     document.getElementById(`${loc.prefix}-hum`).innerText = c.hum + '%';
                     document.getElementById(`${loc.prefix}-wind`).innerHTML = `${c.wind} mph <span style="${getWindDir(c.windDir)}">⬆</span>`;
                     document.getElementById(`${loc.prefix}-pop`).innerText = c.pop + '%';
-                    
                     maxPop = Math.max(maxPop, c.pop);
                 }
             }
@@ -119,7 +116,6 @@
                 alertBox.style.color = "var(--status-green)";
             }
         }
-
         initCurrentWeather();
         setInterval(initCurrentWeather, 300000);
     </script>
