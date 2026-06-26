@@ -16,41 +16,39 @@
         </div>
 
         <div class="nav-tabs">
-            <a href="index.html">Home Base</a>
-            <a href="river.html">🌊 Amite River</a>
-            <a href="weather.html">🌦️ Current Radar</a>
-            <a href="forecast.html" class="active">📅 5-Day Forecast</a>
+            <a href="index.html"><span class="icon">🏠</span> <span>Base</span></a>
+            <a href="river.html"><span class="icon">🌊</span> <span>River</span></a>
+            <a href="weather.html"><span class="icon">🌦️</span> <span>Radar</span></a>
+            <a href="forecast.html" class="active"><span class="icon">📅</span> <span>5-Day</span></a>
+            <a href="prep.html"><span class="icon">🌪️</span> <span>Prep</span></a>
         </div>
 
         <div class="panel float-hover">
             <h2 style="color: var(--accent-blue);">🏡 Denham Springs Projection</h2>
-            <div id="denham-forecast" class="forecast-grid">Loading arrays...</div>
+            <div id="denham-forecast" style="display: flex; flex-direction: column; gap: 12px;">Loading arrays...</div>
         </div>
 
         <div class="panel float-hover">
             <h2 style="color: var(--status-green);">🏭 Donaldsonville Projection</h2>
-            <div id="don-forecast" class="forecast-grid">Loading arrays...</div>
+            <div id="don-forecast" style="display: flex; flex-direction: column; gap: 12px;">Loading arrays...</div>
         </div>
 
         <div class="panel float-hover">
             <h2 style="color: var(--status-orange);">🏥 Ponchatoula Projection</h2>
-            <div id="ponch-forecast" class="forecast-grid">Loading arrays...</div>
+            <div id="ponch-forecast" style="display: flex; flex-direction: column; gap: 12px;">Loading arrays...</div>
         </div>
     </div>
 
     <script src="app.js"></script>
     <script>
-        // Formats date string to day name
         const getDayName = (dateStr, index) => {
             if (index === 0) return "Today";
             const date = new Date(dateStr + 'T12:00:00Z'); 
             return date.toLocaleDateString('en-US', { weekday: 'short' });
         };
 
-        // Renders the 5 day matrix
         function renderForecast(daily, containerId) {
             let html = '';
-            // Arrays are 7 days, limit to 5
             for(let i = 0; i < 5; i++) {
                 const dayName = getDayName(daily.time[i], i);
                 const maxT = Math.round(daily.temperature_2m_max[i]);
@@ -58,26 +56,25 @@
                 const pop = daily.precipitation_probability_max[i];
                 const wmo = getWMO(daily.weather_code[i]);
                 
-                // Calculate position for temp bar (assuming scale 30 to 110 degrees for visual mapping)
                 const leftPos = Math.max(0, ((minT - 30) / 80) * 100);
                 const widthPct = Math.max(5, ((maxT - minT) / 80) * 100);
-
-                const popClass = pop >= 50 ? 'rain-risk-high' : '';
+                const popColor = pop >= 50 ? 'var(--accent-blue)' : 'inherit';
+                const popShadow = pop >= 50 ? '0 0 8px rgba(56, 189, 248, 0.4)' : 'none';
 
                 html += `
-                <div class="day-card">
-                    <div class="date">${dayName}</div>
-                    <div class="icon-desc"><span>${wmo.icon}</span> <span style="font-size:0.85rem; color:var(--text-muted);">${wmo.desc}</span></div>
+                <div style="background: rgba(11, 16, 23, 0.5); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="width: 80px; font-weight: 600; font-size: 0.95rem;">${dayName}</div>
+                    <div style="display: flex; align-items: center; gap: 8px; width: 140px;"><span>${wmo.icon}</span> <span style="font-size:0.85rem; color:var(--text-muted);">${wmo.desc}</span></div>
                     
-                    <div class="temp-bar-container">
+                    <div style="flex-grow: 1; display: flex; align-items: center; gap: 10px; padding: 0 15px;">
                         <span style="font-weight:600; width: 30px; text-align: right;">${minT}°</span>
-                        <div class="temp-bar">
-                            <div class="temp-fill" style="left: ${leftPos}%; width: ${widthPct}%;"></div>
+                        <div style="flex-grow: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; position: relative; overflow: hidden;">
+                            <div style="position: absolute; height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--status-orange)); border-radius: 3px; left: ${leftPos}%; width: ${widthPct}%;"></div>
                         </div>
                         <span style="font-weight:600; width: 30px;">${maxT}°</span>
                     </div>
 
-                    <div class="pop ${popClass}">${pop}% 💧</div>
+                    <div style="width: 60px; text-align: right; font-size: 0.9rem; font-weight: 600; color: ${popColor}; text-shadow: ${popShadow};">${pop}% 💧</div>
                 </div>`;
             }
             document.getElementById(containerId).innerHTML = html;
@@ -98,7 +95,6 @@
                 }
             }
         }
-
         initForecast();
     </script>
 </body>
