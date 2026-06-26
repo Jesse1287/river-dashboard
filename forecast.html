@@ -55,15 +55,15 @@
                 const dayName = getDayName(daily.time[i], i);
                 const maxT = Math.round(daily.temperature_2m_max[i]);
                 const minT = Math.round(daily.temperature_2m_min[i]);
-                const pop = daily.precipitation_probability_max[i];
-                const wmo = getWMO(daily.weather_code[i]);
+                const pop = daily.precipitation_probability_max[i] || 0;
+                const fc = daily.shortForecast && daily.shortForecast[i] ? nwsShortForecastIcon(daily.shortForecast[i]) : getWMO(daily.weather_code[i]);
                 const leftPos = Math.max(0, ((minT - 30) / 80) * 100);
                 const widthPct = Math.max(5, ((maxT - minT) / 80) * 100);
 
                 html += `
                 <div class="forecast-row">
                     <div class="forecast-day">${dayName}</div>
-                    <div class="forecast-cond">${wmo.icon} <span>${wmo.desc}</span></div>
+                    <div class="forecast-cond">${fc.icon} <span>${fc.desc}</span></div>
                     <div class="forecast-bar">
                         <span class="forecast-temp-min">${minT}°</span>
                         <div class="forecast-track"><div class="forecast-fill" style="left:${leftPos}%;width:${widthPct}%;"></div></div>
