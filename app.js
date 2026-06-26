@@ -28,8 +28,9 @@ const getWMO = (code) => {
 
 const getWindDir = (degrees) => `transform: rotate(${degrees}deg); display: inline-block;`;
 
+// Updated weather fetch with HRRR model for US accuracy
 async function fetchWeather(lat, lon) {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FChicago`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FChicago&models=hrrr_conus`;
     try {
         const response = await fetch(url);
         const data = await response.json();
@@ -50,6 +51,20 @@ async function fetchWeather(lat, lon) {
         };
     } catch (error) {
         console.error("Weather fetch failed:", error);
+        return null;
+    }
+}
+
+// Added NWS Alert fetching
+async function fetchAlerts(lat, lon) {
+    try {
+        const response = await fetch(`https://api.weather.gov/alerts/active?point=${lat},${lon}`, {
+            headers: { 'User-Agent': '(RouxFamilyDashboard, jesse@example.com)' }
+        });
+        const data = await response.json();
+        return data.features.length > 0 ? data.features[0].properties.headline : null;
+    } catch (error) {
+        console.error("Alert fetch failed:", error);
         return null;
     }
 }
@@ -77,18 +92,14 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 
-// App-like checklist logic for the Prep page
 function initChecklist() {
     const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
     checkboxes.forEach(box => {
-        // Load saved state
         const saved = localStorage.getItem(box.id);
         if (saved === 'true') {
             box.checked = true;
             box.parentElement.classList.add('done');
         }
-
-        // Listen for changes
         box.addEventListener('change', (e) => {
             localStorage.setItem(e.target.id, e.target.checked);
             if (e.target.checked) {
