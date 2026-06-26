@@ -23,6 +23,15 @@
             <a href="prep.html" class="active"><span class="icon">🌪️</span> <span>Prep</span></a>
         </div>
 
+        <!-- Added Hurricane Tracker Panel -->
+        <div class="panel float-hover" style="margin-bottom: 20px;">
+            <h3 style="color: var(--status-orange);">🌀 Live Hurricane Tracker (Denham Springs, LA)</h3>
+            <div style="width: 100%; height: 500px; overflow: hidden; border-radius: 8px;">
+                <iframe src="https://www.nhc.noaa.gov/" style="width: 100%; height: 100%; border: none;" title="NHC Hurricane Tracker"></iframe>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">Official data provided by the National Hurricane Center.</p>
+        </div>
+
         <div class="grid-3">
             <div class="panel float-hover" style="grid-column: span 2;">
                 <h3 style="color: var(--accent-blue);">🎒 Hurricane & Flood Go-Bag</h3>
@@ -75,7 +84,7 @@
     <script src="app.js"></script>
     <script>
         updateClock();
-        initChecklist(); // Fires the local storage logic from app.js
+        initChecklist();
     </script>
 </body>
 </html>
