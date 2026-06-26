@@ -81,6 +81,18 @@ async function fetchWeather(lat, lon) {
                 }
             }
         } catch (e) { console.error("NWS hourly failed:", e); }
+        try {
+            const dr = await fetch(`https://api.weather.gov/gridpoints/${g.o}/${g.x},${g.y}/forecast`, { headers: { Accept:'application/geo+json', 'User-Agent':'(RouxFamilyDashboard, jesse@example.com)' } });
+            if (dr.ok) {
+                const dd = await dr.json();
+                const dayP = dd.properties.periods.filter(p => p.isDaytime).slice(0, 5);
+                res.daily.shortForecast = dayP.map(p => p.shortForecast);
+                dayP.forEach((p, i) => {
+                    if (p.temperature !== undefined) res.daily.temperature_2m_max[i] = p.temperature;
+                    if (p.probabilityOfPrecipitation && p.probabilityOfPrecipitation.value !== null) res.daily.precipitation_probability_max[i] = p.probabilityOfPrecipitation.value;
+                });
+            }
+        } catch (e) { console.error("NWS 7-day failed:", e); }
     }
     return res;
 }
