@@ -56,14 +56,32 @@ const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${
     }
 }
 
-// Added NWS Alert fetching
 async function fetchAlerts(lat, lon) {
+    const url = `https://api.weather.gov/alerts/active?point=${lat},${lon}`;
     try {
-        const response = await fetch(`https://api.weather.gov/alerts/active?point=${lat},${lon}`, {
-            headers: { 'User-Agent': '(RouxFamilyDashboard, jesse@example.com)' }
+        const response = await fetch(url, {
+            headers: { 
+                'Accept': 'application/geo+json',
+                'User-Agent': '(RouxFamilyDashboard, jesse@example.com)' 
+            }
         });
+
+        if (!response.ok) {
+            console.error("NWS API Error:", response.status, response.statusText);
+            return null;
+        }
+
         const data = await response.json();
-        return data.features.length > 0 ? data.features[0].properties.headline : null;
+        
+        // Log the response to your browser console to see what's happening
+        console.log("NWS API Response:", data);
+
+        if (data.features && data.features.length > 0) {
+            return data.features[0].properties.headline;
+        } else {
+            console.log("No active alerts for this location.");
+            return null;
+        }
     } catch (error) {
         console.error("Alert fetch failed:", error);
         return null;
