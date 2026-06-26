@@ -24,13 +24,17 @@
         </div>
 
         <!-- Added Hurricane Tracker Panel -->
-<!-- Live Hurricane Status Widget -->
+<!-- Live 7-Day Graphical Tropical Weather Outlook -->
 <div class="panel float-hover" style="margin-bottom: 20px;">
-    <h3 style="color: var(--status-orange);">🌀 Live Hurricane Status</h3>
-    <div style="width: 100%; height: 280px; overflow: hidden; border-radius: 8px; background: #000;">
-        <iframe id="nhc" width="100%" height="100%" scrolling="no" frameborder="0" src="https://www.nhc.noaa.gov/widgets/nhc_widget.shtml"></iframe>
+    <h3 style="color: var(--status-orange);">🌀 7-Day Tropical Weather Outlook</h3>
+    <div style="width: 100%; border-radius: 8px; overflow: hidden; background: #fff;">
+        <img src="https://www.nhc.noaa.gov/xgtwo/two_atl_7d0.png" 
+             style="width: 100%; height: auto; display: block;" 
+             alt="National Hurricane Center 7-Day Graphical Tropical Weather Outlook">
     </div>
-    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">Official NHC advisories for the Atlantic Basin.</p>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">
+        Updates at approximately 2 AM, 8 AM, 2 PM, and 8 PM EDT.
+    </p>
 </div>
 
         <div class="grid-3">
