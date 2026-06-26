@@ -9,17 +9,18 @@
 </head>
 <body>
     <div class="container">
-        <h1>🚀 <span id="dynamic-greeting">Roux Family</span> Command Center</h1>
+        <h1>🚀 <span id="dynamic-greeting">Roux Family</span> Command</h1>
         
         <div class="heartbeat-container">
-            <span class="pulse-dot"></span> Signal Flow Active: <span class="sys-clock">--:-- -- ---</span>
+            <span class="pulse-dot"></span> System Live: <span class="sys-clock">--:-- -- ---</span>
         </div>
         
         <div class="nav-tabs">
-            <a href="index.html" class="active">Home Base</a>
-            <a href="river.html">🌊 Amite River</a>
-            <a href="weather.html">🌦️ Current Radar</a>
-            <a href="forecast.html">📅 5-Day Forecast</a>
+            <a href="index.html" class="active"><span class="icon">🏠</span> <span>Base</span></a>
+            <a href="river.html"><span class="icon">🌊</span> <span>River</span></a>
+            <a href="weather.html"><span class="icon">🌦️</span> <span>Radar</span></a>
+            <a href="forecast.html"><span class="icon">📅</span> <span>5-Day</span></a>
+            <a href="prep.html"><span class="icon">🌪️</span> <span>Prep</span></a>
         </div>
 
         <div class="panel float-hover" id="home-river-panel" style="border-left: 5px solid var(--accent-blue);">
@@ -59,15 +60,10 @@
                 <div id="ponch-desc" style="color: var(--text-muted);">Calibrating...</div>
             </div>
         </div>
-
-        <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-muted);">
-            🔄 Polling Direct Endpoints Client-Side
-        </div>
     </div>
 
     <script src="app.js"></script>
     <script>
-        // Set dynamic greeting
         const hour = new Date().getHours();
         let greeting = "Roux Family";
         if (hour < 12) greeting = "Morning Ops |";
@@ -78,11 +74,9 @@
         async function initDashboard() {
             updateClock();
             
-            // River DOM Update
             const riverData = await fetchRiver();
             if (riverData) {
                 document.getElementById('home-stage').innerText = riverData.stage + ' ft';
-                
                 const status = document.getElementById('home-river-status');
                 const fill = document.getElementById('mini-river-fill');
                 const panel = document.getElementById('home-river-panel');
@@ -107,7 +101,6 @@
                 }
             }
 
-            // Weather DOM Updates
             const locations = [
                 { lat: 30.48, lon: -90.95, prefix: 'denham' },
                 { lat: 30.10, lon: -90.99, prefix: 'don' },
@@ -125,7 +118,7 @@
         }
 
         initDashboard();
-        setInterval(initDashboard, 300000); // 5 min
+        setInterval(initDashboard, 300000);
     </script>
 </body>
 </html>
