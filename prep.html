@@ -2,48 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>🌪️ Emergency Prep</title>
-    <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <div class="container">
         <h1>🌪️ Emergency Preparedness</h1>
         
-        <div class="heartbeat-container">
-            <span class="pulse-dot" style="background: var(--status-orange); box-shadow: 0 0 8px var(--status-orange);"></span> Local Storage Active: <span class="sys-clock">--:-- -- ---</span>
-        </div>
-
+        <!-- Navigation to match your other pages -->
         <div class="nav-tabs">
-            <a href="index.html"><span class="icon">🏠</span> <span>Base</span></a>
-            <a href="river.html"><span class="icon">🌊</span> <span>River</span></a>
-            <a href="weather.html"><span class="icon">🌦️</span> <span>Radar</span></a>
-            <a href="forecast.html"><span class="icon">📅</span> <span>5-Day</span></a>
-            <a href="prep.html" class="active"><span class="icon">🌪️</span> <span>Prep</span></a>
+            <a href="index.html"><span>🏠 Base</span></a>
+            <a href="weather.html"><span>🌦️ Radar</span></a>
+            <a href="prep.html" class="active"><span>🌪️ Prep</span></a>
         </div>
 
-        <div class="grid-3">
-            <!-- Hurricane & Prep Section -->
-<div class="panel" style="padding: 20px; border-radius: 16px; margin-bottom: 20px;">
-    <h2 style="color: var(--status-orange);">🌀 Tropical Cyclone Status</h2>
-    <!-- Official NHC Tracker -->
-    <iframe src="https://www.nhc.noaa.gov/widgets/nhc_widget.shtml" width="100%" height="280px" scrolling="no" frameborder="0"></iframe>
-
-    <div id="prep-checklist" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">
-        <h3>Emergency Checklist</h3>
-        <form id="emergency-list">
-            <label><input type="checkbox"> Water (1 gal/person/day)</label><br>
-            <label><input type="checkbox"> Non-perishable food</label><br>
-            <label><input type="checkbox"> Battery-powered radio</label><br>
-            <label><input type="checkbox"> Flashlights & Extra Batteries</label>
-        </form>
+        <!-- The section where you can keep your checklist -->
+        <div class="panel">
+            <h3>Hurricane/Flood Checklist</h3>
+            <form id="emergency-list">
+                <label><input type="checkbox"> Water (1 gal/person/day)</label><br>
+                <label><input type="checkbox"> Non-perishable food</label><br>
+                <label><input type="checkbox"> Battery-powered radio</label><br>
+                <label><input type="checkbox"> Flashlights & Extra Batteries</label>
+            </form>
+        </div>
     </div>
-</div>
-    <script src="app.js"></script>
-    <script>
-        updateClock();
-        initChecklist(); // Fires the local storage logic from app.js
-    </script>
 </body>
 </html>
