@@ -4,27 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>🌊 Flood Center</title>
+    <title>🌊 Flood Watch | Roux Command</title>
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <div class="container">
-        <h1>🌊 Amite River Hydro-Metrics</h1>
+        <h1>🌊 Amite River Flood Watch</h1>
         
         <div class="heartbeat-container">
-            <span class="pulse-dot"></span> Signal Flow Active: <span class="sys-clock">--:-- -- ---</span>
+            <span class="pulse-dot"></span>             River Gauge Telemetry: <span class="sys-clock">--:-- -- ---</span>
         </div>
 
         <div class="nav-tabs">
-            <a href="index.html"><span class="icon">🏠</span> <span>Base</span></a>
-            <a href="river.html" class="active"><span class="icon">🌊</span> <span>River</span></a>
-            <a href="weather.html"><span class="icon">🌦️</span> <span>Radar</span></a>
-            <a href="forecast.html"><span class="icon">📅</span> <span>5-Day</span></a>
-            <a href="prep.html"><span class="icon">🌪️</span> <span>Prep</span></a>
+            <a href="index.html"><span class="icon">🏠</span> <span>HQ</span></a>
+            <a href="river.html" class="active"><span class="icon">🌊</span> <span>Flood</span></a>
+            <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
+            <a href="forecast.html"><span class="icon">📅</span> <span>Forecast</span></a>
+            <a href="prep.html"><span class="icon">🌪️</span> <span>Ready</span></a>
         </div>
 
         <div id="river-main-panel" class="panel float-hover" style="text-align: center; padding: 24px;">
-            <div id="status-badge" class="status-badge" style="margin-bottom: 8px;">Ping Sensor...</div>
+            <div id="status-badge" class="status-badge" style="margin-bottom: 8px;">Polling river gauges...</div>
             <div id="stage" class="metric" style="font-size: 3.8rem; margin: 4px 0; font-family: monospace;">0.00</div>
             
             <div id="delta-container" style="font-size: 0.9rem; margin-bottom: 5px; font-weight: 600;">
@@ -111,3 +111,4 @@
     </script>
 </body>
 </html>
+
