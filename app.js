@@ -26,181 +26,63 @@ const getWMO = (code) => {
     return wmoCodes[code] || { desc: 'Unknown', icon: '❓' };
 };
 
-const getNwsIconAndDesc = (textDescription, iconUrl) => {
-    let desc = textDescription || 'Unknown';
-    let icon = '❓';
-    
-    const descLower = desc.toLowerCase();
-    
-    // Parse standard condition from iconUrl path if possible
-    let iconKey = '';
-    if (iconUrl) {
-        const parts = iconUrl.split('/');
-        const filename = parts[parts.length - 1];
-        iconKey = filename.split('?')[0].split(',')[0].toLowerCase();
-    }
-    
-    if (iconKey === 'skc' || iconKey === 'clear' || descLower.includes('clear') || descLower.includes('fair')) {
-        icon = '☀️';
-        desc = 'Clear Sky';
-    } else if (iconKey === 'few' || descLower.includes('few clouds')) {
-        icon = '🌤️';
-        desc = 'Mainly Clear';
-    } else if (iconKey === 'sct' || descLower.includes('partly cloudy')) {
-        icon = '⛅';
-        desc = 'Partly Cloudy';
-    } else if (iconKey === 'bkn' || descLower.includes('mostly cloudy')) {
-        icon = '☁️';
-        desc = 'Mostly Cloudy';
-    } else if (iconKey === 'ovc' || descLower.includes('overcast') || descLower.includes('cloudy')) {
-        icon = '☁️';
-        desc = 'Overcast';
-    } else if (iconKey === 'fog' || iconKey === 'fg' || descLower.includes('fog') || descLower.includes('mist') || descLower.includes('haze')) {
-        icon = '🌫️';
-        desc = 'Fog';
-    } else if (iconKey === 'rain' || iconKey === 'shra' || descLower.includes('rain') || descLower.includes('drizzle') || descLower.includes('shower')) {
-        icon = '🌧️';
-        desc = 'Rain';
-    } else if (iconKey === 'tsra' || iconKey === 'scttsra' || descLower.includes('thunderstorm') || descLower.includes('storm')) {
-        icon = '⛈️';
-        desc = textDescription || 'Thunderstorm';
-    } else if (iconKey === 'snow' || descLower.includes('snow') || descLower.includes('flurries')) {
-        icon = '❄️';
-        desc = 'Snow';
-    } else if (iconKey === 'fzra' || iconKey === 'ip' || descLower.includes('sleet') || descLower.includes('ice')) {
-        icon = '🌨️';
-        desc = 'Freezing Rain';
-    } else {
-        // Fallback matching on text description
-        if (descLower.includes('sunny')) {
-            icon = '☀️';
-            desc = 'Clear Sky';
-        } else if (descLower.includes('partly')) {
-            icon = '⛅';
-            desc = 'Partly Cloudy';
-        } else if (descLower.includes('cloudy') || descLower.includes('clouds')) {
-            icon = '☁️';
-            desc = 'Cloudy';
-        } else if (descLower.includes('rain') || descLower.includes('drizzle') || descLower.includes('shower')) {
-            icon = '🌧️';
-            desc = 'Rain';
-        } else if (descLower.includes('thunder') || descLower.includes('storm')) {
-            icon = '⛈️';
-            desc = 'Thunderstorm';
-        }
-    }
-    
-    return { desc, icon };
-};
+function nwsShortForecastIcon(text) {
+    if (!text) return { desc: 'Unknown', icon: '❓' };
+    const t = text.toLowerCase();
+    if (t.includes('sunny') && (t.includes('mostly') || t.includes('partly'))) return { desc: text, icon: '🌤️' };
+    if (t.includes('sunny') || t.includes('clear') || t.includes('fair')) return { desc: text, icon: '☀️' };
+    if (t.includes('partly')) return { desc: text, icon: '⛅' };
+    if (t.includes('cloudy') || t.includes('overcast')) return { desc: text, icon: '☁️' };
+    if (t.includes('fog') || t.includes('mist') || t.includes('haze')) return { desc: text, icon: '🌫️' };
+    if (t.includes('thunderstorm') || (t.includes('thunder') && t.includes('storm'))) return { desc: text, icon: '⛈️' };
+    if (t.includes('rain') || t.includes('shower') || t.includes('drizzle')) return { desc: text, icon: '🌧️' };
+    if (t.includes('snow') || t.includes('flurries')) return { desc: text, icon: '❄️' };
+    if (t.includes('sleet') || t.includes('ice') || t.includes('freezing')) return { desc: text, icon: '🌨️' };
+    return { desc: text, icon: '❓' };
+}
+
+function compassDeg(dir) {
+    const m = { 'N':0,'NNE':22.5,'NE':45,'ENE':67.5,'E':90,'ESE':112.5,'SE':135,'SSE':157.5,'S':180,'SSW':202.5,'SW':225,'WSW':247.5,'W':270,'WNW':292.5,'NW':315,'NNW':337.5 };
+    return m[(dir||'').toUpperCase().trim()] || 0;
+}
 
 const getWindDir = (degrees) => `transform: rotate(${degrees}deg); display: inline-block;`;
 
 async function fetchWeather(lat, lon) {
-    // 1. Fetch Open-Meteo forecast first (essential for forecast panels and initial current fallback)
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FChicago`;
-    
-    let baseData = null;
-    try {
-        const response = await fetch(url);
-        baseData = await response.json();
-    } catch (error) {
-        console.error("Open-Meteo forecast fetch failed:", error);
-    }
-
-    if (!baseData) return null;
-
-    const current = baseData.current;
-    const wmo = getWMO(current.weather_code);
-
-    // Initial weather object using Open-Meteo data
-    const weatherResult = {
-        current: {
-            temp: Math.round(current.temperature_2m),
-            feels: Math.round(current.apparent_temperature),
-            hum: current.relative_humidity_2m,
-            wind: current.wind_speed_10m,
-            windDir: current.wind_direction_10m,
-            desc: wmo.desc,
-            icon: wmo.icon,
-            pop: baseData.daily.precipitation_probability_max[0]
-        },
-        daily: baseData.daily
+    const omUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FChicago`;
+    let om = null;
+    try { const r = await fetch(omUrl); om = await r.json(); } catch (e) { console.error("OM failed:", e); }
+    if (!om) return null;
+    const cur = om.current;
+    const wmo = getWMO(cur.weather_code);
+    const res = {
+        current: { temp: Math.round(cur.temperature_2m), feels: Math.round(cur.apparent_temperature), hum: cur.relative_humidity_2m, wind: cur.wind_speed_10m, windDir: cur.wind_direction_10m, desc: wmo.desc, icon: wmo.icon, pop: om.daily.precipitation_probability_max[0] },
+        daily: om.daily
     };
-
-    // 2. Identify the closest official NWS airport station for real-time local physical observations
-    let stationId = null;
-    const lLat = parseFloat(lat);
-    const lLon = parseFloat(lon);
-    
-    if (Math.abs(lLat - 30.48) < 0.05 && Math.abs(lLon - (-90.95)) < 0.05) {
-        stationId = 'KBTR'; // Denham Springs -> Baton Rouge Airport
-    } else if (Math.abs(lLat - 30.10) < 0.05 && Math.abs(lLon - (-90.99)) < 0.05) {
-        stationId = 'KREG'; // Donaldsonville -> Louisiana Regional Airport
-    } else if (Math.abs(lLat - 30.44) < 0.05 && Math.abs(lLon - (-90.40)) < 0.05) {
-        stationId = 'KHDC'; // Ponchatoula -> Hammond Airport
-    }
-
-    // 3. Query the National Weather Service API for high-precision, real-time observations
-    if (stationId) {
+    const llat=+lat, llon=+lon;
+    let g = null;
+    if (Math.abs(llat-30.48)<.05 && Math.abs(llon-(-90.95))<.05) g={o:'LIX',x:34,y:110};
+    else if (Math.abs(llat-30.10)<.05 && Math.abs(llon-(-90.99))<.05) g={o:'LIX',x:32,y:94};
+    else if (Math.abs(llat-30.44)<.05 && Math.abs(llon-(-90.40))<.05) g={o:'LIX',x:54,y:109};
+    if (g) {
         try {
-            const nwsUrl = `https://api.weather.gov/stations/${stationId}/observations/latest`;
-            const response = await fetch(nwsUrl, {
-                headers: { 
-                    'Accept': 'application/geo+json',
-                    'User-Agent': '(RouxFamilyDashboard, jesse@example.com)' 
+            const r = await fetch(`https://api.weather.gov/gridpoints/${g.o}/${g.x},${g.y}/forecast/hourly`, { headers: { Accept:'application/geo+json', 'User-Agent':'(RouxFamilyDashboard, jesse@example.com)' } });
+            if (r.ok) {
+                const d = await r.json();
+                const p = d.properties.periods[0];
+                if (p) {
+                    res.current.temp = p.temperature;
+                    if (p.relativeHumidity && p.relativeHumidity.value !== null) res.current.hum = p.relativeHumidity.value;
+                    const wn = parseFloat(p.windSpeed); if (!isNaN(wn)) res.current.wind = wn;
+                    res.current.windDir = compassDeg(p.windDirection);
+                    if (p.probabilityOfPrecipitation && p.probabilityOfPrecipitation.value !== null) res.current.pop = p.probabilityOfPrecipitation.value;
+                    const ns = nwsShortForecastIcon(p.shortForecast);
+                    res.current.desc = ns.desc; res.current.icon = ns.icon;
                 }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const obs = data.properties;
-
-                if (obs) {
-                    // Update current temperature if available
-                    if (obs.temperature && obs.temperature.value !== null) {
-                        weatherResult.current.temp = Math.round((obs.temperature.value * 9/5) + 32);
-                    }
-                    
-                    // Update current feels-like (using heatIndex, windChill, or falling back to temperature)
-                    if (obs.heatIndex && obs.heatIndex.value !== null) {
-                        weatherResult.current.feels = Math.round((obs.heatIndex.value * 9/5) + 32);
-                    } else if (obs.windChill && obs.windChill.value !== null) {
-                        weatherResult.current.feels = Math.round((obs.windChill.value * 9/5) + 32);
-                    } else if (obs.temperature && obs.temperature.value !== null) {
-                        weatherResult.current.feels = weatherResult.current.temp;
-                    }
-
-                    // Update humidity
-                    if (obs.relativeHumidity && obs.relativeHumidity.value !== null) {
-                        weatherResult.current.hum = Math.round(obs.relativeHumidity.value);
-                    }
-
-                    // Update wind (converting km/h to mph)
-                    if (obs.windSpeed && obs.windSpeed.value !== null) {
-                        weatherResult.current.wind = Math.round(obs.windSpeed.value * 0.621371);
-                    }
-
-                    // Update wind direction
-                    if (obs.windDirection && obs.windDirection.value !== null) {
-                        weatherResult.current.windDir = obs.windDirection.value;
-                    }
-
-                    // Update weather description and icon using our smart mapper
-                    const nwsStyle = getNwsIconAndDesc(obs.textDescription, obs.icon);
-                    weatherResult.current.desc = nwsStyle.desc;
-                    weatherResult.current.icon = nwsStyle.icon;
-                    
-                    console.log(`Successfully merged high-fidelity NWS observations from ${stationId}:`, weatherResult.current);
-                }
-            } else {
-                console.warn(`NWS API returned non-OK status: ${response.status} for ${stationId}. Falling back to Open-Meteo.`);
             }
-        } catch (error) {
-            console.error(`Failed to fetch NWS real-time observations for ${stationId}:`, error);
-        }
+        } catch (e) { console.error("NWS hourly failed:", e); }
     }
-
-    return weatherResult;
+    return res;
 }
 
 async function fetchAlerts(lat, lon) {
