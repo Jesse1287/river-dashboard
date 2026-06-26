@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>🌪️ Emergency Prep</title>
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <h1>🌪️ Emergency Preparedness</h1>
+        
+        <div class="heartbeat-container">
+            <span class="pulse-dot" style="background: var(--status-orange); box-shadow: 0 0 8px var(--status-orange);"></span> Local Storage Active: <span class="sys-clock">--:-- -- ---</span>
+        </div>
+
+        <div class="nav-tabs">
+            <a href="index.html"><span class="icon">🏠</span> <span>Base</span></a>
+            <a href="river.html"><span class="icon">🌊</span> <span>River</span></a>
+            <a href="weather.html"><span class="icon">🌦️</span> <span>Radar</span></a>
+            <a href="forecast.html"><span class="icon">📅</span> <span>5-Day</span></a>
+            <a href="prep.html" class="active"><span class="icon">🌪️</span> <span>Prep</span></a>
+        </div>
+
+        <div class="grid-3">
+            <div class="panel float-hover" style="grid-column: span 2;">
+                <h3 style="color: var(--accent-blue);">🎒 Hurricane & Flood Go-Bag</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: -5px; margin-bottom: 15px;">Progress saves automatically to this device.</p>
+                
+                <label class="checklist-item">
+                    <input type="checkbox" id="prep-water">
+                    <span>Bottled water (1 gallon per person, per day)</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox" id="prep-meds">
+                    <span>Prescription medications & First Aid kit</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox" id="prep-docs">
+                    <span>Important documents (ID, Insurance) in waterproof bag</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox" id="prep-power">
+                    <span>Flashlights, extra batteries, and power banks</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox" id="prep-gas">
+                    <span>Vehicles fueled up & generator gas secured</span>
+                </label>
+                
+                <button onclick="localStorage.clear(); location.reload();" style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; margin-top: 10px; font-size: 0.8rem;">🔄 Reset Checklist</button>
+            </div>
+
+            <div class="panel float-hover">
+                <h3 style="color: var(--status-red);">📞 Emergency Contacts</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">Tap to dial on mobile.</p>
+
+                <div style="margin-bottom: 15px;">
+                    <strong>Livingston Parish (Denham)</strong>
+                    <a href="tel:2256863996" class="emergency-btn">OEP: (225) 686-3996</a>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Ascension Parish (Donaldsonville)</strong>
+                    <a href="tel:2256218360" class="emergency-btn">OEP: (225) 621-8360</a>
+                </div>
+                <div>
+                    <strong>Tangipahoa Parish (Ponchatoula)</strong>
+                    <a href="tel:9857483211" class="emergency-btn">OEP: (985) 748-3211</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        updateClock();
+        initChecklist(); // Fires the local storage logic from app.js
+    </script>
+</body>
+</html>
