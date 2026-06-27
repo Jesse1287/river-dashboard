@@ -73,6 +73,27 @@
             </div>
         </div>
 
+        <div class="grid-2">
+            <div class="panel float-hover">
+                <h3 style="color: var(--accent-blue);">🌬️ Air Quality & UV</h3>
+                <div id="aqi-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">AQI (US)</span><br><strong id="aqi-us" style="font-size:1.5rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">AQI (EU)</span><br><strong id="aqi-eu" style="font-size:1.5rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">UV Index</span><br><strong id="uv-index" style="font-size:1.5rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">PM2.5</span><br><strong id="aqi-pm" style="font-size:1.5rem;">-- µg</strong></div>
+                </div>
+            </div>
+            <div class="panel float-hover">
+                <h3 style="color: var(--status-orange);">☀️ Sun & Moon</h3>
+                <div id="astro-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Sunrise</span><br><strong id="astro-sr" style="font-size:1.3rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Sunset</span><br><strong id="astro-ss" style="font-size:1.3rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Day Length</span><br><strong id="astro-dl" style="font-size:1.3rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Moon</span><br><span id="astro-moon" style="font-size:1.5rem;">--</span></div>
+                </div>
+            </div>
+        </div>
+
         <div class="panel" style="padding: 0; overflow: hidden; border-radius: 16px; height: 600px;">
             <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" height="100%" frameborder="0" allowfullscreen style="border:none; vertical-align: bottom;"></iframe>
         </div>
@@ -116,6 +137,22 @@
                 alertBox.innerText = "☀️ Atmospheric conditions nominal. Clear transit paths expected.";
                 alertBox.style.background = "rgba(74, 222, 128, 0.1)";
                 alertBox.style.color = "var(--status-green)";
+            }
+
+            const aqi = await fetchAirQuality(30.48, -90.95);
+            if (aqi) {
+                document.getElementById('aqi-us').innerText = aqi.us_aqi ?? '--';
+                document.getElementById('aqi-eu').innerText = aqi.european_aqi ?? '--';
+                document.getElementById('uv-index').innerText = aqi.ultraviolet_index?.toFixed(1) ?? '--';
+                document.getElementById('aqi-pm').innerHTML = (aqi.pm2_5?.toFixed(1) ?? '--') + ' µg';
+            }
+
+            const astro = await fetchAstro(30.48, -90.95);
+            if (astro) {
+                document.getElementById('astro-sr').innerText = astro.sunrise;
+                document.getElementById('astro-ss').innerText = astro.sunset;
+                document.getElementById('astro-dl').innerText = astro.dayLength;
+                document.getElementById('astro-moon').innerHTML = `${astro.moon.i} ${astro.moon.n}`;
             }
         }
         initCurrentWeather();
