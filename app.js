@@ -145,6 +145,37 @@ async function fetchRiver() {
     }
 }
 
+async function fetchAirQuality(lat, lon) {
+    const url = `https://api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=european_aqi,us_aqi,pm2_5,pm10,ultraviolet_index`;
+    try { const r = await fetch(url); return (await r.json()).current; }
+    catch (e) { console.error("AQI fetch failed:", e); return null; }
+}
+
+function getMoonPhase(date) {
+    const y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
+    const jd=367*y-Math.floor(7*(y+Math.floor((m+9)/12))/4)+Math.floor(275*m/9)+d+1721013.5;
+    const p=(jd-2451550.1)/29.530588853%1*29.530588853;
+    if(p<1.85) return {n:'New Moon',i:'🌑'}; if(p<5.54) return {n:'Waxing Crescent',i:'🌒'};
+    if(p<9.23) return {n:'First Quarter',i:'🌓'}; if(p<12.92) return {n:'Waxing Gibbous',i:'🌔'};
+    if(p<16.61) return {n:'Full Moon',i:'🌕'}; if(p<20.30) return {n:'Waning Gibbous',i:'🌖'};
+    if(p<23.99) return {n:'Last Quarter',i:'🌗'}; if(p<27.68) return {n:'Waning Crescent',i:'🌘'};
+    return {n:'New Moon',i:'🌑'};
+}
+
+async function fetchAstro(lat, lon) {
+    try {
+        const r = await fetch(`https://api.weather.gov/points/${lat},${lon}`, { headers: { Accept:'application/geo+json', 'User-Agent':'(RouxFamilyDashboard, jesse@example.com)' } });
+        if (!r.ok) return null;
+        const d = await r.json();
+        const a = d.properties.astronomicalData;
+        const sr=new Date(a.sunrise),ss=new Date(a.sunset);
+        const dl=Math.round((ss-sr)/60000);
+        const moon=getMoonPhase(new Date());
+        const fmt = { hour:'2-digit',minute:'2-digit',timeZone:'America/Chicago' };
+        return { sunrise:sr.toLocaleTimeString('en-US',fmt), sunset:ss.toLocaleTimeString('en-US',fmt), dayLength:`${Math.floor(dl/60)}h ${dl%60}m`, moon };
+    } catch (e) { console.error("Astro failed:", e); return null; }
+}
+
 function updateClock() {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: '2-digit', minute:'2-digit', timeZoneName: 'short' });
