@@ -146,9 +146,18 @@ async function fetchRiver() {
 }
 
 async function fetchAirQuality(lat, lon) {
-    const url = `https://api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=european_aqi,us_aqi,pm2_5,pm10,ultraviolet_index`;
-    try { const r = await fetch(url); return (await r.json()).current; }
-    catch (e) { console.error("AQI fetch failed:", e); return null; }
+    const url = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=european_aqi,us_aqi,pm2_5,pm10`;
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+        const aqi = d.current;
+        try {
+            const u = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=uv_index`);
+            const ud = await u.json();
+            aqi.uv_index = ud.current.uv_index;
+        } catch (e) {}
+        return aqi;
+    } catch (e) { console.error("AQI fetch failed:", e); return null; }
 }
 
 function getMoonPhase(date) {
