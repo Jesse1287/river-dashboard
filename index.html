@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>🏠 HQ | Roux Command</title>
+    <title>🏠 Home | Roux Command</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -70,8 +70,8 @@
     <script>
         const hour = new Date().getHours();
         let greeting = "Roux Family";
-        if (hour < 12) greeting = "☕ Morning Ops";
-        else if (hour < 18) greeting = "☀️ Afternoon Ops";
+        if (hour < 12) greeting = "☕ Morning";
+        else if (hour < 18) greeting = "☀️ Afternoon";
         else greeting = "🌙 Night Cycle";
         document.getElementById('dynamic-greeting').innerHTML = greeting;
 
