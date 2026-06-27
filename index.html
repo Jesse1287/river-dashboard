@@ -36,6 +36,8 @@
             </div>
         </div>
 
+        <div id="alerts-container"></div>
+
         <div class="grid-3">
             <div class="panel float-hover">
                 <h3>🏡 Denham Springs</h3>
@@ -120,6 +122,14 @@
                     document.getElementById(`${loc.prefix}-icon`).innerText = w.current.icon;
                     document.getElementById(`${loc.prefix}-desc`).innerText = w.current.desc;
                 }
+            }
+
+            const alerts = await fetchAlerts(30.48, -90.95);
+            const ac = document.getElementById('alerts-container');
+            if (alerts) {
+                ac.innerHTML = `<div class="panel" style="border-left: 5px solid var(--status-red); background: rgba(248,113,113,0.08);"><h3 style="color:var(--status-red);">🚨 Active Weather Alert</h3><p style="font-size:0.9rem;color:var(--text-main);line-height:1.4;">${alerts}</p></div>`;
+            } else {
+                ac.innerHTML = '';
             }
         }
 
