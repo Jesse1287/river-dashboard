@@ -9,34 +9,94 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        .map-panel {
+        .launch-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 0;
+            padding: 24px;
             margin-bottom: 16px;
-            overflow: hidden;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
-        .map-panel iframe {
-            width: 100%;
-            height: 500px;
-            border: none;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+            text-decoration: none;
             display: block;
+            color: inherit;
+            cursor: pointer;
         }
-        .map-header {
-            padding: 16px 18px 0 18px;
+        .launch-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(56, 189, 248, 0.2);
+            border-color: rgba(56, 189, 248, 0.5);
         }
-        .map-footer {
-            padding: 0 18px 16px 18px;
-            font-size: 0.8rem;
+        .launch-card:active {
+            transform: scale(0.97);
+        }
+        .launch-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+        .launch-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .launch-desc {
+            font-size: 0.85rem;
             color: var(--text-muted);
+            line-height: 1.4;
+            margin-bottom: 12px;
         }
-        .map-footer a {
-            color: var(--accent-blue);
+        .launch-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: opacity 0.2s;
         }
-        @media (max-width: 768px) {
-            .map-panel iframe { height: 350px; }
+        .launch-btn:hover {
+            opacity: 0.85;
+        }
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .quick-link {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            text-decoration: none;
+            color: inherit;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .quick-link:hover {
+            background: rgba(56, 189, 248, 0.08);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+        .quick-link:active {
+            transform: scale(0.97);
+        }
+        .quick-link .ql-icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .quick-link .ql-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .quick-link .ql-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
     </style>
 </head>
@@ -58,29 +118,46 @@
             <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
         </div>
 
-        <div class="map-panel">
-            <div class="map-header">
-                <h3 style="color: var(--status-orange);">⚡ Entergy Power Outages</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
-                    480 Donald Drive, Denham Springs, LA 70726
-                </p>
+        <a href="https://www.etrviewoutage.com/map?state=LA" target="_blank" class="launch-card">
+            <div class="launch-icon">⚡</div>
+            <div class="launch-title" style="color: var(--status-orange);">Entergy Power Outages</div>
+            <div class="launch-desc">
+                480 Donald Drive, Denham Springs, LA 70726
             </div>
-            <iframe src="https://www.etrviewoutage.com/map?state=LA" title="Entergy Louisiana Outage Map" loading="lazy" allowfullscreen></iframe>
-            <div class="map-footer">
-                If the map doesn't load, <a href="https://www.entergy-louisiana.com/outages/" target="_blank">view the Entergy outage map directly</a>.
-            </div>
-        </div>
+            <span class="launch-btn" style="background: rgba(251, 146, 60, 0.15); color: var(--status-orange); border: 1px solid rgba(251, 146, 60, 0.3);">
+                Open Outage Map ↗
+            </span>
+        </a>
 
-        <div class="map-panel">
-            <div class="map-header">
-                <h3 style="color: var(--accent-blue);">🚧 Louisiana Road Conditions</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
-                    Live traffic conditions for Denham Springs area
-                </p>
+        <a href="https://www.google.com/maps/@30.48,-90.95,12z/data=!5m1!1e1" target="_blank" class="launch-card">
+            <div class="launch-icon">🚗</div>
+            <div class="launch-title" style="color: var(--accent-blue);">Live Traffic & Road Conditions</div>
+            <div class="launch-desc">
+                Google Maps with traffic layer — check for accidents, congestion, and closures around Denham Springs.
             </div>
-            <iframe src="https://maps.google.com/maps?q=Denham+Springs+LA&t=m&z=12&output=embed" title="Denham Springs Area Map" loading="lazy" allowfullscreen></iframe>
-            <div class="map-footer">
-                <a href="https://www.google.com/maps/@30.48,-90.95,12z/data=!5m1!1e1" target="_blank" style="color:var(--accent-blue);">Open in Google Maps with traffic layer</a> &nbsp;·&nbsp; <a href="https://www.511la.org/" target="_blank" style="color:var(--accent-blue);">511la.org for closures</a>
+            <span class="launch-btn" style="background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3);">
+                Open Traffic Map ↗
+            </span>
+        </a>
+
+        <div style="margin-top: 24px;">
+            <h3 style="color: var(--text-muted); margin-bottom: 12px;">🔗 Quick Links</h3>
+            <div class="quick-links">
+                <a href="https://www.511la.org/" target="_blank" class="quick-link">
+                    <span class="ql-icon">🛣️</span>
+                    <span class="ql-label">511 LA</span>
+                    <span class="ql-desc">Road closures & construction</span>
+                </a>
+                <a href="https://www.entergy-louisiana.com/outages/" target="_blank" class="quick-link">
+                    <span class="ql-icon">🏢</span>
+                    <span class="ql-label">Entergy</span>
+                    <span class="ql-desc">Report an outage</span>
+                </a>
+                <a href="https://www.google.com/maps/dir//480+Donald+Dr,+Denham+Springs,+LA+70726" target="_blank" class="quick-link">
+                    <span class="ql-icon">📍</span>
+                    <span class="ql-label">Directions Home</span>
+                    <span class="ql-desc">Navigate to 480 Donald Dr</span>
+                </a>
             </div>
         </div>
     </div>
