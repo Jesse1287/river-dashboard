@@ -16,6 +16,12 @@
         <div class="heartbeat-container">
             <span class="pulse-dot"></span>             All Systems Nominal: <span class="sys-clock">--:-- -- ---</span>
         </div>
+
+        <div class="ticker-wrap">
+            <div class="ticker-track" id="ticker-track">
+                <span id="ticker-greeting"></span> &nbsp;✦&nbsp; <span id="ticker-psalm"></span> &nbsp;✦&nbsp; <span id="ticker-weather"></span>
+            </div>
+        </div>
         
         <div class="nav-tabs">
             <a href="index.html" class="active"><span class="icon">🏠</span> <span>HQ</span></a>
@@ -75,6 +81,40 @@
         else greeting = "🌙 Night Cycle";
         document.getElementById('dynamic-greeting').innerHTML = greeting;
 
+        const psalms = [
+            '"The Lord is my shepherd; I shall not want." — Psalm 23:1',
+            '"Be still, and know that I am God." — Psalm 46:10',
+            '"This is the day that the Lord has made; let us rejoice and be glad in it." — Psalm 118:24',
+            '"The heavens declare the glory of God, and the sky above proclaims his handiwork." — Psalm 19:1',
+            '"Create in me a clean heart, O God, and renew a right spirit within me." — Psalm 51:10',
+            '"God is our refuge and strength, a very present help in trouble." — Psalm 46:1',
+            '"The Lord is my light and my salvation; whom shall I fear?" — Psalm 27:1',
+            '"Taste and see that the Lord is good; blessed is the man who takes refuge in him!" — Psalm 34:8',
+            '"Your word is a lamp to my feet and a light to my path." — Psalm 119:105',
+            '"The Lord is gracious and merciful, slow to anger and abounding in steadfast love." — Psalm 145:8',
+            '"I will lift up my eyes to the hills. From where does my help come? My help comes from the Lord." — Psalm 121:1-2',
+            '"The earth is the Lord\'s and the fullness thereof, the world and those who dwell therein." — Psalm 24:1',
+            '"Oh give thanks to the Lord, for he is good, for his steadfast love endures forever!" — Psalm 107:1',
+            '"The Lord is near to all who call on him, to all who call on him in truth." — Psalm 145:18',
+            '"Trust in the Lord and do good; dwell in the land and befriend faithfulness." — Psalm 37:3'
+        ];
+
+        function updateTicker(weatherText) {
+            const now = new Date();
+            const hour = now.getHours();
+            let greet = "Good evening";
+            if (hour < 12) greet = "Good morning";
+            else if (hour < 18) greet = "Good afternoon";
+
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+            const psalm = psalms[dayOfYear % psalms.length];
+
+            document.getElementById('ticker-greeting').innerText = greet + ', Roux Family';
+            document.getElementById('ticker-psalm').innerText = psalm;
+            document.getElementById('ticker-weather').innerText = weatherText || 'Syncing sensors...';
+        }
+        updateTicker();
+
         async function initDashboard() {
             updateClock();
             
@@ -115,12 +155,16 @@
                 { lat: 30.44, lon: -90.40, prefix: 'ponch' }
             ];
 
+            let denhamWeather = '';
             for (const loc of locations) {
                 const w = await fetchWeather(loc.lat, loc.lon);
                 if (w) {
                     document.getElementById(`${loc.prefix}-temp`).innerText = w.current.temp + '°';
                     document.getElementById(`${loc.prefix}-icon`).innerText = w.current.icon;
                     document.getElementById(`${loc.prefix}-desc`).innerText = w.current.desc;
+                    if (loc.prefix === 'denham') {
+                        denhamWeather = `${w.current.desc}, ${w.current.temp}°`;
+                    }
                 }
             }
 
@@ -128,9 +172,12 @@
             const ac = document.getElementById('alerts-container');
             if (alerts) {
                 ac.innerHTML = `<div class="panel" style="border-left: 5px solid var(--status-red); background: rgba(248,113,113,0.08);"><h3 style="color:var(--status-red);">🚨 Active Weather Alert</h3><p style="font-size:0.9rem;color:var(--text-main);line-height:1.4;">${alerts}</p></div>`;
+                denhamWeather = '⚠️ ' + denhamWeather;
             } else {
                 ac.innerHTML = '';
             }
+
+            updateTicker(denhamWeather);
         }
 
         initDashboard();
