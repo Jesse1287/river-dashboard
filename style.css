@@ -263,9 +263,9 @@ h2, h3 {
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
 }
 
-.grid-3 { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; align-items: start; }
 @media (min-width: 768px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
-.grid-2 { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-2 { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; align-items: start; }
 @media (min-width: 768px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
 
 /* Prep Checklist Styles */

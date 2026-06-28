@@ -143,7 +143,7 @@
             if (aqi) {
                 document.getElementById('aqi-us').innerText = aqi.us_aqi ?? '--';
                 document.getElementById('aqi-eu').innerText = aqi.european_aqi ?? '--';
-                document.getElementById('uv-index').innerText = aqi.ultraviolet_index?.toFixed(1) ?? '--';
+                document.getElementById('uv-index').innerText = aqi.uv_index?.toFixed(1) ?? '--';
                 document.getElementById('aqi-pm').innerHTML = (aqi.pm2_5?.toFixed(1) ?? '--') + ' µg';
             }
 
