@@ -160,6 +160,29 @@ async function fetchAirQuality(lat, lon) {
     } catch (e) { console.error("AQI fetch failed:", e); return null; }
 }
 
+async function fetchPollen(lat, lon) {
+    const url = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen`;
+    try {
+        const r = await fetch(url);
+        const d = await r.json();
+        const levels = { 0: 'None', 1: 'Very Low', 2: 'Low', 3: 'Moderate', 4: 'High', 5: 'Very High' };
+        const cur = d.current;
+        const types = [
+            { key: 'alder_pollen', label: 'Alder' },
+            { key: 'birch_pollen', label: 'Birch' },
+            { key: 'grass_pollen', label: 'Grass' },
+            { key: 'mugwort_pollen', label: 'Mugwort' },
+            { key: 'olive_pollen', label: 'Olive' },
+            { key: 'ragweed_pollen', label: 'Ragweed' }
+        ];
+        const active = types
+            .map(t => ({ label: t.label, value: cur[t.key], level: levels[cur[t.key]] || 'Unknown' }))
+            .filter(t => t.value && t.value > 0);
+        const highest = active.length > 0 ? active.reduce((a, b) => (a.value > b.value ? a : b)) : null;
+        return { active, highest, all: cur };
+    } catch (e) { console.error("Pollen fetch failed:", e); return null; }
+}
+
 function getMoonPhase(date) {
     const y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();
     const jd=367*y-Math.floor(7*(y+Math.floor((m+9)/12))/4)+Math.floor(275*m/9)+d+1721013.5;

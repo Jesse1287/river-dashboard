@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>🌿 Daily Life | Roux Command</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        .pollen-bar {
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            transition: width 1s ease;
+        }
+        .pollen-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .pollen-item:last-child { border-bottom: none; }
+        .pollen-label { font-size: 0.9rem; color: var(--text-main); }
+        .pollen-level { font-size: 0.85rem; font-weight: 600; }
+
+        .verse-box {
+            background: rgba(56, 189, 248, 0.06);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+        .verse-text {
+            font-size: 1.05rem;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+        .verse-ref {
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            margin-top: 8px;
+            font-weight: 600;
+            font-style: normal;
+        }
+        .reflection-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .note-input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .note-input-row input {
+            flex: 1;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .note-input-row input:focus {
+            border-color: var(--accent-blue);
+        }
+        .note-input-row input::placeholder {
+            color: var(--text-muted);
+        }
+        .note-input-row button {
+            background: var(--accent-blue);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+        .note-input-row button:hover {
+            opacity: 0.85;
+        }
+        .note-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .note-text {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            line-height: 1.4;
+            flex: 1;
+            word-break: break-word;
+        }
+        .note-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .note-delete {
+            background: rgba(248, 113, 113, 0.15);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 6px;
+            padding: 4px 10px;
+            color: var(--status-red);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .note-delete:hover {
+            background: rgba(248, 113, 113, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌿 Daily Life</h1>
+
+        <div class="heartbeat-container">
+            <span class="pulse-dot"></span>             Daily Briefing: <span class="sys-clock">--:-- -- ---</span>
+        </div>
+
+        <div class="nav-tabs">
+            <a href="index.html"><span class="icon">🏠</span> <span>HQ</span></a>
+            <a href="river.html"><span class="icon">🌊</span> <span>Flood</span></a>
+            <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
+            <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
+            <a href="forecast.html"><span class="icon">📅</span> <span>Forecast</span></a>
+            <a href="travel.html"><span class="icon">🚦</span> <span>Travel</span></a>
+            <a href="daily.html" class="active"><span class="icon">🌿</span> <span>Daily</span></a>
+        </div>
+
+        <div class="grid-2">
+            <div class="panel float-hover">
+                <h3 style="color: var(--status-green);">🌸 Pollen & Allergy Forecast</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Denham Springs area — updated hourly</p>
+                <div id="pollen-summary" style="font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; padding: 10px; border-radius: 8px; text-align: center;">
+                    Loading pollen data...
+                </div>
+                <div id="pollen-detail"></div>
+            </div>
+
+            <div class="panel float-hover">
+                <h3 style="color: var(--accent-blue);">📖 Daily Devotional</h3>
+                <div class="verse-box" id="devotional-content">
+                    <div class="verse-text">Be still, and know that I am God.</div>
+                    <div class="verse-ref">— Psalm 46:10</div>
+                    <div class="reflection-text">In the chaos of daily life, God calls us to pause. Stillness is not emptiness—it is presence. When we stop striving and simply rest in Him, we remember who holds tomorrow.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel float-hover">
+            <h3 style="color: var(--status-orange);">📝 Family Notes</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Pin reminders — saved to this device.</p>
+            <div class="note-input-row">
+                <input type="text" id="note-input" placeholder="Write a note..." maxlength="200">
+                <button onclick="addNote()">+ Add</button>
+            </div>
+            <div id="notes-list"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        updateClock();
+
+        const devotions = [
+            { verse: '"Be still, and know that I am God."', ref: 'Psalm 46:10', reflection: 'In the chaos of daily life, God calls us to pause. Stillness is not emptiness—it is presence. When we stop striving and simply rest in Him, we remember who holds tomorrow.' },
+            { verse: '"The Lord is my shepherd; I shall not want."', ref: 'Psalm 23:1', reflection: 'God provides for every need. When anxiety whispers about what we lack, faith reminds us that the Shepherd knows His sheep. Trust His provision for today.' },
+            { verse: '"This is the day that the Lord has made; let us rejoice and be glad in it."', ref: 'Psalm 118:24', reflection: 'Every morning is a gift. Even on hard days, choose joy—not because circumstances are perfect, but because the Giver of days is faithful.' },
+            { verse: '"The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning."', ref: 'Lamentations 3:22-23', reflection: 'Yesterday\'s mistakes do not define today. God\'s mercy resets with the sunrise. Receive it, and extend it to others.' },
+            { verse: '"Trust in the Lord with all your heart, and do not lean on your own understanding."', ref: 'Proverbs 3:5', reflection: 'We cannot see the full picture, but God can. Trust is letting go of the need to control and believing that He is working, even when we cannot see how.' },
+            { verse: '"Fear not, for I am with you; be not dismayed, for I am your God; I will strengthen you, I will help you, I will uphold you with my righteous right hand."', ref: 'Isaiah 41:10', reflection: 'Fear loses its power when we remember Who stands beside us. You are not alone in any storm. God\'s strength is made perfect in your weakness.' },
+            { verse: '"Give thanks to the Lord, for he is good, for his steadfast love endures forever."', ref: 'Psalm 107:1', reflection: 'Gratitude shifts our focus from what we lack to what we have. Even in trials, there is something to give thanks for. Start today by naming three blessings.' },
+            { verse: '"The Lord is near to all who call on him, to all who call on him in truth."', ref: 'Psalm 145:18', reflection: 'God is not distant or indifferent. He bends low to hear His children. Whatever you are carrying today, bring it to Him in prayer—He is near.' },
+            { verse: '"Create in me a clean heart, O God, and renew a right spirit within me."', ref: 'Psalm 51:10', reflection: 'Each day offers a fresh start. Ask God to cleanse your heart and renew your spirit. Let go of bitterness and let His peace fill the empty spaces.' },
+            { verse: '"I can do all things through him who strengthens me."', ref: 'Philippians 4:13', reflection: 'Not by your own power, but through Christ who lives in you. Whatever challenge lies ahead, you don\'t face it alone. His strength is sufficient.' },
+            { verse: '"The Lord is my light and my salvation; whom shall I fear?"', ref: 'Psalm 27:1', reflection: 'Light dispels darkness. When fear threatens to overwhelm, remember that the God who commands the light is your protector. No darkness can overcome His light.' },
+            { verse: '"Peace I leave with you; my peace I give to you. Not as the world gives do I give to you. Let not your hearts be troubled."', ref: 'John 14:27', reflection: 'The world\'s peace depends on circumstances. Christ\'s peace transcends them. Breathe deeply today and receive the peace that passes all understanding.' }
+        ];
+
+        function loadDevotional() {
+            const now = new Date();
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+            const d = devotions[dayOfYear % devotions.length];
+            document.getElementById('devotional-content').innerHTML =
+                `<div class="verse-text">${d.verse}</div>` +
+                `<div class="verse-ref">— ${d.ref}</div>` +
+                `<div class="reflection-text">${d.reflection}</div>`;
+        }
+        loadDevotional();
+
+        async function loadPollen() {
+            const p = await fetchPollen(30.48, -90.95);
+            const summary = document.getElementById('pollen-summary');
+            const detail = document.getElementById('pollen-detail');
+            if (!p || !p.active || p.active.length === 0) {
+                summary.innerText = '🌿 Low pollen activity';
+                summary.style.background = 'rgba(74, 222, 128, 0.1)';
+                summary.style.color = 'var(--status-green)';
+                detail.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">No significant pollen levels detected.</p>';
+                return;
+            }
+            const h = p.highest;
+            let levelColor, levelText;
+            if (h.value <= 1) { levelColor = 'var(--status-green)'; levelText = 'Very Low'; }
+            else if (h.value <= 2) { levelColor = '#fb923c'; levelText = 'Low'; }
+            else if (h.value <= 3) { levelColor = 'var(--status-orange)'; levelText = 'Moderate'; }
+            else if (h.value <= 4) { levelColor = 'var(--status-red)'; levelText = 'High'; }
+            else { levelColor = '#dc2626'; levelText = 'Very High'; }
+            summary.innerText = `${h.label}: ${levelText}`;
+            summary.style.background = `rgba(255,255,255,0.04)`;
+            summary.style.color = levelColor;
+            let html = '';
+            const maxVal = Math.max(...p.active.map(t => t.value), 3);
+            for (const t of p.active) {
+                const pct = (t.value / maxVal) * 100;
+                let barColor = 'var(--status-green)';
+                if (t.value >= 4) barColor = 'var(--status-red)';
+                else if (t.value >= 3) barColor = 'var(--status-orange)';
+                else if (t.value >= 2) barColor = '#fb923c';
+                html +=
+                    `<div class="pollen-item">` +
+                        `<div><div class="pollen-label">${t.label}</div></div>` +
+                        `<div><span class="pollen-level" style="color:${barColor};">${t.level}</span></div>` +
+                    `</div>` +
+                    `<div style="background:rgba(255,255,255,0.06);border-radius:4px;height:8px;overflow:hidden;margin-bottom:4px;">` +
+                        `<div class="pollen-bar" style="width:${pct}%;background:${barColor};"></div>` +
+                    `</div>`;
+            }
+            detail.innerHTML = html;
+        }
+        loadPollen();
+
+        function loadNotes() {
+            const notes = JSON.parse(localStorage.getItem('family-notes') || '[]');
+            const list = document.getElementById('notes-list');
+            if (notes.length === 0) {
+                list.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:20px 0;">No notes yet. Add one above!</p>';
+                return;
+            }
+            list.innerHTML = notes.map((n, i) =>
+                `<div class="note-card">` +
+                    `<div><div class="note-text">${escapeHtml(n.text)}</div><div class="note-time">${n.time}</div></div>` +
+                    `<button class="note-delete" onclick="deleteNote(${i})">✕</button>` +
+                `</div>`
+            ).join('');
+        }
+
+        function addNote() {
+            const input = document.getElementById('note-input');
+            const text = input.value.trim();
+            if (!text) return;
+            const notes = JSON.parse(localStorage.getItem('family-notes') || '[]');
+            const now = new Date();
+            notes.unshift({ text, time: now.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) });
+            localStorage.setItem('family-notes', JSON.stringify(notes));
+            input.value = '';
+            loadNotes();
+        }
+
+        function deleteNote(index) {
+            const notes = JSON.parse(localStorage.getItem('family-notes') || '[]');
+            notes.splice(index, 1);
+            localStorage.setItem('family-notes', JSON.stringify(notes));
+            loadNotes();
+        }
+
+        function escapeHtml(text) {
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
+        document.getElementById('note-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') addNote();
+        });
+
+        loadNotes();
+    </script>
+</body>
+</html>

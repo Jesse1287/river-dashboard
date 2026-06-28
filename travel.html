@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>🚦 Travel & Utilities | Roux Command</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        .map-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 0;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        .map-panel iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            display: block;
+        }
+        .map-header {
+            padding: 16px 18px 0 18px;
+        }
+        .map-footer {
+            padding: 0 18px 16px 18px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .map-footer a {
+            color: var(--accent-blue);
+        }
+        @media (max-width: 768px) {
+            .map-panel iframe { height: 350px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚦 Travel & Utilities</h1>
+
+        <div class="heartbeat-container">
+            <span class="pulse-dot"></span>             Infrastructure Feed: <span class="sys-clock">--:-- -- ---</span>
+        </div>
+
+        <div class="nav-tabs">
+            <a href="index.html"><span class="icon">🏠</span> <span>HQ</span></a>
+            <a href="river.html"><span class="icon">🌊</span> <span>Flood</span></a>
+            <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
+            <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
+            <a href="forecast.html"><span class="icon">📅</span> <span>Forecast</span></a>
+            <a href="travel.html" class="active"><span class="icon">🚦</span> <span>Travel</span></a>
+            <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
+        </div>
+
+        <div class="map-panel">
+            <div class="map-header">
+                <h3 style="color: var(--status-orange);">⚡ Entergy Power Outages</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+                    480 Donald Drive, Denham Springs, LA 70726
+                </p>
+            </div>
+            <iframe src="https://www.etrviewoutage.com/maps/Entergy_LA_Outage_.html" title="Entergy Louisiana Outage Map" loading="lazy" allowfullscreen></iframe>
+            <div class="map-footer">
+                If the map doesn't load, <a href="https://www.entergy-louisiana.com/outages/" target="_blank">view the Entergy outage map directly</a>.
+            </div>
+        </div>
+
+        <div class="map-panel">
+            <div class="map-header">
+                <h3 style="color: var(--accent-blue);">🚧 Louisiana Road Conditions</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+                    Live traffic, closures, and construction from 511 LA
+                </p>
+            </div>
+            <iframe src="https://www.511la.org/" title="Louisiana 511 Traffic Map" loading="lazy" allowfullscreen></iframe>
+            <div class="map-footer">
+                If the map doesn't load, <a href="https://www.511la.org/" target="_blank">visit 511la.org directly</a>.
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
