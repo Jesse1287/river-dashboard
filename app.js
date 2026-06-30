@@ -65,10 +65,10 @@ async function fetchWeather(lat, lon) {
             desc: wmo.desc,
             icon: wmo.icon,
             pop: om.daily.precipitation_probability_max[0],
-            pressure: cur.pressure_msl ? Math.round(cur.pressure_msl) : null,
-            visibility: cur.visibility ? (cur.visibility / 1609.34).toFixed(1) : null,
-            dewPoint: cur.dew_point_2m ? Math.round(cur.dew_point_2m) : null,
-            cloudCover: cur.cloud_cover ?? null
+            pressure: cur.pressure_msl != null ? Math.round(cur.pressure_msl) : null,
+            visibility: cur.visibility != null ? (cur.visibility / 1609.34).toFixed(1) : null,
+            dewPoint: cur.dew_point_2m != null ? Math.round(cur.dew_point_2m) : null,
+            cloudCover: cur.cloud_cover != null ? cur.cloud_cover : null
         },
         daily: om.daily
     };

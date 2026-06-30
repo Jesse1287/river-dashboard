@@ -35,26 +35,29 @@
 
         <div class="grid-3" style="margin-bottom: 16px;">
             <div class="panel float-hover" style="text-align: center;">
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Denham → Donaldsonville</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🚗 Morning — Interstate</div>
+                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 2px;">Denham → Donaldsonville</div>
                 <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route1-status">~ 45 min</div>
-                <div style="font-size: 0.8rem; color: var(--text-muted);">via LA-22 W & I-10 W</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">I-12 W → I-10 W</div>
                 <div id="route1-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </div>
             <div class="panel float-hover" style="text-align: center;">
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Denham → Ponchatoula</div>
-                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route2-status">~ 35 min</div>
-                <div style="font-size: 0.8rem; color: var(--text-muted);">via I-55 S & I-12 E</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🌅 Evening — Back Roads</div>
+                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 2px;">Donaldsonville → Denham Springs</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route2-status">~ 55 min</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">LA-22 W → LA-16 W</div>
                 <div id="route2-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </div>
             <div class="panel float-hover" style="text-align: center;">
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Donaldsonville → Ponchatoula</div>
-                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route3-status">~ 50 min</div>
-                <div style="font-size: 0.8rem; color: var(--text-muted);">via LA-22 E & I-55 S</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🏥 Wife — Bedico</div>
+                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 2px;">Denham → Family Healthcare of Bedico</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route3-status">~ 35 min</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">I-12 E → LA-445 S</div>
                 <div id="route3-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </div>
         </div>
 
-        <div class="grid-2">
+        <div class="grid-3">
             <div class="panel float-hover">
                 <h3 style="color: var(--accent-blue);">🏡 Denham Springs Departure</h3>
                 <div id="depart-denham" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
@@ -73,6 +76,27 @@
                     <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
                         <div style="font-size: 0.7rem; color: var(--text-muted);">Visibility</div>
                         <div id="dep-denham-vis" style="font-size: 1rem; font-weight: 700;">-- mi</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel float-hover">
+                <h3 style="color: var(--accent-pink);">🏥 Bedico Arrival</h3>
+                <div id="depart-bedico" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Temp</div>
+                        <div id="dep-bedico-temp" style="font-size: 1.3rem; font-weight: 700;">--°</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Conditions</div>
+                        <div style="font-size: 1.3rem;" id="dep-bedico-icon">--</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Wind</div>
+                        <div id="dep-bedico-wind" style="font-size: 1rem; font-weight: 700;">--</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Visibility</div>
+                        <div id="dep-bedico-vis" style="font-size: 1rem; font-weight: 700;">-- mi</div>
                     </div>
                 </div>
             </div>
@@ -189,7 +213,7 @@
 
             const denhamW = await fetchWeather(30.48, -90.95);
             const donW = await fetchWeather(30.10, -90.99);
-            const ponchW = await fetchWeather(30.44, -90.40);
+            const bedicoW = await fetchWeather(30.42, -90.38);
             const river = await fetchRiver();
             const alerts = await fetchAlerts(30.48, -90.95);
 
@@ -209,15 +233,23 @@
                 document.getElementById('route1-conditions').innerText = r1.label;
                 document.getElementById('route1-conditions').style.color = r1.color;
 
-                const r2 = routeConditions(c, ponchW?.current);
+                const r2 = routeConditions(donW?.current, c);
                 document.getElementById('route2-conditions').innerText = r2.label;
                 document.getElementById('route2-conditions').style.color = r2.color;
             }
 
-            if (donW && ponchW) {
-                const r3 = routeConditions(donW.current, ponchW.current);
+            if (denhamW && bedicoW) {
+                const r3 = routeConditions(denhamW.current, bedicoW.current);
                 document.getElementById('route3-conditions').innerText = r3.label;
                 document.getElementById('route3-conditions').style.color = r3.color;
+            }
+
+            if (bedicoW) {
+                const c = bedicoW.current;
+                document.getElementById('dep-bedico-temp').innerText = c.temp + '°';
+                document.getElementById('dep-bedico-icon').innerText = c.icon;
+                document.getElementById('dep-bedico-wind').innerHTML = `${c.wind} mph <span style="${getWindDir(c.windDir)}">⬆</span>`;
+                document.getElementById('dep-bedico-vis').innerText = (c.visibility ?? '--') + ' mi';
             }
 
             if (river) {

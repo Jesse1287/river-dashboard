@@ -8,6 +8,7 @@
     --status-green: #4ade80;
     --status-red: #f87171;
     --status-orange: #fb923c;
+    --accent-pink: #f472b6;
 }
 
 * {
@@ -217,7 +218,8 @@ h2, h3 {
 }
 
 @media (max-width: 768px) {
-    body { padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
+    body { padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
+    .container { padding-bottom: 16px; }
     .nav-tabs {
         position: fixed;
         bottom: 0;
