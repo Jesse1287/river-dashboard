@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>🇺🇦 Bohdanivka | Roux Command</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        .ukraine-header {
+            background: linear-gradient(135deg, rgba(0,87,184,0.15), rgba(255,215,0,0.1));
+            border: 1px solid rgba(0,87,184,0.25);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .ukraine-header h2 { font-size: 1.6rem; margin-bottom: 4px; }
+        .ukraine-header .sub { font-size: 0.85rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🇺🇦 Bohdanivka Forecast</h1>
+
+        <div class="heartbeat-container">
+            <span class="pulse-dot"></span>             Ukraine Weather Relay: <span class="sys-clock">--:-- -- ---</span>
+        </div>
+
+        <div class="nav-tabs">
+            <a href="index.html"><span class="icon">🏠</span> <span>HQ</span></a>
+            <a href="river.html"><span class="icon">🌊</span> <span>Flood</span></a>
+            <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
+            <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
+            <a href="forecast.html"><span class="icon">📅</span> <span>Forecast</span></a>
+            <a href="travel.html"><span class="icon">🚦</span> <span>Travel</span></a>
+            <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
+            <a href="ukraine.html" class="active"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
+        </div>
+
+        <div class="ukraine-header">
+            <h2>🌻 Bohdanivka</h2>
+            <div class="sub">Zaporizhzhia Oblast, Ukraine</div>
+            <div style="font-size: 0.8rem; color: rgba(255,255,255,0.25); margin-top: 6px;">48.032° N, 35.824° E</div>
+        </div>
+
+        <div class="panel float-hover" id="ukraine-weather">
+            <div style="display: flex; align-items: center; gap: 16px; justify-content: center;">
+                <div id="ukr-icon" style="font-size: 3rem;">--</div>
+                <div>
+                    <div id="ukr-temp" class="metric" style="font-size: 3rem;">--°</div>
+                    <div id="ukr-desc" style="color: var(--text-muted); font-weight: 600;">Syncing...</div>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                <div style="text-align: center;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Feels Like</div>
+                    <div id="ukr-feels" style="font-size: 1.2rem; font-weight: 700;">--°</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Humidity</div>
+                    <div id="ukr-hum" style="font-size: 1.2rem; font-weight: 700;">--%</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Wind</div>
+                    <div id="ukr-wind" style="font-size: 1.2rem; font-weight: 700;">-- mph</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Rain</div>
+                    <div id="ukr-pop" style="font-size: 1.2rem; font-weight: 700;">--%</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Pressure</div>
+                    <div id="ukr-pressure" style="font-size: 1.2rem; font-weight: 700;">-- hPa</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Visibility</div>
+                    <div id="ukr-vis" style="font-size: 1.2rem; font-weight: 700;">-- mi</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        updateClock();
+
+        async function loadUkraine() {
+            const w = await fetchWeather(48.03188, 35.82367);
+            if (w) {
+                const c = w.current;
+                document.getElementById('ukr-temp').innerText = c.temp + '°';
+                document.getElementById('ukr-icon').innerText = c.icon;
+                document.getElementById('ukr-desc').innerText = c.desc;
+                document.getElementById('ukr-feels').innerText = (c.feelsLike ?? '--') + '°';
+                document.getElementById('ukr-hum').innerText = (c.humidity ?? '--') + '%';
+                document.getElementById('ukr-wind').innerText = (c.wind ?? '--') + ' mph';
+                document.getElementById('ukr-pop').innerText = (c.pop ?? '--') + '%';
+                document.getElementById('ukr-pressure').innerText = (c.pressure ?? '--') + ' hPa';
+                document.getElementById('ukr-vis').innerText = (c.visibility ?? '--') + ' mi';
+            }
+        }
+        loadUkraine();
+        setInterval(loadUkraine, 300000);
+    </script>
+</body>
+</html>

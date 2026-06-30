@@ -8,6 +8,31 @@
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        .route-card {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            text-align: center;
+            cursor: pointer;
+            transition: opacity 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+        }
+        .route-card:hover {
+            border-color: rgba(56,189,248,0.5) !important;
+            box-shadow: 0 12px 40px rgba(56,189,248,0.2) !important;
+        }
+        .route-dim { opacity: 0.5; }
+        .route-active {
+            border-color: var(--accent-blue) !important;
+            box-shadow: 0 0 25px rgba(56,189,248,0.15) !important;
+        }
+        .route-badge {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -25,6 +50,7 @@
             <a href="forecast.html"><span class="icon">📅</span> <span>Forecast</span></a>
             <a href="travel.html" class="active"><span class="icon">🚦</span> <span>Travel</span></a>
             <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
+            <a href="ukraine.html"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
         </div>
 
         <div id="travel-status" class="panel" style="text-align: center; padding: 20px;">
@@ -34,27 +60,27 @@
         </div>
 
         <div class="grid-3" style="margin-bottom: 16px;">
-            <div class="panel float-hover" style="text-align: center; display: none;" id="route-morning">
-                <div style="font-size: 0.65rem; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Active — Morning</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🚗 Interstate — Denham → Donaldsonville</div>
+            <a href="https://www.google.com/maps/dir/480+Donald+Dr,+Denham+Springs,+LA+70726/30.1007863,-90.9565542" target="_blank" class="panel float-hover route-card" id="route-morning">
+                <div class="route-badge" style="color: var(--accent-blue);" id="morning-badge">🚗 Morning</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Denham → Donaldsonville</div>
                 <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 45 min</div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">I-12 W → I-10 W</div>
                 <div id="route-morning-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
-            </div>
-            <div class="panel float-hover" style="text-align: center; display: none;" id="route-evening">
-                <div style="font-size: 0.65rem; color: var(--status-orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Active — Afternoon/Evening</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🌅 Back Roads — Donaldsonville → Denham Springs</div>
+            </a>
+            <a href="https://www.google.com/maps/dir/30.1007863,-90.9565542/480+Donald+Dr,+Denham+Springs,+LA+70726" target="_blank" class="panel float-hover route-card" id="route-evening">
+                <div class="route-badge" style="color: var(--status-orange);" id="evening-badge">🌅 Evening</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Donaldsonville → Denham Springs</div>
                 <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 55 min</div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">LA-22 W → LA-16 W</div>
                 <div id="route-evening-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
-            </div>
-            <div class="panel float-hover" style="text-align: center;">
+            </a>
+            <a href="https://www.google.com/maps/dir/Denham+Springs,+LA/Family+Healthcare+of+Bedico,+Ponchatoula,+LA" target="_blank" class="panel float-hover route-card">
                 <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🏥 Wife — Bedico</div>
                 <div style="font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 2px;">Denham → Family Healthcare of Bedico</div>
                 <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 35 min</div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">I-12 E → LA-445 S</div>
                 <div id="route-bedico-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
-            </div>
+            </a>
         </div>
 
         <div class="grid-2">
@@ -79,10 +105,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="panel" style="padding: 0; overflow: hidden; border-radius: 16px; height: 480px;">
-            <iframe id="route-map" src="" width="100%" height="100%" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
 
         <div class="quick-links" style="margin-top: 16px;">
@@ -116,18 +138,6 @@
 
     <script src="app.js"></script>
     <script>
-        const HOME = '480+Donald+Dr,+Denham+Springs,+LA+70726';
-        const WORK = '30.1007863,-90.9565542';
-
-        function loadMap() {
-            const h = new Date().getHours();
-            const src = h < 12
-                ? `https://maps.google.com/maps?f=d&hl=en&saddr=${HOME}&daddr=${WORK}&output=embed`
-                : `https://maps.google.com/maps?f=d&hl=en&saddr=${WORK}&daddr=${HOME}&output=embed`;
-            document.getElementById('route-map').src = src;
-        }
-        loadMap();
-
         function travelVerdict(weather, river, alerts) {
             let hazards = [];
             let score = 0;
@@ -195,10 +205,18 @@
             ]);
 
             const active = activeRoute();
-            const showMorning = document.getElementById('route-morning');
-            const showEvening = document.getElementById('route-evening');
-            showMorning.style.display = active === 'morning' ? '' : 'none';
-            showEvening.style.display = active === 'evening' ? '' : 'none';
+            const morningCard = document.getElementById('route-morning');
+            const eveningCard = document.getElementById('route-evening');
+            const morningBadge = document.getElementById('morning-badge');
+            const eveningBadge = document.getElementById('evening-badge');
+
+            morningCard.classList.toggle('route-active', active === 'morning');
+            morningCard.classList.toggle('route-dim', active !== 'morning');
+            morningBadge.innerText = active === 'morning' ? '⭐ Active — Morning' : '🚗 Morning';
+
+            eveningCard.classList.toggle('route-active', active === 'evening');
+            eveningCard.classList.toggle('route-dim', active !== 'evening');
+            eveningBadge.innerText = active === 'evening' ? '⭐ Active — Evening' : '🌅 Evening';
 
             const activeOriginW = active === 'morning' ? denhamW : donW;
             const activeDestW = active === 'morning' ? donW : denhamW;
