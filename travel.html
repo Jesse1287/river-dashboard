@@ -122,8 +122,8 @@
         function loadMap() {
             const h = new Date().getHours();
             const src = h < 12
-                ? `https://www.google.com/maps/dir/${HOME}/${WORK}`
-                : `https://www.google.com/maps/dir/${WORK}/${HOME}`;
+                ? `https://maps.google.com/maps?f=d&hl=en&saddr=${HOME}&daddr=${WORK}&output=embed`
+                : `https://maps.google.com/maps?f=d&hl=en&saddr=${WORK}&daddr=${HOME}&output=embed`;
             document.getElementById('route-map').src = src;
         }
         loadMap();
