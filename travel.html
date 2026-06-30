@@ -4,108 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>🚦 Travel & Utilities | Roux Command</title>
+    <title>🚦 Corridor Intelligence | Roux Command</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <style>
-        .launch-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
-            text-decoration: none;
-            display: block;
-            color: inherit;
-            cursor: pointer;
-        }
-        .launch-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(56, 189, 248, 0.2);
-            border-color: rgba(56, 189, 248, 0.5);
-        }
-        .launch-card:active {
-            transform: scale(0.97);
-        }
-        .launch-icon {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-        }
-        .launch-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-        .launch-desc {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-            margin-bottom: 12px;
-        }
-        .launch-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-        .launch-btn:hover {
-            opacity: 0.85;
-        }
-        .quick-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 6px;
-        }
-        .quick-link {
-            flex: 1;
-            min-width: 140px;
-            padding: 14px;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border-color);
-            text-decoration: none;
-            color: inherit;
-            text-align: center;
-            transition: all 0.2s;
-        }
-        .quick-link:hover {
-            background: rgba(56, 189, 248, 0.08);
-            border-color: rgba(56, 189, 248, 0.3);
-        }
-        .quick-link:active {
-            transform: scale(0.97);
-        }
-        .quick-link .ql-icon {
-            font-size: 1.5rem;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .quick-link .ql-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .quick-link .ql-desc {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚦 Travel & Utilities</h1>
+        <h1>🚦 Corridor Intelligence</h1>
 
         <div class="heartbeat-container">
-            <span class="pulse-dot"></span>             Infrastructure Feed: <span class="sys-clock">--:-- -- ---</span>
+            <span class="pulse-dot"></span>             Route Telemetry: <span class="sys-clock">--:-- -- ---</span>
         </div>
 
         <div class="nav-tabs">
@@ -118,54 +27,213 @@
             <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
         </div>
 
-        <a href="https://www.etrviewoutage.com/map?state=LA" target="_blank" class="launch-card">
-            <div class="launch-icon">⚡</div>
-            <div class="launch-title" style="color: var(--status-orange);">Entergy Power Outages</div>
-            <div class="launch-desc">
-                480 Donald Drive, Denham Springs, LA 70726
-            </div>
-            <span class="launch-btn" style="background: rgba(251, 146, 60, 0.15); color: var(--status-orange); border: 1px solid rgba(251, 146, 60, 0.3);">
-                Open Outage Map ↗
-            </span>
-        </a>
+        <div id="travel-status" class="panel" style="text-align: center; padding: 20px;">
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Corridor Status</div>
+            <div id="corridor-verdict" style="font-size: 1.6rem; font-weight: 800; margin: 8px 0;">Analyzing conditions...</div>
+            <div id="corridor-reason" style="font-size: 0.85rem; color: var(--text-muted);"></div>
+        </div>
 
-        <a href="https://www.google.com/maps/@30.48,-90.95,12z/data=!5m1!1e1" target="_blank" class="launch-card">
-            <div class="launch-icon">🚗</div>
-            <div class="launch-title" style="color: var(--accent-blue);">Live Traffic & Road Conditions</div>
-            <div class="launch-desc">
-                Google Maps with traffic layer — check for accidents, congestion, and closures around Denham Springs.
+        <div class="grid-3" style="margin-bottom: 16px;">
+            <div class="panel float-hover" style="text-align: center;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Denham → Donaldsonville</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route1-status">~ 45 min</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">via LA-22 W & I-10 W</div>
+                <div id="route1-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </div>
-            <span class="launch-btn" style="background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3);">
-                Open Traffic Map ↗
-            </span>
-        </a>
+            <div class="panel float-hover" style="text-align: center;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Denham → Ponchatoula</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route2-status">~ 35 min</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">via I-55 S & I-12 E</div>
+                <div id="route2-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
+            </div>
+            <div class="panel float-hover" style="text-align: center;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Donaldsonville → Ponchatoula</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route3-status">~ 50 min</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">via LA-22 E & I-55 S</div>
+                <div id="route3-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
+            </div>
+        </div>
 
-        <div style="margin-top: 24px;">
-            <h3 style="color: var(--text-muted); margin-bottom: 12px;">🔗 Quick Links</h3>
-            <div class="quick-links">
-                <a href="https://www.511la.org/" target="_blank" class="quick-link">
-                    <span class="ql-icon">🛣️</span>
-                    <span class="ql-label">511 LA</span>
-                    <span class="ql-desc">Road closures & construction</span>
-                </a>
-                <a href="https://www.entergy-louisiana.com/outages/" target="_blank" class="quick-link">
-                    <span class="ql-icon">🏢</span>
-                    <span class="ql-label">Entergy</span>
-                    <span class="ql-desc">Report an outage</span>
-                </a>
-                <a href="https://www.google.com/maps/dir//480+Donald+Dr,+Denham+Springs,+LA+70726" target="_blank" class="quick-link">
-                    <span class="ql-icon">📍</span>
-                    <span class="ql-label">Directions Home</span>
-                    <span class="ql-desc">Navigate to 480 Donald Dr</span>
-                </a>
+        <div class="grid-2">
+            <div class="panel float-hover">
+                <h3 style="color: var(--accent-blue);">🏡 Denham Springs Departure</h3>
+                <div id="depart-denham" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Temp</div>
+                        <div id="dep-denham-temp" style="font-size: 1.3rem; font-weight: 700;">--°</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Conditions</div>
+                        <div style="font-size: 1.3rem;" id="dep-denham-icon">--</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Wind</div>
+                        <div id="dep-denham-wind" style="font-size: 1rem; font-weight: 700;">--</div>
+                    </div>
+                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Visibility</div>
+                        <div id="dep-denham-vis" style="font-size: 1rem; font-weight: 700;">-- mi</div>
+                    </div>
+                </div>
             </div>
+            <div class="panel float-hover">
+                <h3 style="color: var(--status-orange);">⚡ Infrastructure Status</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">⚡ Entergy Power</span>
+                        <a href="https://www.etrviewoutage.com/map?state=LA" target="_blank" style="color: var(--accent-blue); font-size: 0.8rem; text-decoration: none; font-weight: 600;">Check Outages ↗</a>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">🛣️ LA Road Closures</span>
+                        <a href="https://www.511la.org/" target="_blank" style="color: var(--accent-blue); font-size: 0.8rem; text-decoration: none; font-weight: 600;">511 LA ↗</a>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">📍 480 Donald Dr</span>
+                        <a href="https://www.google.com/maps/dir//480+Donald+Dr,+Denham+Springs,+LA+70726" target="_blank" style="color: var(--accent-blue); font-size: 0.8rem; text-decoration: none; font-weight: 600;">Navigate ↗</a>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">🌊 River at 29ft+</span>
+                        <span id="river-road-status" style="font-size: 0.8rem; font-weight: 600; color: var(--status-green);">Checking...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" style="padding: 0; overflow: hidden; border-radius: 16px; height: 480px;">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d110192.70323632464!2d-91.01692375264537!3d30.34831895012284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x8626b7a5a5a5a5a5%3A0x5a5a5a5a5a5a5a5a!2sDenham+Springs%2C+LA!3m2!1d30.4879787!2d-90.9567682!4m5!1s0x8626b4b4b4b4b4b4%3A0x4b4b4b4b4b4b4b4b!2sDonaldsonville%2C+LA!3m2!1d30.099927!2d-90.991068!5e0!3m2!1sen!2sus!4v1" width="100%" height="100%" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <div class="quick-links" style="margin-top: 16px;">
+            <a href="https://www.etrviewoutage.com/map?state=LA" target="_blank" class="quick-link">
+                <span class="ql-icon">⚡</span>
+                <span class="ql-label">Entergy Map</span>
+                <span class="ql-desc">Live power outages</span>
+            </a>
+            <a href="https://www.511la.org/" target="_blank" class="quick-link">
+                <span class="ql-icon">🛣️</span>
+                <span class="ql-label">511 LA</span>
+                <span class="ql-desc">Road closures & construction</span>
+            </a>
+            <a href="https://www.entergy-louisiana.com/outages/" target="_blank" class="quick-link">
+                <span class="ql-icon">🏢</span>
+                <span class="ql-label">Report Outage</span>
+                <span class="ql-desc">Entergy service</span>
+            </a>
+            <a href="https://www.google.com/maps/dir//480+Donald+Dr,+Denham+Springs,+LA+70726" target="_blank" class="quick-link">
+                <span class="ql-icon">📍</span>
+                <span class="ql-label">Directions Home</span>
+                <span class="ql-desc">480 Donald Dr</span>
+            </a>
+            <a href="https://www.weather.gov/" target="_blank" class="quick-link">
+                <span class="ql-icon">🌦️</span>
+                <span class="ql-label">NWS</span>
+                <span class="ql-desc">National Weather Service</span>
+            </a>
         </div>
     </div>
 
     <script src="app.js"></script>
     <script>
-        updateClock();
-        setInterval(updateClock, 1000);
+        function travelVerdict(weather, river, alerts) {
+            let hazards = [];
+            let score = 0;
+
+            if (alerts) {
+                hazards.push('⚠️ Active weather alert');
+                score += 3;
+            }
+            if (weather && weather.pop >= 60) {
+                hazards.push('☔ Heavy rain likely');
+                score += 2;
+            } else if (weather && weather.pop >= 30) {
+                hazards.push('🌦️ Scattered showers');
+                score += 1;
+            }
+            if (weather && weather.visibility && parseFloat(weather.visibility) < 3) {
+                hazards.push('🌫️ Low visibility');
+                score += 2;
+            }
+            if (weather && weather.wind >= 30) {
+                hazards.push('💨 Strong winds');
+                score += 2;
+            } else if (weather && weather.wind >= 20) {
+                hazards.push('🌬️ Breezy');
+                score += 1;
+            }
+            if (river && river.raw >= 35) {
+                hazards.push('🚨 Major flooding — avoid low-lying routes');
+                score += 4;
+            } else if (river && river.raw >= 29) {
+                hazards.push('🌊 Action stage — some roads may flood');
+                score += 2;
+            }
+
+            if (score === 0) return { verdict: '✅ All Clear', color: 'var(--status-green)', reason: 'Conditions favorable for travel. No hazards detected on corridor.' };
+            if (score <= 2) return { verdict: '🟡 Exercise Caution', color: 'var(--status-orange)', reason: hazards.join(' • ') };
+            if (score <= 4) return { verdict: '🟠 Elevated Risk', color: 'var(--status-orange)', reason: hazards.join(' • ') };
+            return { verdict: '🔴 Avoid Travel', color: 'var(--status-red)', reason: hazards.join(' • ') };
+        }
+
+        function routeConditions(w1, w2) {
+            if (!w1 || !w2) return { label: '--', color: 'var(--text-muted)' };
+            const hazards = [];
+            if (w1.pop >= 60 || w2.pop >= 60) hazards.push('Rain');
+            if ((w1.visibility && parseFloat(w1.visibility) < 3) || (w2.visibility && parseFloat(w2.visibility) < 3)) hazards.push('Fog');
+            if (w1.wind >= 25 || w2.wind >= 25) hazards.push('Wind');
+            if (hazards.length === 0) return { label: '✅ Clear', color: 'var(--status-green)' };
+            return { label: `⚠️ ${hazards.join('/')}`, color: 'var(--status-orange)' };
+        }
+
+        async function initTravel() {
+            updateClock();
+
+            const denhamW = await fetchWeather(30.48, -90.95);
+            const donW = await fetchWeather(30.10, -90.99);
+            const ponchW = await fetchWeather(30.44, -90.40);
+            const river = await fetchRiver();
+            const alerts = await fetchAlerts(30.48, -90.95);
+
+            if (denhamW) {
+                const c = denhamW.current;
+                document.getElementById('dep-denham-temp').innerText = c.temp + '°';
+                document.getElementById('dep-denham-icon').innerText = c.icon;
+                document.getElementById('dep-denham-wind').innerHTML = `${c.wind} mph <span style="${getWindDir(c.windDir)}">⬆</span>`;
+                document.getElementById('dep-denham-vis').innerText = (c.visibility ?? '--') + ' mi';
+
+                const verdict = travelVerdict(c, river, alerts);
+                document.getElementById('corridor-verdict').innerText = verdict.verdict;
+                document.getElementById('corridor-verdict').style.color = verdict.color;
+                document.getElementById('corridor-reason').innerText = verdict.reason;
+
+                const r1 = routeConditions(c, donW?.current);
+                document.getElementById('route1-conditions').innerText = r1.label;
+                document.getElementById('route1-conditions').style.color = r1.color;
+
+                const r2 = routeConditions(c, ponchW?.current);
+                document.getElementById('route2-conditions').innerText = r2.label;
+                document.getElementById('route2-conditions').style.color = r2.color;
+            }
+
+            if (donW && ponchW) {
+                const r3 = routeConditions(donW.current, ponchW.current);
+                document.getElementById('route3-conditions').innerText = r3.label;
+                document.getElementById('route3-conditions').style.color = r3.color;
+            }
+
+            if (river) {
+                const rs = document.getElementById('river-road-status');
+                if (river.raw >= 29) {
+                    rs.innerText = '⚠️ Road flood risk';
+                    rs.style.color = 'var(--status-red)';
+                } else {
+                    rs.innerText = '✅ Routes clear';
+                    rs.style.color = 'var(--status-green)';
+                }
+            }
+        }
+
+        initTravel();
+        setInterval(initTravel, 300000);
     </script>
 </body>
 </html>

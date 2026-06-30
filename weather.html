@@ -41,8 +41,12 @@
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="denham-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="denham-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Dew Point <strong id="denham-dew" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Cloud Cover <strong id="denham-cloud" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="denham-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="denham-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="denham-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="denham-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
                 </div>
             </div>
 
@@ -55,8 +59,12 @@
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="don-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="don-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Dew Point <strong id="don-dew" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Cloud Cover <strong id="don-cloud" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="don-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="don-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="don-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="don-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
                 </div>
             </div>
 
@@ -69,8 +77,12 @@
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="ponch-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="ponch-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Dew Point <strong id="ponch-dew" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Cloud Cover <strong id="ponch-cloud" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="ponch-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="ponch-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="ponch-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="ponch-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
                 </div>
             </div>
         </div>
@@ -96,6 +108,13 @@
             </div>
         </div>
 
+        <div class="panel float-hover">
+            <h3 style="color: var(--status-orange);">🌿 Pollen Forecast — Denham Springs</h3>
+            <div id="pollen-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Loading pollen data...</div>
+            </div>
+        </div>
+
         <div class="panel" style="padding: 0; overflow: hidden; border-radius: 16px; height: 600px;">
             <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" height="100%" frameborder="0" allowfullscreen style="border:none; vertical-align: bottom;"></iframe>
         </div>
@@ -103,6 +122,15 @@
 
     <script src="app.js"></script>
     <script>
+        function pollenLevel(value) {
+            if (!value || value === 0) return { label: 'None', color: 'var(--text-muted)' };
+            if (value <= 1) return { label: 'Very Low', color: '#4ade80' };
+            if (value <= 2) return { label: 'Low', color: '#a3e635' };
+            if (value <= 3) return { label: 'Moderate', color: '#fb923c' };
+            if (value <= 4) return { label: 'High', color: '#f87171' };
+            return { label: 'Very High', color: '#dc2626' };
+        }
+
         async function initCurrentWeather() {
             updateClock();
             const locations = [
@@ -120,8 +148,12 @@
                     document.getElementById(`${loc.prefix}-desc`).innerText = c.desc;
                     document.getElementById(`${loc.prefix}-feels`).innerText = c.feels + '°';
                     document.getElementById(`${loc.prefix}-hum`).innerText = c.hum + '%';
+                    document.getElementById(`${loc.prefix}-dew`).innerText = (c.dewPoint ?? '--') + '°';
+                    document.getElementById(`${loc.prefix}-cloud`).innerText = (c.cloudCover ?? '--') + '%';
                     document.getElementById(`${loc.prefix}-wind`).innerHTML = `${c.wind} mph <span style="${getWindDir(c.windDir)}">⬆</span>`;
                     document.getElementById(`${loc.prefix}-pop`).innerText = c.pop + '%';
+                    document.getElementById(`${loc.prefix}-pressure`).innerText = (c.pressure ?? '--') + ' hPa';
+                    document.getElementById(`${loc.prefix}-vis`).innerText = (c.visibility ?? '--') + ' mi';
                     maxPop = Math.max(maxPop, c.pop);
                 }
             }
@@ -156,11 +188,32 @@
                 document.getElementById('astro-dl').innerText = astro.dayLength;
                 document.getElementById('astro-moon').innerHTML = `${astro.moon.i} ${astro.moon.n}`;
             }
+
+            const pollen = await fetchPollen(30.48, -90.95);
+            const pc = document.getElementById('pollen-content');
+            if (pollen && pollen.active.length > 0) {
+                pc.innerHTML = pollen.active.map(p => {
+                    const pl = pollenLevel(p.value);
+                    return `<div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">${p.label}</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: ${pl.color}; margin-top: 4px;">${pl.label}</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Idx: ${p.value}</div>
+                    </div>`;
+                }).join('');
+                if (pollen.highest) {
+                    const ph = pollenLevel(pollen.highest.value);
+                    pc.innerHTML += `<div style="grid-column: 1 / -1; padding: 8px 12px; background: rgba(251, 146, 60, 0.08); border-radius: 8px; font-size: 0.85rem; text-align: center; color: var(--text-muted);">
+                        <strong style="color: ${ph.color};">${pollen.highest.label}</strong> is the dominant allergen today — ${ph.label.toLowerCase()} level
+                    </div>`;
+                }
+            } else if (pollen) {
+                pc.innerHTML = '<div style="grid-column: 1 / -1; color: var(--text-muted); text-align: center; font-size: 0.85rem;">🌿 No significant pollen detected today</div>';
+            } else {
+                pc.innerHTML = '<div style="grid-column: 1 / -1; color: var(--text-muted); text-align: center; font-size: 0.85rem;">Pollen data unavailable</div>';
+            }
         }
         initCurrentWeather();
         setInterval(initCurrentWeather, 300000);
     </script>
 </body>
 </html>
-
-

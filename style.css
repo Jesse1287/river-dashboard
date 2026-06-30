@@ -450,3 +450,44 @@ button {
 .river-fact strong {
     color: var(--accent-blue);
 }
+
+/* Quick Links */
+.quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 6px;
+}
+.quick-link {
+    flex: 1;
+    min-width: 140px;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    transition: all 0.2s;
+}
+.quick-link:hover {
+    background: rgba(56, 189, 248, 0.08);
+    border-color: rgba(56, 189, 248, 0.3);
+}
+.quick-link:active {
+    transform: scale(0.97);
+}
+.quick-link .ql-icon {
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 4px;
+}
+.quick-link .ql-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.quick-link .ql-desc {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
