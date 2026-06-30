@@ -15,16 +15,10 @@
             display: block;
             text-align: center;
             cursor: pointer;
-            transition: opacity 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.2s;
         }
         .route-card:hover {
             border-color: rgba(56,189,248,0.5) !important;
             box-shadow: 0 12px 40px rgba(56,189,248,0.2) !important;
-        }
-        .route-dim { opacity: 0.5; }
-        .route-active {
-            border-color: var(--accent-blue) !important;
-            box-shadow: 0 0 25px rgba(56,189,248,0.15) !important;
         }
         .route-badge {
             font-size: 0.65rem;
@@ -59,33 +53,29 @@
             <div id="corridor-reason" style="font-size: 0.85rem; color: var(--text-muted);"></div>
         </div>
 
-        <div class="grid-3" style="margin-bottom: 16px;">
-            <a href="https://www.google.com/maps/dir/480+Donald+Dr,+Denham+Springs,+LA+70726/30.1007863,-90.9565542" target="_blank" class="panel float-hover route-card" id="route-morning">
-                <div class="route-badge" style="color: var(--accent-blue);" id="morning-badge">🚗 Morning</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Denham → Donaldsonville</div>
-                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 45 min</div>
-                <div style="font-size: 0.8rem; color: var(--text-muted);">I-12 W → I-10 W</div>
-                <div id="route-morning-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
-            </a>
-            <a href="https://www.google.com/maps/dir/30.1007863,-90.9565542/480+Donald+Dr,+Denham+Springs,+LA+70726" target="_blank" class="panel float-hover route-card" id="route-evening">
-                <div class="route-badge" style="color: var(--status-orange);" id="evening-badge">🌅 Evening</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Donaldsonville → Denham Springs</div>
-                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 55 min</div>
-                <div style="font-size: 0.8rem; color: var(--text-muted);">LA-22 W → LA-16 W</div>
-                <div id="route-evening-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
+        <div class="grid-2" style="margin-bottom: 16px;">
+            <a id="active-route-card" target="_blank" class="panel float-hover route-card">
+                <div class="route-badge" id="active-badge" style="color: var(--accent-blue);">⭐ Active</div>
+                <div id="active-route-name" style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Denham → Donaldsonville</div>
+                <div id="active-time" style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 45 min</div>
+                <div id="active-route-path" style="font-size: 0.8rem; color: var(--text-muted);">I-12 W → I-10 W</div>
+                <div id="active-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </a>
             <a href="https://www.google.com/maps/dir/Denham+Springs,+LA/Family+Healthcare+of+Bedico,+Ponchatoula,+LA" target="_blank" class="panel float-hover route-card">
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🏥 Wife — Bedico</div>
-                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 2px;">Denham → Family Healthcare of Bedico</div>
+                <div style="font-size: 0.65rem; color: #f472b6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">🏥 Wife — Bedico</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Denham → Family Healthcare of Bedico</div>
                 <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 35 min</div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">I-12 E → LA-445 S</div>
                 <div id="route-bedico-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </a>
         </div>
 
-        <div class="grid-2">
-            <div class="panel float-hover">
-                <h3 style="color: var(--status-orange);">⚡ Infrastructure Status</h3>
+        <div class="panel" style="padding: 0; overflow: hidden; border-radius: 16px; height: 400px;">
+            <iframe id="route-map" width="100%" height="100%" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <div class="panel float-hover">
+            <h3 style="color: var(--status-orange);">⚡ Infrastructure Status</h3>
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 8px;">
                         <span style="color: var(--text-muted); font-size: 0.85rem;">⚡ Entergy Power</span>
@@ -105,7 +95,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <div class="quick-links" style="margin-top: 16px;">
             <a href="https://www.etrviewoutage.com/map?state=LA" target="_blank" class="quick-link">
@@ -188,9 +177,14 @@
             return { label: `⚠️ ${hazards.join('/')}`, color: 'var(--status-orange)' };
         }
 
+        const HOME_ADDR = '480+Donald+Dr,+Denham+Springs,+LA+70726';
+        const WORK_COORDS = '30.1007863,-90.9565542';
+
+        const MAP_MORNING = `https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d110192!2d-90.957!3d30.294!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x8626b7a5a5a5a5a5%3A0x5a5a5a5a5a5a5a5a!2sDenham+Springs!3m2!1d30.4879787!2d-90.9567682!4m5!1s0x8626b4b4b4b4b4b4%3A0x4b4b4b4b4b4b4b4b!2sDonaldsonville!3m2!1d30.1007863!2d-90.9565542!5e0!3m2!1sen!2sus!4v1`;
+        const MAP_EVENING = `https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d110192!2d-90.957!3d30.294!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x8626b4b4b4b4b4b4%3A0x4b4b4b4b4b4b4b4b!2sDonaldsonville!3m2!1d30.1007863!2d-90.9565542!4m5!1s0x8626b7a5a5a5a5a5%3A0x5a5a5a5a5a5a5a5a!2sDenham+Springs!3m2!1d30.4879787!2d-90.9567682!5e0!3m2!1sen!2sus!4v1`;
+
         function activeRoute() {
-            const h = new Date().getHours();
-            return h < 12 ? 'morning' : 'evening';
+            return new Date().getHours() < 12 ? 'morning' : 'evening';
         }
 
         async function initTravel() {
@@ -205,22 +199,34 @@
             ]);
 
             const active = activeRoute();
-            const morningCard = document.getElementById('route-morning');
-            const eveningCard = document.getElementById('route-evening');
-            const morningBadge = document.getElementById('morning-badge');
-            const eveningBadge = document.getElementById('evening-badge');
+            const isMorning = active === 'morning';
 
-            morningCard.classList.toggle('route-active', active === 'morning');
-            morningCard.classList.toggle('route-dim', active !== 'morning');
-            morningBadge.innerText = active === 'morning' ? '⭐ Active — Morning' : '🚗 Morning';
+            const card = document.getElementById('active-route-card');
+            const badge = document.getElementById('active-badge');
+            const rName = document.getElementById('active-route-name');
+            const rTime = document.getElementById('active-time');
+            const rPath = document.getElementById('active-route-path');
 
-            eveningCard.classList.toggle('route-active', active === 'evening');
-            eveningCard.classList.toggle('route-dim', active !== 'evening');
-            eveningBadge.innerText = active === 'evening' ? '⭐ Active — Evening' : '🌅 Evening';
+            if (isMorning) {
+                card.href = `https://www.google.com/maps/dir/${HOME_ADDR}/${WORK_COORDS}`;
+                badge.innerText = '⭐ Active — Morning';
+                badge.style.color = 'var(--accent-blue)';
+                rName.innerText = 'Denham → Donaldsonville';
+                rTime.innerText = '~ 45 min';
+                rPath.innerText = 'I-12 W → I-10 W';
+            } else {
+                card.href = `https://www.google.com/maps/dir/${WORK_COORDS}/${HOME_ADDR}`;
+                badge.innerText = '⭐ Active — Evening';
+                badge.style.color = 'var(--status-orange)';
+                rName.innerText = 'Donaldsonville → Denham Springs';
+                rTime.innerText = '~ 55 min';
+                rPath.innerText = 'LA-22 W → LA-16 W';
+            }
 
-            const activeOriginW = active === 'morning' ? denhamW : donW;
-            const activeDestW = active === 'morning' ? donW : denhamW;
-            const activeElId = active === 'morning' ? 'route-morning-conditions' : 'route-evening-conditions';
+            document.getElementById('route-map').src = isMorning ? MAP_MORNING : MAP_EVENING;
+
+            const activeOriginW = isMorning ? denhamW : donW;
+            const activeDestW = isMorning ? donW : denhamW;
 
             if (activeOriginW) {
                 const c = activeOriginW.current;
@@ -230,8 +236,8 @@
                 document.getElementById('corridor-reason').innerText = verdict.reason;
 
                 const rc = routeConditions(c, activeDestW?.current);
-                document.getElementById(activeElId).innerText = rc.label;
-                document.getElementById(activeElId).style.color = rc.color;
+                document.getElementById('active-conditions').innerText = rc.label;
+                document.getElementById('active-conditions').style.color = rc.color;
             }
 
             if (denhamW && bedicoW) {
