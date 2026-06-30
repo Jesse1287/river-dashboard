@@ -34,72 +34,30 @@
         </div>
 
         <div class="grid-3" style="margin-bottom: 16px;">
-            <div class="panel float-hover" style="text-align: center;">
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🚗 Morning — Interstate</div>
-                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 2px;">Denham → Donaldsonville</div>
-                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route1-status">~ 45 min</div>
+            <div class="panel float-hover" style="text-align: center; display: none;" id="route-morning">
+                <div style="font-size: 0.65rem; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Active — Morning</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🚗 Interstate — Denham → Donaldsonville</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 45 min</div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">I-12 W → I-10 W</div>
-                <div id="route1-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
+                <div id="route-morning-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </div>
-            <div class="panel float-hover" style="text-align: center;">
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🌅 Evening — Back Roads</div>
-                <div style="font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 2px;">Donaldsonville → Denham Springs</div>
-                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route2-status">~ 55 min</div>
+            <div class="panel float-hover" style="text-align: center; display: none;" id="route-evening">
+                <div style="font-size: 0.65rem; color: var(--status-orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">Active — Afternoon/Evening</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🌅 Back Roads — Donaldsonville → Denham Springs</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 55 min</div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">LA-22 W → LA-16 W</div>
-                <div id="route2-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
+                <div id="route-evening-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </div>
             <div class="panel float-hover" style="text-align: center;">
                 <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">🏥 Wife — Bedico</div>
                 <div style="font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 2px;">Denham → Family Healthcare of Bedico</div>
-                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;" id="route3-status">~ 35 min</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 35 min</div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">I-12 E → LA-445 S</div>
-                <div id="route3-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
+                <div id="route-bedico-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </div>
         </div>
 
-        <div class="grid-3">
-            <div class="panel float-hover">
-                <h3 style="color: var(--accent-blue);">🏡 Denham Springs Departure</h3>
-                <div id="depart-denham" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Temp</div>
-                        <div id="dep-denham-temp" style="font-size: 1.3rem; font-weight: 700;">--°</div>
-                    </div>
-                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Conditions</div>
-                        <div style="font-size: 1.3rem;" id="dep-denham-icon">--</div>
-                    </div>
-                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Wind</div>
-                        <div id="dep-denham-wind" style="font-size: 1rem; font-weight: 700;">--</div>
-                    </div>
-                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Visibility</div>
-                        <div id="dep-denham-vis" style="font-size: 1rem; font-weight: 700;">-- mi</div>
-                    </div>
-                </div>
-            </div>
-            <div class="panel float-hover">
-                <h3 style="color: var(--accent-pink);">🏥 Bedico Arrival</h3>
-                <div id="depart-bedico" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Temp</div>
-                        <div id="dep-bedico-temp" style="font-size: 1.3rem; font-weight: 700;">--°</div>
-                    </div>
-                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Conditions</div>
-                        <div style="font-size: 1.3rem;" id="dep-bedico-icon">--</div>
-                    </div>
-                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Wind</div>
-                        <div id="dep-bedico-wind" style="font-size: 1rem; font-weight: 700;">--</div>
-                    </div>
-                    <div style="text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
-                        <div style="font-size: 0.7rem; color: var(--text-muted);">Visibility</div>
-                        <div id="dep-bedico-vis" style="font-size: 1rem; font-weight: 700;">-- mi</div>
-                    </div>
-                </div>
-            </div>
+        <div class="grid-2">
             <div class="panel float-hover">
                 <h3 style="color: var(--status-orange);">⚡ Infrastructure Status</h3>
                 <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -173,7 +131,7 @@
                 hazards.push('🌦️ Scattered showers');
                 score += 1;
             }
-            if (weather && weather.visibility && parseFloat(weather.visibility) < 3) {
+            if (weather && weather.visibility != null && parseFloat(weather.visibility) < 3) {
                 hazards.push('🌫️ Low visibility');
                 score += 2;
             }
@@ -202,54 +160,54 @@
             if (!w1 || !w2) return { label: '--', color: 'var(--text-muted)' };
             const hazards = [];
             if (w1.pop >= 60 || w2.pop >= 60) hazards.push('Rain');
-            if ((w1.visibility && parseFloat(w1.visibility) < 3) || (w2.visibility && parseFloat(w2.visibility) < 3)) hazards.push('Fog');
+            if ((w1.visibility != null && parseFloat(w1.visibility) < 3) || (w2.visibility != null && parseFloat(w2.visibility) < 3)) hazards.push('Fog');
             if (w1.wind >= 25 || w2.wind >= 25) hazards.push('Wind');
             if (hazards.length === 0) return { label: '✅ Clear', color: 'var(--status-green)' };
             return { label: `⚠️ ${hazards.join('/')}`, color: 'var(--status-orange)' };
         }
 
+        function activeRoute() {
+            const h = new Date().getHours();
+            return h < 12 ? 'morning' : 'evening';
+        }
+
         async function initTravel() {
             updateClock();
 
-            const denhamW = await fetchWeather(30.48, -90.95);
-            const donW = await fetchWeather(30.10, -90.99);
-            const bedicoW = await fetchWeather(30.42, -90.38);
-            const river = await fetchRiver();
-            const alerts = await fetchAlerts(30.48, -90.95);
+            const [denhamW, donW, bedicoW, river, alerts] = await Promise.all([
+                fetchWeather(30.48, -90.95),
+                fetchWeather(30.10, -90.99),
+                fetchWeather(30.42, -90.38),
+                fetchRiver(),
+                fetchAlerts(30.48, -90.95)
+            ]);
 
-            if (denhamW) {
-                const c = denhamW.current;
-                document.getElementById('dep-denham-temp').innerText = c.temp + '°';
-                document.getElementById('dep-denham-icon').innerText = c.icon;
-                document.getElementById('dep-denham-wind').innerHTML = `${c.wind} mph <span style="${getWindDir(c.windDir)}">⬆</span>`;
-                document.getElementById('dep-denham-vis').innerText = (c.visibility ?? '--') + ' mi';
+            const active = activeRoute();
+            const showMorning = document.getElementById('route-morning');
+            const showEvening = document.getElementById('route-evening');
+            showMorning.style.display = active === 'morning' ? '' : 'none';
+            showEvening.style.display = active === 'evening' ? '' : 'none';
 
+            const activeOriginW = active === 'morning' ? denhamW : donW;
+            const activeDestW = active === 'morning' ? donW : denhamW;
+            const activeElId = active === 'morning' ? 'route-morning-conditions' : 'route-evening-conditions';
+
+            if (activeOriginW) {
+                const c = activeOriginW.current;
                 const verdict = travelVerdict(c, river, alerts);
                 document.getElementById('corridor-verdict').innerText = verdict.verdict;
                 document.getElementById('corridor-verdict').style.color = verdict.color;
                 document.getElementById('corridor-reason').innerText = verdict.reason;
 
-                const r1 = routeConditions(c, donW?.current);
-                document.getElementById('route1-conditions').innerText = r1.label;
-                document.getElementById('route1-conditions').style.color = r1.color;
-
-                const r2 = routeConditions(donW?.current, c);
-                document.getElementById('route2-conditions').innerText = r2.label;
-                document.getElementById('route2-conditions').style.color = r2.color;
+                const rc = routeConditions(c, activeDestW?.current);
+                document.getElementById(activeElId).innerText = rc.label;
+                document.getElementById(activeElId).style.color = rc.color;
             }
 
             if (denhamW && bedicoW) {
-                const r3 = routeConditions(denhamW.current, bedicoW.current);
-                document.getElementById('route3-conditions').innerText = r3.label;
-                document.getElementById('route3-conditions').style.color = r3.color;
-            }
-
-            if (bedicoW) {
-                const c = bedicoW.current;
-                document.getElementById('dep-bedico-temp').innerText = c.temp + '°';
-                document.getElementById('dep-bedico-icon').innerText = c.icon;
-                document.getElementById('dep-bedico-wind').innerHTML = `${c.wind} mph <span style="${getWindDir(c.windDir)}">⬆</span>`;
-                document.getElementById('dep-bedico-vis').innerText = (c.visibility ?? '--') + ' mi';
+                const rc = routeConditions(denhamW.current, bedicoW.current);
+                document.getElementById('route-bedico-conditions').innerText = rc.label;
+                document.getElementById('route-bedico-conditions').style.color = rc.color;
             }
 
             if (river) {
