@@ -42,6 +42,7 @@
             <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 10px; overflow: hidden; position: relative;">
                 <div id="mini-river-fill" style="height: 100%; background: var(--status-green); width: 0%; transition: width 1s ease, background 0.5s;"></div>
             </div>
+            <div class="river-fact" id="river-fact"></div>
         </div>
 
         <div id="alerts-container"></div>
@@ -108,7 +109,7 @@
             if (hour < 12) greet = "Good morning";
             else if (hour < 18) greet = "Good afternoon";
 
-            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+            const dayOfYear = Math.floor((Date.now() - Date.UTC(now.getFullYear(), 0, 1)) / 86400000);
             const psalm = psalms[dayOfYear % psalms.length];
 
             document.getElementById('ticker-greeting').innerText = greet + ', Roux Family';
@@ -120,6 +121,8 @@
         async function initDashboard() {
             updateClock();
             
+            document.getElementById('river-fact').innerHTML = '💡 <strong>River Fact:</strong> ' + getRiverFact();
+
             const riverData = await fetchRiver();
             if (riverData) {
                 document.getElementById('home-stage').innerText = riverData.stage + ' ft';

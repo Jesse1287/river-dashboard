@@ -106,23 +106,12 @@ async function fetchAlerts(lat, lon) {
                 'User-Agent': '(RouxFamilyDashboard, jesse@example.com)' 
             }
         });
-
-        if (!response.ok) {
-            console.error("NWS API Error:", response.status, response.statusText);
-            return null;
-        }
-
+        if (!response.ok) return null;
         const data = await response.json();
-        
-        // Log the response to your browser console to see what's happening
-        console.log("NWS API Response:", data);
-
         if (data.features && data.features.length > 0) {
             return data.features[0].properties.headline;
-        } else {
-            console.log("No active alerts for this location.");
-            return null;
         }
+        return null;
     } catch (error) {
         console.error("Alert fetch failed:", error);
         return null;
@@ -234,6 +223,29 @@ function initChecklist() {
     });
 }
 
+const RIVER_FACTS = [
+    "The Amite River flows approximately 117 miles through Mississippi and Louisiana.",
+    "Denham Springs recorded its highest crest at 46.2 feet during The Great Flood of August 2016.",
+    "The name 'Amite' comes from a Choctaw word meaning 'little river' or 'young river.'",
+    "The Amite River basin drains over 2,000 square miles of watershed.",
+    "Flood stage at the Denham Springs gauge is 26.0 feet. Major flood stage begins at 39.0 feet.",
+    "The USGS gauge 07378500 has been monitoring the Amite since 1974.",
+    "The Amite River flows into Lake Maurepas, then into Lake Pontchartrain.",
+    "Alligators in the Amite basin can grow up to 14 feet long.",
+    "The Amite River is home to over 50 species of fish including bass, catfish, and crappie.",
+    "French settlers named the area 'Denham Springs' after the natural springs found along the river.",
+    "The 2016 Louisiana flood was a 1-in-1,000-year event that damaged over 150,000 homes.",
+    "Bald cypress trees along the Amite can live for over 1,000 years.",
+    "The Amite River's flow can increase 100x during major flood events.",
+    "Blue herons, egrets, and ospreys are common sights along the Amite River.",
+    "The river's name has also been spelled 'Amity' and 'Amit' on historical maps."
+];
+
+function getRiverFact() {
+    const dayOfYear = Math.floor((Date.now() - Date.UTC(new Date().getFullYear(), 0, 1)) / 86400000);
+    return RIVER_FACTS[dayOfYear % RIVER_FACTS.length];
+}
+
 // Register Service Worker for Progressive Web App (PWA) support
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -242,5 +254,3 @@ if ('serviceWorker' in navigator) {
             .catch((err) => console.error('[PWA] Service Worker registration failed:', err));
     });
 }
-
-

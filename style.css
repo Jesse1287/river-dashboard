@@ -8,7 +8,6 @@
     --status-green: #4ade80;
     --status-red: #f87171;
     --status-orange: #fb923c;
-    --nav-height: 70px;
 }
 
 * {
@@ -22,7 +21,7 @@ body {
     color: var(--text-main);
     margin: 0;
     padding: 16px;
-    padding-bottom: calc(var(--nav-height) + 20px);
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 20px));
     display: flex;
     justify-content: center;
     position: relative;
@@ -113,6 +112,74 @@ h2, h3 {
 }
 
 .critical-state { animation: critical-pulse 2s infinite; }
+
+/* Wave Animation */
+@keyframes wave-flow {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.wave-container {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    overflow: hidden;
+    margin-top: 10px;
+    opacity: 0.6;
+}
+
+.wave {
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background: repeat-x;
+    animation: wave-flow 4s linear infinite;
+}
+
+.wave-1 {
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        var(--accent-blue) 2px,
+        transparent 4px,
+        var(--accent-blue) 6px,
+        transparent 8px
+    );
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='white' d='M0,30 C360,0 720,60 1080,30 C1260,15 1350,30 1440,30 L1440,60 L0,60 Z'/%3E%3C/svg%3E");
+    mask-size: 720px 100%;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='white' d='M0,30 C360,0 720,60 1080,30 C1260,15 1350,30 1440,30 L1440,60 L0,60 Z'/%3E%3C/svg%3E");
+    -webkit-mask-size: 720px 100%;
+    opacity: 0.5;
+}
+
+.wave-2 {
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        var(--accent-blue) 3px,
+        transparent 6px
+    );
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='white' d='M0,40 C360,10 720,50 1080,20 C1260,30 1350,40 1440,40 L1440,60 L0,60 Z'/%3E%3C/svg%3E");
+    mask-size: 720px 100%;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='white' d='M0,40 C360,10 720,50 1080,20 C1260,30 1350,40 1440,40 L1440,60 L0,60 Z'/%3E%3C/svg%3E");
+    -webkit-mask-size: 720px 100%;
+    animation-duration: 6s;
+    animation-direction: reverse;
+    opacity: 0.3;
+}
+
+/* Sparkle hover effect on metrics */
+.metric-sparkle {
+    transition: text-shadow 0.3s ease;
+}
+.metric-sparkle:hover {
+    text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+}
+
+@keyframes gentle-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
 
 /* Navigation */
 .nav-tabs {
@@ -365,4 +432,21 @@ button {
     background: var(--text-muted);
 }
 
-
+/* River Fact Card */
+.river-fact {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    padding: 12px 16px;
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px dashed rgba(56, 189, 248, 0.2);
+    border-radius: 10px;
+    margin-top: 12px;
+    transition: background 0.3s;
+}
+.river-fact:hover {
+    background: rgba(56, 189, 248, 0.1);
+}
+.river-fact strong {
+    color: var(--accent-blue);
+}

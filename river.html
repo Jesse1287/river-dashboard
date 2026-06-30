@@ -48,6 +48,13 @@
                     <div style="position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: bold; color: var(--status-red); white-space: nowrap;">Major (35ft)</div>
                 </div>
             </div>
+
+            <div class="wave-container">
+                <div class="wave wave-1"></div>
+                <div class="wave wave-2"></div>
+            </div>
+
+            <div class="river-fact" id="river-fact"></div>
         </div>
 
         <h3>📈 River Forecast Hydrograph</h3>
@@ -71,6 +78,7 @@
 
         async function initRiver() {
             updateClock();
+            document.getElementById('river-fact').innerHTML = '💡 <strong>River Fact:</strong> ' + getRiverFact();
             const r = await fetchRiver();
             if (!r) return;
 
