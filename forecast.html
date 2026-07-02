@@ -3,104 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>📅 Forecast | Roux Command</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=weather.html">
+    <link rel="canonical" href="weather.html">
 </head>
 <body>
-    <div class="container">
-        <h1>📅 5-Day Forecast</h1>
-        
-        <div class="heartbeat-container">
-            <span class="pulse-dot"></span>             Model Sync: <span class="sys-clock">--:-- -- ---</span>
-        </div>
-
-        <div class="nav-tabs">
-            <a href="index.html"><span class="icon">🏠</span> <span>HQ</span></a>
-            <a href="river.html"><span class="icon">🌊</span> <span>Flood</span></a>
-            <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
-            <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
-            <a href="forecast.html" class="active"><span class="icon">📅</span> <span>Forecast</span></a>
-            <a href="travel.html"><span class="icon">🚦</span> <span>Travel</span></a>
-            <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
-            <a href="ukraine.html"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
-        </div>
-
-        <div class="panel float-hover">
-            <h2 style="color: var(--accent-blue);">🏡 Denham Springs Projection</h2>
-            <div id="denham-forecast" style="display: flex; flex-direction: column; gap: 12px;">Crunching ensemble models...</div>
-        </div>
-
-        <div class="panel float-hover">
-            <h2 style="color: var(--status-green);">🏭 Donaldsonville Projection</h2>
-            <div id="don-forecast" style="display: flex; flex-direction: column; gap: 12px;">Crunching ensemble models...</div>
-        </div>
-
-        <div class="panel float-hover">
-            <h2 style="color: var(--status-orange);">🏥 Ponchatoula Projection</h2>
-            <div id="ponch-forecast" style="display: flex; flex-direction: column; gap: 12px;">Crunching ensemble models...</div>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
-    <script>
-        const getDayName = (dateStr, index) => {
-            if (index === 0) return "Today";
-            const date = new Date(dateStr + 'T12:00:00Z'); 
-            return date.toLocaleDateString('en-US', { weekday: 'short' });
-        };
-
-        function renderForecast(daily, containerId) {
-            let html = '';
-            const allMax = daily.temperature_2m_max.slice(0, 5);
-            const allMin = daily.temperature_2m_min.slice(0, 5);
-            const rangeMin = Math.floor(Math.min(...allMin) / 10) * 10;
-            const rangeMax = Math.ceil(Math.max(...allMax) / 10) * 10;
-            const range = rangeMax - rangeMin || 80;
-            for(let i = 0; i < 5; i++) {
-                const dayName = getDayName(daily.time[i], i);
-                const maxT = Math.round(daily.temperature_2m_max[i]);
-                const minT = Math.round(daily.temperature_2m_min[i]);
-                const pop = daily.precipitation_probability_max[i] || 0;
-                const fc = daily.shortForecast && daily.shortForecast[i] ? nwsShortForecastIcon(daily.shortForecast[i]) : getWMO(daily.weather_code[i]);
-                const leftPos = Math.max(0, Math.min(100, ((minT - rangeMin) / range) * 100));
-                const widthPct = Math.max(5, Math.min(100, ((maxT - minT) / range) * 100));
-
-                html += `
-                <div class="forecast-row">
-                    <div class="forecast-day">${dayName}</div>
-                    <div class="forecast-cond">${fc.icon} <span>${fc.desc}</span></div>
-                    <div class="forecast-bar">
-                        <span class="forecast-temp-min">${minT}°</span>
-                        <div class="forecast-track"><div class="forecast-fill" style="left:${leftPos}%;width:${widthPct}%;"></div></div>
-                        <span class="forecast-temp-max">${maxT}°</span>
-                    </div>
-                    <div class="forecast-pop ${pop >= 50 ? 'pop-high' : ''}">${pop}% 💧</div>
-                </div>`;
-            }
-            document.getElementById(containerId).innerHTML = html;
-        }
-
-        async function initForecast() {
-            updateClock();
-            const locations = [
-                { lat: 30.48, lon: -90.95, prefix: 'denham' },
-                { lat: 30.10, lon: -90.99, prefix: 'don' },
-                { lat: 30.44, lon: -90.40, prefix: 'ponch' }
-            ];
-
-            for (const loc of locations) {
-                const w = await fetchWeather(loc.lat, loc.lon);
-                if (w && w.daily) {
-                    renderForecast(w.daily, `${loc.prefix}-forecast`);
-                }
-            }
-        }
-        initForecast();
-    </script>
+    <p>Forecast has moved to <a href="weather.html">Weather & Forecast</a>.</p>
 </body>
 </html>
-
-
