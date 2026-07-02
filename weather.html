@@ -9,20 +9,22 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        .radar-container {
-            height: 300px;
-            background-color: #1a202c;
-            border-radius: 16px;
-            margin-bottom: 16px;
+        .forecast-cond {
+            min-width: 140px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            font-size: 1.2rem;
+            gap: 6px;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(20px) saturate(200%);
-            -webkit-backdrop-filter: blur(20px) saturate(200%);
+        }
+        .forecast-cond span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        @media (max-width: 600px) {
+            .forecast-cond { min-width: 0; font-size: 0.75rem; }
+            .forecast-cond span { display: none; }
         }
 
         .extra-detail {
@@ -79,7 +81,11 @@
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="denham-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="denham-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
                 </div>
-                <div class="extra-detail" id="denham-extra"></div>
+                <div class="extra-detail">
+                    <span>☀️ UV <strong id="denham-uv">--</strong></span>
+                    <span>🌡️ Dew <strong id="denham-dew">--°</strong></span>
+                    <span>☁️ Cloud <strong id="denham-cloud">--%</strong></span>
+                </div>
             </div>
 
             <div class="panel float-hover">
@@ -96,7 +102,11 @@
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="don-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="don-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
                 </div>
-                <div class="extra-detail" id="don-extra"></div>
+                <div class="extra-detail">
+                    <span>☀️ UV <strong id="don-uv">--</strong></span>
+                    <span>🌡️ Dew <strong id="don-dew">--°</strong></span>
+                    <span>☁️ Cloud <strong id="don-cloud">--%</strong></span>
+                </div>
             </div>
 
             <div class="panel float-hover">
@@ -113,12 +123,44 @@
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="ponch-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="ponch-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
                 </div>
-                <div class="extra-detail" id="ponch-extra"></div>
+                <div class="extra-detail">
+                    <span>☀️ UV <strong id="ponch-uv">--</strong></span>
+                    <span>🌡️ Dew <strong id="ponch-dew">--°</strong></span>
+                    <span>☁️ Cloud <strong id="ponch-cloud">--%</strong></span>
+                </div>
             </div>
         </div>
 
-        <div class="radar-container">
-            <span>Interactive Radar (placeholder)</span>
+        <div class="panel" style="padding: 0; overflow: hidden; border-radius: 16px; height: 600px;">
+            <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" height="100%" frameborder="0" allowfullscreen style="border:none; vertical-align: bottom;"></iframe>
+        </div>
+
+        <div class="grid-2">
+            <div class="panel float-hover">
+                <h3 style="color: var(--accent-blue);">🌬️ Air Quality & UV</h3>
+                <div id="aqi-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">AQI (US)</span><br><strong id="aqi-us" style="font-size:1.5rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">AQI (EU)</span><br><strong id="aqi-eu" style="font-size:1.5rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">UV Index</span><br><strong id="uv-index" style="font-size:1.5rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">PM2.5</span><br><strong id="aqi-pm" style="font-size:1.5rem;">-- µg</strong></div>
+                </div>
+            </div>
+            <div class="panel float-hover">
+                <h3 style="color: var(--status-orange);">☀️ Sun & Moon</h3>
+                <div id="astro-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Sunrise</span><br><strong id="astro-sr" style="font-size:1.3rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Sunset</span><br><strong id="astro-ss" style="font-size:1.3rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Day Length</span><br><strong id="astro-dl" style="font-size:1.3rem;">--</strong></div>
+                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Moon</span><br><span id="astro-moon" style="font-size:1.5rem;">--</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel float-hover">
+            <h3 style="color: var(--status-orange);">🌿 Pollen — Denham Springs</h3>
+            <div id="pollen-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Loading pollen data...</div>
+            </div>
         </div>
 
         <div class="panel float-hover">
@@ -140,9 +182,9 @@
     <script src="app.js"></script>
     <script>
         const LOCATIONS = [
-            { lat: 30.48, lon: -90.95, prefix: 'denham', name: 'Denham Springs' },
-            { lat: 30.10, lon: -90.99, prefix: 'don', name: 'Donaldsonville' },
-            { lat: 30.44, lon: -90.40, prefix: 'ponch', name: 'Ponchatoula' }
+            { lat: 30.48, lon: -90.95, prefix: 'denham' },
+            { lat: 30.10, lon: -90.99, prefix: 'don' },
+            { lat: 30.44, lon: -90.40, prefix: 'ponch' }
         ];
 
         function getDayName(dateStr, index) {
@@ -183,8 +225,27 @@
             container.innerHTML = html;
         }
 
+        function pollenLevel(value) {
+            if (!value || value === 0) return { label: 'None', color: 'var(--text-muted)' };
+            if (value <= 1) return { label: 'Very Low', color: '#4ade80' };
+            if (value <= 2) return { label: 'Low', color: '#a3e635' };
+            if (value <= 3) return { label: 'Moderate', color: '#fb923c' };
+            if (value <= 4) return { label: 'High', color: '#f87171' };
+            return { label: 'Very High', color: '#dc2626' };
+        }
+
         async function loadWeatherPage() {
             updateClock();
+
+            const aqi = await fetchAirQuality(30.48, -90.95);
+            let uvVal = '--';
+            if (aqi) {
+                uvVal = aqi.uv_index?.toFixed(1) ?? '--';
+                document.getElementById('aqi-us').innerText = aqi.us_aqi ?? '--';
+                document.getElementById('aqi-eu').innerText = aqi.european_aqi ?? '--';
+                document.getElementById('uv-index').innerText = uvVal;
+                document.getElementById('aqi-pm').innerHTML = (aqi.pm2_5?.toFixed(1) ?? '--') + ' µg';
+            }
 
             for (const loc of LOCATIONS) {
                 const w = await fetchWeather(loc.lat, loc.lon);
@@ -199,6 +260,9 @@
                     document.getElementById(`${loc.prefix}-pop`).innerText = (c.pop ?? '--') + '%';
                     document.getElementById(`${loc.prefix}-pressure`).innerText = (c.pressure ?? '--') + ' hPa';
                     document.getElementById(`${loc.prefix}-vis`).innerText = (c.visibility ?? '--') + ' mi';
+                    document.getElementById(`${loc.prefix}-uv`).innerText = uvVal;
+                    document.getElementById(`${loc.prefix}-dew`).innerText = (c.dewPoint ?? '--') + '°';
+                    document.getElementById(`${loc.prefix}-cloud`).innerText = (c.cloudCover ?? '--') + '%';
                 }
 
                 const forecastData = await fetchForecast(loc.lat, loc.lon);
@@ -207,6 +271,37 @@
                 } else {
                     document.getElementById(`${loc.prefix}-forecast`).innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Failed to load forecast.</div>';
                 }
+            }
+
+            const astro = await fetchAstro(30.48, -90.95);
+            if (astro) {
+                document.getElementById('astro-sr').innerText = astro.sunrise;
+                document.getElementById('astro-ss').innerText = astro.sunset;
+                document.getElementById('astro-dl').innerText = astro.dayLength;
+                document.getElementById('astro-moon').innerHTML = `${astro.moon.i} ${astro.moon.n}`;
+            }
+
+            const pollen = await fetchPollen(30.48, -90.95);
+            const pc = document.getElementById('pollen-content');
+            if (pollen && pollen.active.length > 0) {
+                pc.innerHTML = pollen.active.map(p => {
+                    const pl = pollenLevel(p.value);
+                    return `<div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">${p.label}</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: ${pl.color}; margin-top: 4px;">${pl.label}</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Idx: ${p.value}</div>
+                    </div>`;
+                }).join('');
+                if (pollen.highest) {
+                    const ph = pollenLevel(pollen.highest.value);
+                    pc.innerHTML += `<div style="grid-column: 1 / -1; padding: 8px 12px; background: rgba(251, 146, 60, 0.08); border-radius: 8px; font-size: 0.85rem; text-align: center; color: var(--text-muted);">
+                        <strong style="color: ${ph.color};">${pollen.highest.label}</strong> is the dominant allergen today — ${ph.label.toLowerCase()} level
+                    </div>`;
+                }
+            } else if (pollen) {
+                pc.innerHTML = '<div style="grid-column: 1 / -1; color: var(--text-muted); text-align: center; font-size: 0.85rem;">🌿 No significant pollen detected today</div>';
+            } else {
+                pc.innerHTML = '<div style="grid-column: 1 / -1; color: var(--text-muted); text-align: center; font-size: 0.85rem;">Pollen data unavailable</div>';
             }
         }
 
