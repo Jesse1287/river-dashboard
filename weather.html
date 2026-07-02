@@ -9,10 +9,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        /* Radar Placeholder */
         .radar-container {
-            height: 300px; /* Adjust as needed */
-            background-color: #1a202c; /* Dark background */
+            height: 300px;
+            background-color: #1a202c;
             border-radius: 16px;
             margin-bottom: 16px;
             display: flex;
@@ -25,80 +24,12 @@
             backdrop-filter: blur(20px) saturate(200%);
             -webkit-backdrop-filter: blur(20px) saturate(200%);
         }
-
-        /* Forecast Section */
-        .forecast-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Responsive grid */
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-        .forecast-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 18px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(20px) saturate(200%);
-            -webkit-backdrop-filter: blur(20px) saturate(200%);
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .forecast-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(56,189,248,0.2);
-            border-color: rgba(56,189,248,0.5);
-        }
-        .forecast-day {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-main);
-            margin-bottom: 8px;
-        }
-        .forecast-temps {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-top: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-        .forecast-temp-high { color: var(--status-orange); }
-        .forecast-temp-low { color: var(--accent-blue); opacity: 0.8; }
-
-        /* Temperature Line Graph */
-        .graph-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            margin-top: 16px;
-        }
-        .graph-canvas {
-            display: block; /* Remove extra space below canvas */
-            width: 100%;
-            height: 200px; /* Fixed height for graph */
-            background-color: rgba(255, 255, 255, 0.03); /* Slight background for canvas */
-            border-radius: 8px;
-        }
-        .graph-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: 12px;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🌦️ Weather & Forecast</h1>
-        
+
         <div class="heartbeat-container">
             <span class="pulse-dot"></span>             Current Conditions: <span class="sys-clock">--:-- -- ---</span>
         </div>
@@ -108,7 +39,6 @@
             <a href="river.html"><span class="icon">🌊</span> <span>Flood</span></a>
             <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
             <a href="weather.html" class="active"><span class="icon">🌦️</span> <span>Weather</span></a>
-            <a href="forecast.html"><span class="icon">📅</span> <span>Forecast</span></a>
             <a href="travel.html"><span class="icon">🚦</span> <span>Travel</span></a>
             <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
             <a href="ukraine.html"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
@@ -116,7 +46,6 @@
 
         <div class="radar-container">
             <span>Interactive Radar (placeholder)</span>
-            <!-- Actual radar integration would go here -->
         </div>
 
         <div class="panel float-hover">
@@ -135,16 +64,10 @@
             </div>
         </div>
 
-        <div class="forecast-section" id="forecast-section">
-            <!-- Forecast cards will be populated here by JS -->
-            <div class="forecast-card">Loading forecast...</div>
+        <div class="panel float-hover">
+            <h2 style="color: var(--status-orange);">📅 5-Day Forecast — Denham Springs</h2>
+            <div id="forecast-rows" style="display: flex; flex-direction: column; gap: 12px;">Loading forecast...</div>
         </div>
-
-        <div class="graph-container">
-            <div class="graph-title">5-Day Temperature Forecast</div>
-            <canvas id="temp-graph" class="graph-canvas"></canvas>
-        </div>
-
     </div>
 
     <script src="app.js"></script>
@@ -152,107 +75,42 @@
         const WEATHER_LAT = 30.48;
         const WEATHER_LON = -90.95;
 
-        function renderForecast(dailyData) {
-            const forecastSection = document.getElementById('forecast-section');
-            forecastSection.innerHTML = ''; // Clear loading message
+        function getDayName(dateStr, index) {
+            if (index === 0) return "Today";
+            const date = new Date(dateStr + 'T12:00:00Z');
+            return date.toLocaleDateString('en-US', { weekday: 'short' });
+        }
 
-            const days = ['Today', 'Tomorrow', 'Day 3', 'Day 4', 'Day 5']; // Placeholder names
-
-            const tempsMax = dailyData.temperature_2m_max.slice(0, 5);
-            const tempsMin = dailyData.temperature_2m_min.slice(0, 5);
-            const pops = dailyData.precipitation_probability_max.slice(0, 5);
-            const weatherCodes = dailyData.weather_code.slice(0, 5);
-
-            const minTempOverall = Math.min(...tempsMin);
-            const maxTempOverall = Math.max(...tempsMax);
-
-            // Determine graph Y-axis limits, ensuring a reasonable range
-            const yAxisMin = Math.floor(minTempOverall / 10) * 10 - 20; // Extend by 10 or 20 degrees
-            const yAxisMax = Math.ceil(maxTempOverall / 10) * 10 + 20; // Extend by 10 or 20 degrees
-
+        function renderForecastRows(daily) {
+            const container = document.getElementById('forecast-rows');
+            let html = '';
+            const allMax = daily.temperature_2m_max.slice(0, 5);
+            const allMin = daily.temperature_2m_min.slice(0, 5);
+            const rangeMin = Math.floor(Math.min(...allMin) / 10) * 10;
+            const rangeMax = Math.ceil(Math.max(...allMax) / 10) * 10;
+            const range = rangeMax - rangeMin || 80;
             for (let i = 0; i < 5; i++) {
-                const card = document.createElement('div');
-                card.classList.add('forecast-card', 'panel', 'float-hover');
+                const dayName = getDayName(daily.time[i], i);
+                const maxT = Math.round(daily.temperature_2m_max[i]);
+                const minT = Math.round(daily.temperature_2m_min[i]);
+                const pop = daily.precipitation_probability_max[i] || 0;
+                const fc = getWMO(daily.weather_code[i]);
+                const leftPos = Math.max(0, Math.min(100, ((minT - rangeMin) / range) * 100));
+                const widthPct = Math.max(5, Math.min(100, ((maxT - minT) / range) * 100));
 
-                card.innerHTML = `
-                    <div class="forecast-day">${days[i]}</div>
-                    <div class="forecast-temps">
-                        <span class="forecast-temp-high">${Math.round(tempsMax[i])}°</span>
-                        <span class="forecast-temp-low">${Math.round(tempsMin[i])}°</span>
+                html += `
+                <div class="forecast-row">
+                    <div class="forecast-day">${dayName}</div>
+                    <div class="forecast-cond">${fc.icon} <span>${fc.desc}</span></div>
+                    <div class="forecast-bar">
+                        <span class="forecast-temp-min">${minT}°</span>
+                        <div class="forecast-track"><div class="forecast-fill" style="left:${leftPos}%;width:${widthPct}%;"></div></div>
+                        <span class="forecast-temp-max">${maxT}°</span>
                     </div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">Rain: ${pops[i]}%</div>
-                `;
-                forecastSection.appendChild(card);
+                    <div class="forecast-pop ${pop >= 50 ? 'pop-high' : ''}">${pop}% 💧</div>
+                </div>`;
             }
-
-            // Render graph
-            const canvas = document.getElementById('temp-graph');
-            // Match canvas buffer size to CSS display size for crisp rendering
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width * (window.devicePixelRatio || 1);
-            canvas.height = rect.height * (window.devicePixelRatio || 1);
-            const ctx = canvas.getContext('2d');
-            ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
-            const width = rect.width;
-            const height = rect.height;
-
-            ctx.clearRect(0, 0, width, height); // Clear canvas
-
-            const padding = 20; // Padding for axes
-            const graphWidth = width - padding * 2;
-            const graphHeight = height - padding * 2;
-
-            // Y-axis (Temperature)
-            ctx.font = '12px Arial';
-            ctx.fillStyle = 'var(--text-muted)';
-            ctx.textAlign = 'right';
-            ctx.textBaseline = 'middle';
-
-            const numYLabels = 5;
-            for (let i = 0; i <= numYLabels; i++) {
-                const temp = yAxisMin + (yAxisMax - yAxisMin) * (1 - i / numYLabels);
-                const y = padding + graphHeight * (i / numYLabels);
-                ctx.fillText(Math.round(temp) + '°', padding - 5, y);
-            }
-
-            // X-axis (Days)
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'top';
-            for (let i = 0; i < 5; i++) {
-                const x = padding + graphWidth * (i / 4); // 5 points, 4 intervals
-                ctx.fillText(days[i], x, height - padding + 5);
-            }
-
-            // Draw temperature line
-            ctx.beginPath();
-            ctx.strokeStyle = 'var(--accent-blue)';
-            ctx.lineWidth = 2;
-            ctx.lineJoin = 'round';
-            ctx.lineCap = 'round';
-
-            for (let i = 0; i < tempsMax.length; i++) {
-                const x = padding + graphWidth * (i / (tempsMax.length - 1));
-                const temp = tempsMax[i];
-                const y = padding + graphHeight * (1 - (temp - yAxisMin) / (yAxisMax - yAxisMin));
-
-                if (i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            }
-            ctx.stroke();
-
-            // Dots for each day's high temp
-            ctx.fillStyle = 'var(--accent-blue)';
-            for (let i = 0; i < tempsMax.length; i++) {
-                const x = padding + graphWidth * (i / (tempsMax.length - 1));
-                const temp = tempsMax[i];
-                const y = padding + graphHeight * (1 - (temp - yAxisMin) / (yAxisMax - yAxisMin));
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            container.innerHTML = html;
         }
 
         async function loadWeatherPage() {
@@ -273,9 +131,9 @@
 
             const forecastData = await fetchForecast(WEATHER_LAT, WEATHER_LON);
             if (forecastData && forecastData.daily) {
-                renderForecast(forecastData.daily);
+                renderForecastRows(forecastData.daily);
             } else {
-                document.getElementById('forecast-section').innerHTML = '<div class="forecast-card">Failed to load forecast.</div>';
+                document.getElementById('forecast-rows').innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Failed to load forecast.</div>';
             }
         }
 
