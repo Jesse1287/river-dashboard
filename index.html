@@ -88,6 +88,28 @@
                 <div id="ponch-desc" style="color: var(--text-muted);">Syncing sensors...</div>
             </div>
         </div>
+
+        <div class="panel" style="background: linear-gradient(135deg, rgba(0,87,184,0.12), rgba(255,215,0,0.08)); border: 1px solid rgba(0,87,184,0.25);">
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size:2rem;">🌻</span>
+                    <div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);">Bohdanivka, Ukraine</div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span id="ukr-icon" style="font-size:1.5rem;"></span>
+                            <span id="ukr-temp" class="metric" style="font-size:1.4rem;">--°</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:0.8rem;color:var(--text-muted);">
+                    <span>Feels <strong id="ukr-feels" style="color:var(--text-main);">--°</strong></span>
+                    <span>Humidity <strong id="ukr-hum" style="color:var(--text-main);">--%</strong></span>
+                    <span>Wind <strong id="ukr-wind" style="color:var(--text-main);">-- mph</strong></span>
+                    <span>Rain <strong id="ukr-pop" style="color:var(--text-main);">--%</strong></span>
+                </div>
+                <a href="ukraine.html" class="quick-link" style="min-width:auto;padding:8px 14px;font-size:0.78rem;">Full Forecast →</a>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
@@ -208,6 +230,16 @@
             }
 
             updateTicker(denhamWeather);
+
+            const ua = await fetchWeather(48.03188, 35.82367);
+            if (ua) {
+                document.getElementById('ukr-temp').innerText = ua.current.temp + '°';
+                document.getElementById('ukr-icon').innerText = ua.current.icon;
+                document.getElementById('ukr-feels').innerText = (ua.current.feels ?? '--') + '°';
+                document.getElementById('ukr-hum').innerText = (ua.current.hum ?? '--') + '%';
+                document.getElementById('ukr-wind').innerText = (ua.current.wind ?? '--') + ' mph';
+                document.getElementById('ukr-pop').innerText = (ua.current.pop ?? '--') + '%';
+            }
         }
 
         initDashboard();
