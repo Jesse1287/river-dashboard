@@ -24,6 +24,26 @@
             backdrop-filter: blur(20px) saturate(200%);
             -webkit-backdrop-filter: blur(20px) saturate(200%);
         }
+
+        .extra-detail {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .extra-detail span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .extra-detail strong {
+            color: var(--text-main);
+        }
     </style>
 </head>
 <body>
@@ -44,10 +64,6 @@
             <a href="ukraine.html"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
         </div>
 
-        <div class="radar-container">
-            <span>Interactive Radar (placeholder)</span>
-        </div>
-
         <div class="grid-3">
             <div class="panel float-hover">
                 <h2 style="color: var(--accent-blue);">🏡 Denham Springs</h2>
@@ -63,6 +79,7 @@
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="denham-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="denham-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
                 </div>
+                <div class="extra-detail" id="denham-extra"></div>
             </div>
 
             <div class="panel float-hover">
@@ -79,6 +96,7 @@
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="don-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="don-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
                 </div>
+                <div class="extra-detail" id="don-extra"></div>
             </div>
 
             <div class="panel float-hover">
@@ -95,19 +113,37 @@
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="ponch-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
                     <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="ponch-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
                 </div>
+                <div class="extra-detail" id="ponch-extra"></div>
             </div>
         </div>
 
+        <div class="radar-container">
+            <span>Interactive Radar (placeholder)</span>
+        </div>
+
         <div class="panel float-hover">
-            <h2 style="color: var(--status-orange);">📅 5-Day Forecast — Denham Springs</h2>
-            <div id="forecast-rows" style="display: flex; flex-direction: column; gap: 12px;">Loading forecast...</div>
+            <h2 style="color: var(--accent-blue);">📅 5-Day — Denham Springs</h2>
+            <div id="denham-forecast" style="display: flex; flex-direction: column; gap: 12px;">Loading forecast...</div>
+        </div>
+
+        <div class="panel float-hover">
+            <h2 style="color: var(--status-green);">📅 5-Day — Donaldsonville</h2>
+            <div id="don-forecast" style="display: flex; flex-direction: column; gap: 12px;">Loading forecast...</div>
+        </div>
+
+        <div class="panel float-hover">
+            <h2 style="color: var(--status-orange);">📅 5-Day — Ponchatoula</h2>
+            <div id="ponch-forecast" style="display: flex; flex-direction: column; gap: 12px;">Loading forecast...</div>
         </div>
     </div>
 
     <script src="app.js"></script>
     <script>
-        const WEATHER_LAT = 30.48;
-        const WEATHER_LON = -90.95;
+        const LOCATIONS = [
+            { lat: 30.48, lon: -90.95, prefix: 'denham', name: 'Denham Springs' },
+            { lat: 30.10, lon: -90.99, prefix: 'don', name: 'Donaldsonville' },
+            { lat: 30.44, lon: -90.40, prefix: 'ponch', name: 'Ponchatoula' }
+        ];
 
         function getDayName(dateStr, index) {
             if (index === 0) return "Today";
@@ -115,8 +151,8 @@
             return date.toLocaleDateString('en-US', { weekday: 'short' });
         }
 
-        function renderForecastRows(daily) {
-            const container = document.getElementById('forecast-rows');
+        function renderForecastRows(daily, containerId) {
+            const container = document.getElementById(containerId);
             let html = '';
             const allMax = daily.temperature_2m_max.slice(0, 5);
             const allMin = daily.temperature_2m_min.slice(0, 5);
@@ -149,12 +185,8 @@
 
         async function loadWeatherPage() {
             updateClock();
-            const locations = [
-                { lat: 30.48, lon: -90.95, prefix: 'denham' },
-                { lat: 30.10, lon: -90.99, prefix: 'don' },
-                { lat: 30.44, lon: -90.40, prefix: 'ponch' }
-            ];
-            for (const loc of locations) {
+
+            for (const loc of LOCATIONS) {
                 const w = await fetchWeather(loc.lat, loc.lon);
                 if (w) {
                     const c = w.current;
@@ -168,13 +200,13 @@
                     document.getElementById(`${loc.prefix}-pressure`).innerText = (c.pressure ?? '--') + ' hPa';
                     document.getElementById(`${loc.prefix}-vis`).innerText = (c.visibility ?? '--') + ' mi';
                 }
-            }
 
-            const forecastData = await fetchForecast(WEATHER_LAT, WEATHER_LON);
-            if (forecastData && forecastData.daily) {
-                renderForecastRows(forecastData.daily);
-            } else {
-                document.getElementById('forecast-rows').innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Failed to load forecast.</div>';
+                const forecastData = await fetchForecast(loc.lat, loc.lon);
+                if (forecastData && forecastData.daily) {
+                    renderForecastRows(forecastData.daily, `${loc.prefix}-forecast`);
+                } else {
+                    document.getElementById(`${loc.prefix}-forecast`).innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Failed to load forecast.</div>';
+                }
             }
         }
 
