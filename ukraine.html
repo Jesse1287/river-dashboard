@@ -26,7 +26,7 @@
         <h1>🇺🇦 Bohdanivka Forecast</h1>
 
         <div class="heartbeat-container">
-            <span class="pulse-dot"></span>             Ukraine Weather Relay: <span class="sys-clock">--:-- -- ---</span>
+            <span class="pulse-dot"></span>             Ukraine: <span id="ukraine-clock">--:-- -- ---</span> &nbsp;·&nbsp; <span id="ukraine-date"></span>
         </div>
 
         <div class="nav-tabs">
@@ -84,7 +84,15 @@
 
     <script src="app.js"></script>
     <script>
-        updateClock();
+        function updateUkraineClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { timeZone: 'Europe/Kyiv', hour: '2-digit', minute:'2-digit', timeZoneName: 'short' });
+            const dateStr = now.toLocaleDateString('en-US', { timeZone: 'Europe/Kyiv', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            document.getElementById('ukraine-clock').innerText = timeStr;
+            document.getElementById('ukraine-date').innerText = dateStr;
+        }
+        updateUkraineClock();
+        setInterval(updateUkraineClock, 1000);
 
         async function loadUkraine() {
             const w = await fetchWeather(48.03188, 35.82367);

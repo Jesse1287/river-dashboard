@@ -47,6 +47,21 @@
 
         <div id="alerts-container"></div>
 
+        <div class="panel" style="text-align:center;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                <div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">🇺🇸 Louisiana</div>
+                    <div id="hq-la-clock" style="font-size:1.5rem;font-weight:700;margin-top:4px;">--:-- --</div>
+                    <div id="hq-la-date" style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">--</div>
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">🇺🇦 Ukraine</div>
+                    <div id="hq-ua-clock" style="font-size:1.5rem;font-weight:700;margin-top:4px;">--:-- --</div>
+                    <div id="hq-ua-date" style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">--</div>
+                </div>
+            </div>
+        </div>
+
         <div class="grid-3">
             <div class="panel float-hover">
                 <h3>🏡 Denham Springs</h3>
@@ -117,6 +132,16 @@
             document.getElementById('ticker-weather').innerText = weatherText || 'Syncing sensors...';
         }
         updateTicker();
+
+        function updateDualClocks() {
+            const now = new Date();
+            document.getElementById('hq-la-clock').innerText = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: '2-digit', minute:'2-digit' });
+            document.getElementById('hq-la-date').innerText = now.toLocaleDateString('en-US', { timeZone: 'America/Chicago', weekday: 'short', month: 'short', day: 'numeric' });
+            document.getElementById('hq-ua-clock').innerText = now.toLocaleTimeString('en-US', { timeZone: 'Europe/Kyiv', hour: '2-digit', minute:'2-digit' });
+            document.getElementById('hq-ua-date').innerText = now.toLocaleDateString('en-US', { timeZone: 'Europe/Kyiv', weekday: 'short', month: 'short', day: 'numeric' });
+        }
+        updateDualClocks();
+        setInterval(updateDualClocks, 1000);
 
         async function initDashboard() {
             updateClock();

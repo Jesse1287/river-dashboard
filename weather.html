@@ -9,28 +9,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        .forecast-cond {
-            min-width: 140px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        .forecast-cond span {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        @media (max-width: 600px) {
-            .forecast-cond { min-width: 0; font-size: 0.75rem; }
-            .forecast-cond span { display: none; }
-        }
-
         .extra-detail {
             display: flex;
             justify-content: center;
-            gap: 16px;
+            gap: 14px;
             flex-wrap: wrap;
             margin-top: 10px;
             padding-top: 10px;
@@ -41,10 +23,48 @@
         .extra-detail span {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
         .extra-detail strong {
             color: var(--text-main);
+        }
+
+        .status-line {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .compact-forecast {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+        }
+        .cf-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 0;
+            font-size: 0.78rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .cf-row:last-child { border-bottom: none; }
+        .cf-day { width: 38px; font-weight: 600; flex-shrink: 0; }
+        .cf-icon { width: 20px; text-align: center; flex-shrink: 0; }
+        .cf-desc { flex: 1; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+        .cf-temps { width: 65px; text-align: right; font-weight: 600; color: var(--status-orange); flex-shrink: 0; }
+        .cf-temps .cf-low { color: var(--accent-blue); opacity: 0.7; font-weight: 500; }
+        .cf-pop { width: 42px; text-align: right; color: var(--accent-blue); flex-shrink: 0; }
+        @media (max-width: 600px) {
+            .cf-desc { display: none; }
+            .cf-temps { width: 55px; }
+            .cf-pop { width: 36px; font-size: 0.72rem; }
         }
     </style>
 </head>
@@ -66,25 +86,34 @@
             <a href="ukraine.html"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
         </div>
 
-        <div class="grid-3">
+        <div class="grid-3" id="weather-panels">
             <div class="panel float-hover">
                 <h2 style="color: var(--accent-blue);">🏡 Denham Springs</h2>
                 <div class="metric" id="denham-temp">--°</div>
                 <div style="font-weight: 600; color: var(--text-main);">
                     <span id="denham-icon"></span> <span id="denham-desc">Awaiting feed...</span>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="denham-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="denham-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="denham-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="denham-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="denham-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="denham-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Feels Like <strong id="denham-feels" style="color: var(--text-main); display: block; font-size: 0.95rem;">--°</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Humidity <strong id="denham-hum" style="color: var(--text-main); display: block; font-size: 0.95rem;">--%</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Wind <strong id="denham-wind" style="color: var(--text-main); display: block; font-size: 0.95rem;">-- mph</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Rain <strong id="denham-pop" style="color: var(--text-main); display: block; font-size: 0.95rem;">--%</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Pressure <strong id="denham-pressure" style="color: var(--text-main); display: block; font-size: 0.95rem;">-- hPa</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Visibility <strong id="denham-vis" style="color: var(--text-main); display: block; font-size: 0.95rem;">-- mi</strong></div>
                 </div>
                 <div class="extra-detail">
                     <span>☀️ UV <strong id="denham-uv">--</strong></span>
                     <span>🌡️ Dew <strong id="denham-dew">--°</strong></span>
                     <span>☁️ Cloud <strong id="denham-cloud">--%</strong></span>
+                    <span>🌅 <strong id="denham-sunrise">--</strong> / 🌇 <strong id="denham-sunset">--</strong></span>
+                </div>
+                <div class="status-line">
+                    🌬️ AQI: <strong id="denham-aqi-val">--</strong> <span id="denham-aqi-label"></span>
+                    &nbsp;·&nbsp;
+                    🌿 <span id="denham-pollen">--</span>
+                </div>
+                <div class="compact-forecast" id="denham-forecast">
+                    <div class="cf-row" style="color:var(--text-muted);border:none;">Loading forecast...</div>
                 </div>
             </div>
 
@@ -94,18 +123,27 @@
                 <div style="font-weight: 600; color: var(--text-main);">
                     <span id="don-icon"></span> <span id="don-desc">Awaiting feed...</span>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="don-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="don-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="don-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="don-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="don-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="don-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Feels Like <strong id="don-feels" style="color: var(--text-main); display: block; font-size: 0.95rem;">--°</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Humidity <strong id="don-hum" style="color: var(--text-main); display: block; font-size: 0.95rem;">--%</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Wind <strong id="don-wind" style="color: var(--text-main); display: block; font-size: 0.95rem;">-- mph</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Rain <strong id="don-pop" style="color: var(--text-main); display: block; font-size: 0.95rem;">--%</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Pressure <strong id="don-pressure" style="color: var(--text-main); display: block; font-size: 0.95rem;">-- hPa</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Visibility <strong id="don-vis" style="color: var(--text-main); display: block; font-size: 0.95rem;">-- mi</strong></div>
                 </div>
                 <div class="extra-detail">
                     <span>☀️ UV <strong id="don-uv">--</strong></span>
                     <span>🌡️ Dew <strong id="don-dew">--°</strong></span>
                     <span>☁️ Cloud <strong id="don-cloud">--%</strong></span>
+                    <span>🌅 <strong id="don-sunrise">--</strong> / 🌇 <strong id="don-sunset">--</strong></span>
+                </div>
+                <div class="status-line">
+                    🌬️ AQI: <strong id="don-aqi-val">--</strong> <span id="don-aqi-label"></span>
+                    &nbsp;·&nbsp;
+                    🌿 <span id="don-pollen">--</span>
+                </div>
+                <div class="compact-forecast" id="don-forecast">
+                    <div class="cf-row" style="color:var(--text-muted);border:none;">Loading forecast...</div>
                 </div>
             </div>
 
@@ -115,67 +153,33 @@
                 <div style="font-weight: 600; color: var(--text-main);">
                     <span id="ponch-icon"></span> <span id="ponch-desc">Awaiting feed...</span>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="ponch-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="ponch-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="ponch-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="ponch-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="ponch-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
-                    <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="ponch-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Feels Like <strong id="ponch-feels" style="color: var(--text-main); display: block; font-size: 0.95rem;">--°</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Humidity <strong id="ponch-hum" style="color: var(--text-main); display: block; font-size: 0.95rem;">--%</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Wind <strong id="ponch-wind" style="color: var(--text-main); display: block; font-size: 0.95rem;">-- mph</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Rain <strong id="ponch-pop" style="color: var(--text-main); display: block; font-size: 0.95rem;">--%</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Pressure <strong id="ponch-pressure" style="color: var(--text-main); display: block; font-size: 0.95rem;">-- hPa</strong></div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Visibility <strong id="ponch-vis" style="color: var(--text-main); display: block; font-size: 0.95rem;">-- mi</strong></div>
                 </div>
                 <div class="extra-detail">
                     <span>☀️ UV <strong id="ponch-uv">--</strong></span>
                     <span>🌡️ Dew <strong id="ponch-dew">--°</strong></span>
                     <span>☁️ Cloud <strong id="ponch-cloud">--%</strong></span>
+                    <span>🌅 <strong id="ponch-sunrise">--</strong> / 🌇 <strong id="ponch-sunset">--</strong></span>
+                </div>
+                <div class="status-line">
+                    🌬️ AQI: <strong id="ponch-aqi-val">--</strong> <span id="ponch-aqi-label"></span>
+                    &nbsp;·&nbsp;
+                    🌿 <span id="ponch-pollen">--</span>
+                </div>
+                <div class="compact-forecast" id="ponch-forecast">
+                    <div class="cf-row" style="color:var(--text-muted);border:none;">Loading forecast...</div>
                 </div>
             </div>
         </div>
 
         <div class="panel" style="padding: 0; overflow: hidden; border-radius: 16px; height: 600px;">
             <iframe src="https://www.ventusky.com/?p=30.48;-90.95;9&l=radar" width="100%" height="100%" frameborder="0" allowfullscreen style="border:none; vertical-align: bottom;"></iframe>
-        </div>
-
-        <div class="grid-2">
-            <div class="panel float-hover">
-                <h3 style="color: var(--accent-blue);">🌬️ Air Quality & UV</h3>
-                <div id="aqi-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div><span style="color:var(--text-muted);font-size:0.85rem;">AQI (US)</span><br><strong id="aqi-us" style="font-size:1.5rem;">--</strong></div>
-                    <div><span style="color:var(--text-muted);font-size:0.85rem;">AQI (EU)</span><br><strong id="aqi-eu" style="font-size:1.5rem;">--</strong></div>
-                    <div><span style="color:var(--text-muted);font-size:0.85rem;">UV Index</span><br><strong id="uv-index" style="font-size:1.5rem;">--</strong></div>
-                    <div><span style="color:var(--text-muted);font-size:0.85rem;">PM2.5</span><br><strong id="aqi-pm" style="font-size:1.5rem;">-- µg</strong></div>
-                </div>
-            </div>
-            <div class="panel float-hover">
-                <h3 style="color: var(--status-orange);">☀️ Sun & Moon</h3>
-                <div id="astro-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Sunrise</span><br><strong id="astro-sr" style="font-size:1.3rem;">--</strong></div>
-                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Sunset</span><br><strong id="astro-ss" style="font-size:1.3rem;">--</strong></div>
-                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Day Length</span><br><strong id="astro-dl" style="font-size:1.3rem;">--</strong></div>
-                    <div><span style="color:var(--text-muted);font-size:0.85rem;">Moon</span><br><span id="astro-moon" style="font-size:1.5rem;">--</span></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel float-hover">
-            <h3 style="color: var(--status-orange);">🌿 Pollen — Denham Springs</h3>
-            <div id="pollen-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
-                <div style="color: var(--text-muted); font-size: 0.85rem;">Loading pollen data...</div>
-            </div>
-        </div>
-
-        <div class="panel float-hover">
-            <h2 style="color: var(--accent-blue);">📅 5-Day — Denham Springs</h2>
-            <div id="denham-forecast" style="display: flex; flex-direction: column; gap: 12px;">Loading forecast...</div>
-        </div>
-
-        <div class="panel float-hover">
-            <h2 style="color: var(--status-green);">📅 5-Day — Donaldsonville</h2>
-            <div id="don-forecast" style="display: flex; flex-direction: column; gap: 12px;">Loading forecast...</div>
-        </div>
-
-        <div class="panel float-hover">
-            <h2 style="color: var(--status-orange);">📅 5-Day — Ponchatoula</h2>
-            <div id="ponch-forecast" style="display: flex; flex-direction: column; gap: 12px;">Loading forecast...</div>
         </div>
     </div>
 
@@ -193,40 +197,8 @@
             return date.toLocaleDateString('en-US', { weekday: 'short' });
         }
 
-        function renderForecastRows(daily, containerId) {
-            const container = document.getElementById(containerId);
-            let html = '';
-            const allMax = daily.temperature_2m_max.slice(0, 5);
-            const allMin = daily.temperature_2m_min.slice(0, 5);
-            const rangeMin = Math.floor(Math.min(...allMin) / 10) * 10;
-            const rangeMax = Math.ceil(Math.max(...allMax) / 10) * 10;
-            const range = rangeMax - rangeMin || 80;
-            for (let i = 0; i < 5; i++) {
-                const dayName = getDayName(daily.time[i], i);
-                const maxT = Math.round(daily.temperature_2m_max[i]);
-                const minT = Math.round(daily.temperature_2m_min[i]);
-                const pop = daily.precipitation_probability_max[i] || 0;
-                const fc = getWMO(daily.weather_code[i]);
-                const leftPos = Math.max(0, Math.min(100, ((minT - rangeMin) / range) * 100));
-                const widthPct = Math.max(5, Math.min(100, ((maxT - minT) / range) * 100));
-
-                html += `
-                <div class="forecast-row">
-                    <div class="forecast-day">${dayName}</div>
-                    <div class="forecast-cond">${fc.icon} <span>${fc.desc}</span></div>
-                    <div class="forecast-bar">
-                        <span class="forecast-temp-min">${minT}°</span>
-                        <div class="forecast-track"><div class="forecast-fill" style="left:${leftPos}%;width:${widthPct}%;"></div></div>
-                        <span class="forecast-temp-max">${maxT}°</span>
-                    </div>
-                    <div class="forecast-pop ${pop >= 50 ? 'pop-high' : ''}">${pop}% 💧</div>
-                </div>`;
-            }
-            container.innerHTML = html;
-        }
-
         function pollenLevel(value) {
-            if (!value || value === 0) return { label: 'None', color: 'var(--text-muted)' };
+            if (!value || value === 0) return { label: 'None', color: '#94a3b8' };
             if (value <= 1) return { label: 'Very Low', color: '#4ade80' };
             if (value <= 2) return { label: 'Low', color: '#a3e635' };
             if (value <= 3) return { label: 'Moderate', color: '#fb923c' };
@@ -234,74 +206,99 @@
             return { label: 'Very High', color: '#dc2626' };
         }
 
+        function aqiLevel(usAqi) {
+            if (usAqi == null) return { label: '--', color: '#94a3b8' };
+            if (usAqi <= 50) return { label: 'Good', color: '#4ade80' };
+            if (usAqi <= 100) return { label: 'Moderate', color: '#facc15' };
+            if (usAqi <= 150) return { label: 'Unhealthy (Sensitive)', color: '#fb923c' };
+            if (usAqi <= 200) return { label: 'Unhealthy', color: '#f87171' };
+            return { label: 'Very Unhealthy', color: '#dc2626' };
+        }
+
+        function nwsShortForecastIcon(text) {
+            if (!text) return { desc: 'Unknown', icon: '❓' };
+            const t = text.toLowerCase();
+            if (t.includes('sunny') && (t.includes('mostly') || t.includes('partly'))) return { desc: text, icon: '🌤️' };
+            if (t.includes('sunny') || t.includes('clear') || t.includes('fair')) return { desc: text, icon: '☀️' };
+            if (t.includes('partly')) return { desc: text, icon: '⛅' };
+            if (t.includes('cloudy') || t.includes('overcast')) return { desc: text, icon: '☁️' };
+            if (t.includes('fog') || t.includes('mist') || t.includes('haze')) return { desc: text, icon: '🌫️' };
+            if (t.includes('thunderstorm') || (t.includes('thunder') && t.includes('storm'))) return { desc: text, icon: '⛈️' };
+            if (t.includes('rain') || t.includes('shower') || t.includes('drizzle')) return { desc: text, icon: '🌧️' };
+            if (t.includes('snow') || t.includes('flurries')) return { desc: text, icon: '❄️' };
+            if (t.includes('sleet') || t.includes('ice') || t.includes('freezing')) return { desc: text, icon: '🌨️' };
+            return { desc: text, icon: '❓' };
+        }
+
         async function loadWeatherPage() {
             updateClock();
 
-            const aqi = await fetchAirQuality(30.48, -90.95);
-            let uvVal = '--';
-            if (aqi) {
-                uvVal = aqi.uv_index?.toFixed(1) ?? '--';
-                document.getElementById('aqi-us').innerText = aqi.us_aqi ?? '--';
-                document.getElementById('aqi-eu').innerText = aqi.european_aqi ?? '--';
-                document.getElementById('uv-index').innerText = uvVal;
-                document.getElementById('aqi-pm').innerHTML = (aqi.pm2_5?.toFixed(1) ?? '--') + ' µg';
-            }
-
             for (const loc of LOCATIONS) {
                 const w = await fetchWeather(loc.lat, loc.lon);
-                if (w) {
-                    const c = w.current;
-                    document.getElementById(`${loc.prefix}-temp`).innerText = c.temp + '°';
-                    document.getElementById(`${loc.prefix}-icon`).innerText = c.icon;
-                    document.getElementById(`${loc.prefix}-desc`).innerText = c.desc;
-                    document.getElementById(`${loc.prefix}-feels`).innerText = (c.feels ?? '--') + '°';
-                    document.getElementById(`${loc.prefix}-hum`).innerText = (c.hum ?? '--') + '%';
-                    document.getElementById(`${loc.prefix}-wind`).innerText = (c.wind ?? '--') + ' mph';
-                    document.getElementById(`${loc.prefix}-pop`).innerText = (c.pop ?? '--') + '%';
-                    document.getElementById(`${loc.prefix}-pressure`).innerText = (c.pressure ?? '--') + ' hPa';
-                    document.getElementById(`${loc.prefix}-vis`).innerText = (c.visibility ?? '--') + ' mi';
-                    document.getElementById(`${loc.prefix}-uv`).innerText = uvVal;
-                    document.getElementById(`${loc.prefix}-dew`).innerText = (c.dewPoint ?? '--') + '°';
-                    document.getElementById(`${loc.prefix}-cloud`).innerText = (c.cloudCover ?? '--') + '%';
+                if (!w) continue;
+
+                const c = w.current;
+                document.getElementById(`${loc.prefix}-temp`).innerText = c.temp + '°';
+                document.getElementById(`${loc.prefix}-icon`).innerText = c.icon;
+                document.getElementById(`${loc.prefix}-desc`).innerText = c.desc;
+                document.getElementById(`${loc.prefix}-feels`).innerText = (c.feels ?? '--') + '°';
+                document.getElementById(`${loc.prefix}-hum`).innerText = (c.hum ?? '--') + '%';
+                document.getElementById(`${loc.prefix}-wind`).innerText = (c.wind ?? '--') + ' mph';
+                document.getElementById(`${loc.prefix}-pop`).innerText = (c.pop ?? '--') + '%';
+                document.getElementById(`${loc.prefix}-pressure`).innerText = (c.pressure ?? '--') + ' hPa';
+                document.getElementById(`${loc.prefix}-vis`).innerText = (c.visibility ?? '--') + ' mi';
+                document.getElementById(`${loc.prefix}-dew`).innerText = (c.dewPoint ?? '--') + '°';
+                document.getElementById(`${loc.prefix}-cloud`).innerText = (c.cloudCover ?? '--') + '%';
+
+                const aqi = await fetchAirQuality(loc.lat, loc.lon);
+                let uvVal = '--';
+                if (aqi) {
+                    uvVal = aqi.uv_index?.toFixed(1) ?? '--';
+                    const aq = aqiLevel(aqi.us_aqi);
+                    document.getElementById(`${loc.prefix}-aqi-val`).innerText = aqi.us_aqi ?? '--';
+                    document.getElementById(`${loc.prefix}-aqi-label`).innerText = aqi.us_aqi ? aq.label : '';
+                    document.getElementById(`${loc.prefix}-aqi-label`).style.color = aq.color;
+                }
+                document.getElementById(`${loc.prefix}-uv`).innerText = uvVal;
+
+                const astro = await fetchAstro(loc.lat, loc.lon);
+                if (astro) {
+                    document.getElementById(`${loc.prefix}-sunrise`).innerText = astro.sunrise;
+                    document.getElementById(`${loc.prefix}-sunset`).innerText = astro.sunset;
                 }
 
-                const forecastData = await fetchForecast(loc.lat, loc.lon);
-                if (forecastData && forecastData.daily) {
-                    renderForecastRows(forecastData.daily, `${loc.prefix}-forecast`);
+                const pollen = await fetchPollen(loc.lat, loc.lon);
+                const pel = document.getElementById(`${loc.prefix}-pollen`);
+                if (pollen && pollen.highest) {
+                    const pl = pollenLevel(pollen.highest.value);
+                    pel.innerHTML = `<span style="color:${pl.color};font-weight:600;">${pollen.highest.label} ${pl.label}</span>`;
+                } else if (pollen) {
+                    pel.innerText = 'None';
                 } else {
-                    document.getElementById(`${loc.prefix}-forecast`).innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Failed to load forecast.</div>';
+                    pel.innerText = '--';
                 }
-            }
 
-            const astro = await fetchAstro(30.48, -90.95);
-            if (astro) {
-                document.getElementById('astro-sr').innerText = astro.sunrise;
-                document.getElementById('astro-ss').innerText = astro.sunset;
-                document.getElementById('astro-dl').innerText = astro.dayLength;
-                document.getElementById('astro-moon').innerHTML = `${astro.moon.i} ${astro.moon.n}`;
-            }
+                const daily = w.daily;
+                const fcContainer = document.getElementById(`${loc.prefix}-forecast`);
+                let fhtml = '';
+                for (let i = 0; i < 5; i++) {
+                    const dayName = getDayName(daily.time[i], i);
+                    const maxT = Math.round(daily.temperature_2m_max[i]);
+                    const minT = Math.round(daily.temperature_2m_min[i]);
+                    const pop = daily.precipitation_probability_max[i] || 0;
+                    const sf = daily.shortForecast && daily.shortForecast[i];
+                    const fc = sf ? nwsShortForecastIcon(sf) : getWMO(daily.weather_code[i]);
 
-            const pollen = await fetchPollen(30.48, -90.95);
-            const pc = document.getElementById('pollen-content');
-            if (pollen && pollen.active.length > 0) {
-                pc.innerHTML = pollen.active.map(p => {
-                    const pl = pollenLevel(p.value);
-                    return `<div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: center;">
-                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">${p.label}</div>
-                        <div style="font-size: 1rem; font-weight: 700; color: ${pl.color}; margin-top: 4px;">${pl.label}</div>
-                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Idx: ${p.value}</div>
-                    </div>`;
-                }).join('');
-                if (pollen.highest) {
-                    const ph = pollenLevel(pollen.highest.value);
-                    pc.innerHTML += `<div style="grid-column: 1 / -1; padding: 8px 12px; background: rgba(251, 146, 60, 0.08); border-radius: 8px; font-size: 0.85rem; text-align: center; color: var(--text-muted);">
-                        <strong style="color: ${ph.color};">${pollen.highest.label}</strong> is the dominant allergen today — ${ph.label.toLowerCase()} level
+                    fhtml += `
+                    <div class="cf-row">
+                        <span class="cf-day">${dayName}</span>
+                        <span class="cf-icon">${fc.icon}</span>
+                        <span class="cf-desc">${fc.desc}</span>
+                        <span class="cf-temps">${maxT}°<span class="cf-low">/${minT}°</span></span>
+                        <span class="cf-pop">🌧${pop}%</span>
                     </div>`;
                 }
-            } else if (pollen) {
-                pc.innerHTML = '<div style="grid-column: 1 / -1; color: var(--text-muted); text-align: center; font-size: 0.85rem;">🌿 No significant pollen detected today</div>';
-            } else {
-                pc.innerHTML = '<div style="grid-column: 1 / -1; color: var(--text-muted); text-align: center; font-size: 0.85rem;">Pollen data unavailable</div>';
+                fcContainer.innerHTML = fhtml;
             }
         }
 
