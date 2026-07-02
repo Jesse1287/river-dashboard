@@ -48,19 +48,53 @@
             <span>Interactive Radar (placeholder)</span>
         </div>
 
-        <div class="panel float-hover">
-            <h2 style="color: var(--accent-blue);">🏡 Denham Springs Current</h2>
-            <div class="metric" id="current-temp">--°</div>
-            <div style="font-weight: 600; color: var(--text-main);">
-                <span id="current-icon"></span> <span id="current-desc">Awaiting feed...</span>
+        <div class="grid-3">
+            <div class="panel float-hover">
+                <h2 style="color: var(--accent-blue);">🏡 Denham Springs</h2>
+                <div class="metric" id="denham-temp">--°</div>
+                <div style="font-weight: 600; color: var(--text-main);">
+                    <span id="denham-icon"></span> <span id="denham-desc">Awaiting feed...</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="denham-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="denham-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="denham-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="denham-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="denham-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="denham-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
+                </div>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
-                <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="current-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
-                <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="current-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
-                <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="current-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
-                <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="current-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
-                <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="current-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
-                <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="current-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
+
+            <div class="panel float-hover">
+                <h2 style="color: var(--status-green);">🏭 Donaldsonville</h2>
+                <div class="metric" id="don-temp">--°</div>
+                <div style="font-weight: 600; color: var(--text-main);">
+                    <span id="don-icon"></span> <span id="don-desc">Awaiting feed...</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="don-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="don-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="don-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="don-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="don-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="don-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
+                </div>
+            </div>
+
+            <div class="panel float-hover">
+                <h2 style="color: var(--status-orange);">🏥 Ponchatoula</h2>
+                <div class="metric" id="ponch-temp">--°</div>
+                <div style="font-weight: 600; color: var(--text-main);">
+                    <span id="ponch-icon"></span> <span id="ponch-desc">Awaiting feed...</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Feels Like <strong id="ponch-feels" style="color: var(--text-main); display: block; font-size: 1rem;">--°</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Humidity <strong id="ponch-hum" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Wind <strong id="ponch-wind" style="color: var(--text-main); display: block; font-size: 1rem;">-- mph</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Rain <strong id="ponch-pop" style="color: var(--text-main); display: block; font-size: 1rem;">--%</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Pressure <strong id="ponch-pressure" style="color: var(--text-main); display: block; font-size: 1rem;">-- hPa</strong></div>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">Visibility <strong id="ponch-vis" style="color: var(--text-main); display: block; font-size: 1rem;">-- mi</strong></div>
+                </div>
             </div>
         </div>
 
@@ -115,18 +149,25 @@
 
         async function loadWeatherPage() {
             updateClock();
-            const w = await fetchWeather(WEATHER_LAT, WEATHER_LON);
-            if (w) {
-                const c = w.current;
-                document.getElementById('current-temp').innerText = c.temp + '°';
-                document.getElementById('current-icon').innerText = c.icon;
-                document.getElementById('current-desc').innerText = c.desc;
-                document.getElementById('current-feels').innerText = (c.feels ?? '--') + '°';
-                document.getElementById('current-hum').innerText = (c.hum ?? '--') + '%';
-                document.getElementById('current-wind').innerText = (c.wind ?? '--') + ' mph';
-                document.getElementById('current-pop').innerText = (c.pop ?? '--') + '%';
-                document.getElementById('current-pressure').innerText = (c.pressure ?? '--') + ' hPa';
-                document.getElementById('current-vis').innerText = (c.visibility ?? '--') + ' mi';
+            const locations = [
+                { lat: 30.48, lon: -90.95, prefix: 'denham' },
+                { lat: 30.10, lon: -90.99, prefix: 'don' },
+                { lat: 30.44, lon: -90.40, prefix: 'ponch' }
+            ];
+            for (const loc of locations) {
+                const w = await fetchWeather(loc.lat, loc.lon);
+                if (w) {
+                    const c = w.current;
+                    document.getElementById(`${loc.prefix}-temp`).innerText = c.temp + '°';
+                    document.getElementById(`${loc.prefix}-icon`).innerText = c.icon;
+                    document.getElementById(`${loc.prefix}-desc`).innerText = c.desc;
+                    document.getElementById(`${loc.prefix}-feels`).innerText = (c.feels ?? '--') + '°';
+                    document.getElementById(`${loc.prefix}-hum`).innerText = (c.hum ?? '--') + '%';
+                    document.getElementById(`${loc.prefix}-wind`).innerText = (c.wind ?? '--') + ' mph';
+                    document.getElementById(`${loc.prefix}-pop`).innerText = (c.pop ?? '--') + '%';
+                    document.getElementById(`${loc.prefix}-pressure`).innerText = (c.pressure ?? '--') + ' hPa';
+                    document.getElementById(`${loc.prefix}-vis`).innerText = (c.visibility ?? '--') + ' mi';
+                }
             }
 
             const forecastData = await fetchForecast(WEATHER_LAT, WEATHER_LON);
