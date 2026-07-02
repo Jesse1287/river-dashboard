@@ -42,30 +42,34 @@
         }
 
         .compact-forecast {
-            margin-top: 10px;
-            padding-top: 8px;
+            margin-top: 8px;
+            padding-top: 6px;
             border-top: 1px solid var(--border-color);
-        }
-        .cf-row {
             display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .compact-forecast::-webkit-scrollbar { display: none; }
+        .cf-day {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 6px;
-            padding: 3px 0;
-            font-size: 0.78rem;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            gap: 2px;
+            min-width: 48px;
+            padding: 6px 4px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.03);
+            text-align: center;
         }
-        .cf-row:last-child { border-bottom: none; }
-        .cf-day { width: 38px; font-weight: 600; flex-shrink: 0; }
-        .cf-icon { width: 20px; text-align: center; flex-shrink: 0; }
-        .cf-desc { flex: 1; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-        .cf-temps { width: 65px; text-align: right; font-weight: 600; color: var(--status-orange); flex-shrink: 0; }
-        .cf-temps .cf-low { color: var(--accent-blue); opacity: 0.7; font-weight: 500; }
-        .cf-pop { width: 42px; text-align: right; color: var(--accent-blue); flex-shrink: 0; }
-        @media (max-width: 600px) {
-            .cf-desc { display: none; }
-            .cf-temps { width: 55px; }
-            .cf-pop { width: 36px; font-size: 0.72rem; }
-        }
+        .cf-day-name { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+        .cf-day-icon { font-size: 1.1rem; line-height: 1; }
+        .cf-day-high { font-size: 0.82rem; font-weight: 700; color: var(--status-orange); }
+        .cf-day-low { font-size: 0.72rem; color: var(--accent-blue); opacity: 0.7; }
+        .cf-day-pop { font-size: 0.6rem; color: var(--accent-blue); }
+        .cf-day.today { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.15); }
     </style>
 </head>
 <body>
@@ -113,7 +117,7 @@
                     🌿 <span id="denham-pollen">--</span>
                 </div>
                 <div class="compact-forecast" id="denham-forecast">
-                    <div class="cf-row" style="color:var(--text-muted);border:none;">Loading forecast...</div>
+                    <div style="color:var(--text-muted);font-size:0.75rem;padding:4px 0;">Loading forecast...</div>
                 </div>
             </div>
 
@@ -143,7 +147,7 @@
                     🌿 <span id="don-pollen">--</span>
                 </div>
                 <div class="compact-forecast" id="don-forecast">
-                    <div class="cf-row" style="color:var(--text-muted);border:none;">Loading forecast...</div>
+                    <div style="color:var(--text-muted);font-size:0.75rem;padding:4px 0;">Loading forecast...</div>
                 </div>
             </div>
 
@@ -173,7 +177,7 @@
                     🌿 <span id="ponch-pollen">--</span>
                 </div>
                 <div class="compact-forecast" id="ponch-forecast">
-                    <div class="cf-row" style="color:var(--text-muted);border:none;">Loading forecast...</div>
+                    <div style="color:var(--text-muted);font-size:0.75rem;padding:4px 0;">Loading forecast...</div>
                 </div>
             </div>
         </div>
@@ -290,12 +294,12 @@
                     const fc = sf ? nwsShortForecastIcon(sf) : getWMO(daily.weather_code[i]);
 
                     fhtml += `
-                    <div class="cf-row">
-                        <span class="cf-day">${dayName}</span>
-                        <span class="cf-icon">${fc.icon}</span>
-                        <span class="cf-desc">${fc.desc}</span>
-                        <span class="cf-temps">${maxT}°<span class="cf-low">/${minT}°</span></span>
-                        <span class="cf-pop">🌧${pop}%</span>
+                    <div class="cf-day${i === 0 ? ' today' : ''}">
+                        <div class="cf-day-name">${dayName}</div>
+                        <div class="cf-day-icon">${fc.icon}</div>
+                        <div class="cf-day-high">${maxT}°</div>
+                        <div class="cf-day-low">${minT}°</div>
+                        <div class="cf-day-pop">🌧${pop}%</div>
                     </div>`;
                 }
                 fcContainer.innerHTML = fhtml;
