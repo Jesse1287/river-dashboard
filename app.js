@@ -296,9 +296,6 @@ if ('serviceWorker' in navigator) {
 // ============================================
 
 function updateWeatherBackground(weatherCode, isNight) {
-    // Don't apply dark weather backgrounds in light mode — let the light theme show through
-    if (document.documentElement.getAttribute('data-theme') === 'light') return;
-
     const body = document.body;
     
     // Remove all weather classes first
@@ -331,9 +328,6 @@ function updateWeatherBackground(weatherCode, isNight) {
 
 // Apply time-based background immediately on page load (fallback before weather data loads)
 (function applyInitialBackground() {
-    // Don't apply dark weather backgrounds in light mode — let the light theme show through
-    if (document.documentElement.getAttribute('data-theme') === 'light') return;
-    
     const hour = new Date().getHours();
     const isNight = hour < 6 || hour >= 20;
     if (isNight) {
