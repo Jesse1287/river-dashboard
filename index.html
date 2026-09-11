@@ -68,53 +68,40 @@
         </div>
 
         <div class="grid-3">
-            <div class="panel float-hover">
+            <a href="weather.html#denham" class="panel float-hover" style="text-decoration:none;color:inherit;">
                 <h3>🏡 Denham Springs</h3>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <div id="denham-icon" style="font-size: 1.8rem;"></div>
                     <div id="denham-temp" class="metric">--°</div>
                 </div>
                 <div id="denham-desc" style="color: var(--text-muted);">Syncing sensors...</div>
-            </div>
-            <div class="panel float-hover">
+            </a>
+            <a href="weather.html#don" class="panel float-hover" style="text-decoration:none;color:inherit;">
                 <h3>🏭 Donaldsonville</h3>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <div id="don-icon" style="font-size: 1.8rem;"></div>
                     <div id="don-temp" class="metric">--°</div>
                 </div>
                 <div id="don-desc" style="color: var(--text-muted);">Syncing sensors...</div>
-            </div>
-            <div class="panel float-hover">
+            </a>
+            <a href="weather.html#ponch" class="panel float-hover" style="text-decoration:none;color:inherit;">
                 <h3>🏥 Ponchatoula</h3>
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <div id="ponch-icon" style="font-size: 1.8rem;"></div>
                     <div id="ponch-temp" class="metric">--°</div>
                 </div>
                 <div id="ponch-desc" style="color: var(--text-muted);">Syncing sensors...</div>
-            </div>
+            </a>
         </div>
 
-        <div class="panel" style="background: linear-gradient(135deg, rgba(0,87,184,0.12), rgba(255,215,0,0.08)); border: 1px solid rgba(0,87,184,0.25);">
-            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size:2rem;">🌻</span>
-                    <div>
-                        <div style="font-size:0.75rem;color:var(--text-muted);">Bohdanivka, Ukraine</div>
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span id="ukr-icon" style="font-size:1.5rem;"></span>
-                            <span id="ukr-temp" class="metric" style="font-size:1.4rem;">--°</span>
-                        </div>
-                    </div>
-                </div>
-                <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:0.8rem;color:var(--text-muted);">
-                    <span>Feels <strong id="ukr-feels" style="color:var(--text-main);">--°</strong></span>
-                    <span>Humidity <strong id="ukr-hum" style="color:var(--text-main);">--%</strong></span>
-                    <span>Wind <strong id="ukr-wind" style="color:var(--text-main);">-- mph</strong></span>
-                    <span>Rain <strong id="ukr-pop" style="color:var(--text-main);">--%</strong></span>
-                </div>
-                <a href="ukraine.html" class="quick-link" style="min-width:auto;padding:8px 14px;font-size:0.78rem;">Full Forecast →</a>
+        <a href="ukraine.html" class="panel float-hover" style="text-decoration:none;color:inherit;display:block;">
+            <h3>🌻 Bohdanivka, Ukraine</h3>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <div id="ukr-icon" style="font-size: 1.8rem;"></div>
+                <div id="ukr-temp" class="metric">--°</div>
             </div>
-        </div>
+            <div id="ukr-desc" style="color: var(--text-muted);">Syncing sensors...</div>
+        </a>
     </div>
 
     <script src="app.js"></script>
@@ -240,10 +227,7 @@
             if (ua) {
                 document.getElementById('ukr-temp').innerText = ua.current.temp + '°';
                 document.getElementById('ukr-icon').innerText = ua.current.icon;
-                document.getElementById('ukr-feels').innerText = (ua.current.feels ?? '--') + '°';
-                document.getElementById('ukr-hum').innerText = (ua.current.hum ?? '--') + '%';
-                document.getElementById('ukr-wind').innerText = (ua.current.wind ?? '--') + ' mph';
-                document.getElementById('ukr-pop').innerText = (ua.current.pop ?? '--') + '%';
+                document.getElementById('ukr-desc').innerText = ua.current.desc;
             }
 
             document.getElementById('last-updated').innerText = 'Last updated: ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
