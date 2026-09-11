@@ -41,12 +41,6 @@
                 24h Trend: <span id="delta-trend">--</span>
             </div>
 
-            <div style="margin: 10px 0 15px 0;">
-                <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Last 24 Hours</div>
-                <svg id="sparkline" viewBox="0 0 300 60" preserveAspectRatio="none" style="width:100%;height:60px;display:block;"></svg>
-                <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:var(--text-muted);margin-top:2px;"><span>24h ago</span><span id="spark-now">--</span></div>
-            </div>
-
             <div id="ark-status" style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-bottom: 20px;">
                 Checking requirements...
             </div>
@@ -95,25 +89,6 @@
             const deltaEl = document.getElementById('delta-trend');
             deltaEl.innerText = r.delta;
             deltaEl.style.color = r.delta.startsWith('+') ? "var(--status-red)" : "var(--status-green)";
-
-            // 24h sparkline
-            if (r.series && r.series.length > 1) {
-                const W = 300, H = 60, PAD = 3;
-                const vals = r.series.map(p => p.v);
-                const min = Math.min(...vals), max = Math.max(...vals);
-                const range = (max - min) || 1;
-                const pts = r.series.map((p, i) => {
-                    const x = PAD + (i / (r.series.length - 1)) * (W - PAD * 2);
-                    const y = H - PAD - ((p.v - min) / range) * (H - PAD * 2);
-                    return `${x.toFixed(1)},${y.toFixed(1)}`;
-                });
-                const color = r.delta.startsWith('+') ? 'var(--status-red)' : 'var(--status-green)';
-                const last = pts[pts.length-1].split(',');
-                document.getElementById('sparkline').innerHTML =
-                    `<polyline points="${pts.join(' ')}" fill="none" style="stroke:${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` +
-                    `<circle cx="${last[0]}" cy="${last[1]}" r="3" style="fill:${color}"/>`;
-                document.getElementById('spark-now').innerText = r.stage + ' ft';
-            }
 
             let pct = (r.raw / 40) * 100;
             document.getElementById('flood-meter').style.width = Math.min(Math.max(pct, 0), 100) + '%';
