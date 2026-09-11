@@ -55,6 +55,12 @@ async function fetchWeather(lat, lon) {
     if (!om) return null;
     const cur = om.current;
     const wmo = getWMO(cur.weather_code);
+    
+    // Update dynamic background based on weather conditions
+    const hour = new Date().getHours();
+    const isNight = hour < 6 || hour >= 20;
+    updateWeatherBackground(cur.weather_code, isNight);
+    
     const res = {
         current: {
             temp: Math.round(cur.temperature_2m),
@@ -277,4 +283,90 @@ if ('serviceWorker' in navigator) {
             .then((reg) => console.log('[PWA] Service Worker registered successfully:', reg.scope))
             .catch((err) => console.error('[PWA] Service Worker registration failed:', err));
     });
+}
+
+// ============================================
+// DYNAMIC WEATHER BACKGROUND
+// Detects current weather and updates background
+// ============================================
+
+function updateWeatherBackground(weatherCode, isNight) {
+    const body = document.body;
+    
+    // Remove all weather classes first
+    body.classList.remove('weather-clear', 'weather-cloudy', 'weather-rainy', 'weather-storm', 'weather-foggy', 'weather-night');
+    
+    if (isNight) {
+        body.classList.add('weather-night');
+        return;
+    }
+    
+    // Map WMO weather codes to background classes
+    const clearCodes = [0, 1]; // Clear sky, mainly clear
+    const cloudyCodes = [2, 3]; // Partly cloudy, overcast
+    const rainCodes = [51, 53, 55, 61, 63, 65, 80, 81, 82]; // Drizzle, rain showers
+    const stormCodes = [95, 96, 99]; // Thunderstorm
+    const fogCodes = [45, 48]; // Fog
+    
+    if (fogCodes.includes(weatherCode)) {
+        body.classList.add('weather-foggy');
+    } else if (stormCodes.includes(weatherCode)) {
+        body.classList.add('weather-storm');
+    } else if (rainCodes.includes(weatherCode)) {
+        body.classList.add('weather-rainy');
+    } else if (cloudyCodes.includes(weatherCode)) {
+        body.classList.add('weather-cloudy');
+    } else if (clearCodes.includes(weatherCode)) {
+        body.classList.add('weather-clear');
+    }
+}
+
+// Call this function after weather data is loaded
+// Example usage: updateWeatherBackground(weatherCode, isNight);
+// ============================================
+// NUMBER COUNTER ANIMATION
+// Smoothly counts numbers up instead of jumping
+// ============================================
+
+function animateNumber(elementId, newValue, suffix = '', prefix = '') {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    
+    // Parse current displayed value
+    const currentText = el.innerText.replace(/[^\d.-]/g, '');
+    const start = parseFloat(currentText) || 0;
+    const end = parseFloat(newValue);
+    const duration = 600; // ms
+    const startTime = performance.now();
+    
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Ease out cubic for smooth deceleration
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = start + (end - start) * eased;
+        
+        el.innerText = prefix + current.toFixed(newValue % 1 !== 0 ? 2 : 0) + suffix;
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        } else {
+            // Ensure final value is exact
+            el.innerText = prefix + end.toFixed(newValue % 1 !== 0 ? 2 : 0) + suffix;
+        }
+    }
+    
+    requestAnimationFrame(update);
+}
+
+// Simple fade-in for text elements
+function fadeInElement(elementId, delay = 0) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    el.style.opacity = '0';
+    setTimeout(() => {
+        el.style.transition = 'opacity 0.4s ease';
+        el.style.opacity = '1';
+    }, delay);
 }
