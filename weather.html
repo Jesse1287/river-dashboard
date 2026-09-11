@@ -103,13 +103,17 @@
         </div>
 
         <div class="grid-3" id="weather-panels">
-            <div class="panel float-hover">
+            <div class="panel float-hover" id="denham">
                 <h2 class="panel-toggle" data-target="denham-body" style="color: var(--accent-blue);">🏡 Denham Springs <span class="chev">▾</span></h2>
-                <div class="panel-collapsible" id="denham-body">
-                <div class="metric" id="denham-temp">--°</div>
-                <div style="font-weight: 600; color: var(--text-main);">
-                    <span id="denham-icon"></span> <span id="denham-desc">Awaiting feed...</span>
+                <!-- Always visible current weather -->
+                <div id="denham-current">
+                    <div class="metric" id="denham-temp">--°</div>
+                    <div style="font-weight: 600; color: var(--text-main);">
+                        <span id="denham-icon"></span> <span id="denham-desc">Awaiting feed...</span>
+                    </div>
                 </div>
+                <!-- Collapsible detailed info -->
+                <div class="panel-collapsible collapsed" id="denham-body">
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
                     <div style="font-size: 0.85rem; color: var(--text-muted);">Feels Like <strong id="denham-feels" style="color: var(--text-main); display: block; font-size: 0.95rem;">--°</strong></div>
                     <div style="font-size: 0.85rem; color: var(--text-muted);">Humidity <strong id="denham-hum" style="color: var(--text-main); display: block; font-size: 0.95rem;">--%</strong></div>
@@ -135,13 +139,17 @@
                 </div>
             </div>
 
-            <div class="panel float-hover">
+            <div class="panel float-hover" id="don">
                 <h2 class="panel-toggle" data-target="don-body" style="color: var(--status-green);">🏭 Donaldsonville <span class="chev">▾</span></h2>
-                <div class="panel-collapsible" id="don-body">
-                <div class="metric" id="don-temp">--°</div>
-                <div style="font-weight: 600; color: var(--text-main);">
-                    <span id="don-icon"></span> <span id="don-desc">Awaiting feed...</span>
+                <!-- Always visible current weather -->
+                <div id="don-current">
+                    <div class="metric" id="don-temp">--°</div>
+                    <div style="font-weight: 600; color: var(--text-main);">
+                        <span id="don-icon"></span> <span id="don-desc">Awaiting feed...</span>
+                    </div>
                 </div>
+                <!-- Collapsible detailed info -->
+                <div class="panel-collapsible collapsed" id="don-body">
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
                     <div style="font-size: 0.85rem; color: var(--text-muted);">Feels Like <strong id="don-feels" style="color: var(--text-main); display: block; font-size: 0.95rem;">--°</strong></div>
                     <div style="font-size: 0.85rem; color: var(--text-muted);">Humidity <strong id="don-hum" style="color: var(--text-main); display: block; font-size: 0.95rem;">--%</strong></div>
@@ -167,13 +175,17 @@
                 </div>
             </div>
 
-            <div class="panel float-hover">
+            <div class="panel float-hover" id="ponch">
                 <h2 class="panel-toggle" data-target="ponch-body" style="color: var(--status-orange);">🏥 Ponchatoula <span class="chev">▾</span></h2>
-                <div class="panel-collapsible" id="ponch-body">
-                <div class="metric" id="ponch-temp">--°</div>
-                <div style="font-weight: 600; color: var(--text-main);">
-                    <span id="ponch-icon"></span> <span id="ponch-desc">Awaiting feed...</span>
+                <!-- Always visible current weather -->
+                <div id="ponch-current">
+                    <div class="metric" id="ponch-temp">--°</div>
+                    <div style="font-weight: 600; color: var(--text-main);">
+                        <span id="ponch-icon"></span> <span id="ponch-desc">Awaiting feed...</span>
+                    </div>
                 </div>
+                <!-- Collapsible detailed info -->
+                <div class="panel-collapsible collapsed" id="ponch-body">
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
                     <div style="font-size: 0.85rem; color: var(--text-muted);">Feels Like <strong id="ponch-feels" style="color: var(--text-main); display: block; font-size: 0.95rem;">--°</strong></div>
                     <div style="font-size: 0.85rem; color: var(--text-muted);">Humidity <strong id="ponch-hum" style="color: var(--text-main); display: block; font-size: 0.95rem;">--%</strong></div>
@@ -331,14 +343,34 @@
             }
         }
 
-        // Collapsible location panels (tap header to expand/collapse)
+        // Collapsible location panels — start collapsed, tap header to expand/collapse
         document.querySelectorAll('.panel-toggle').forEach(h => {
             h.addEventListener('click', () => {
-                const body = document.getElementById(h.dataset.target);
+                const panel = h.closest('.panel');
+                const body = panel.querySelector('.panel-collapsible');
                 const chev = h.querySelector('.chev');
                 body.classList.toggle('collapsed');
                 chev.style.transform = body.classList.contains('collapsed') ? 'rotate(-90deg)' : '';
             });
+        });
+
+        // Anchor scrolling — if URL has a hash (e.g., weather.html#denham), expand that panel and scroll to it
+        window.addEventListener('load', () => {
+            const hash = window.location.hash;
+            if (hash) {
+                const target = document.querySelector(hash);
+                if (target) {
+                    // Expand the collapsible section if it's collapsed
+                    const collapsible = target.querySelector('.panel-collapsible');
+                    if (collapsible && collapsible.classList.contains('collapsed')) {
+                        collapsible.classList.remove('collapsed');
+                        const chev = target.querySelector('.chev');
+                        if (chev) chev.style.transform = '';
+                    }
+                    // Scroll to the panel
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
         });
 
         loadWeatherPage();
