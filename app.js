@@ -296,6 +296,9 @@ if ('serviceWorker' in navigator) {
 // ============================================
 
 function updateWeatherBackground(weatherCode, isNight) {
+    // Don't apply dark weather backgrounds in light mode — let the light theme show through
+    if (document.documentElement.getAttribute('data-theme') === 'light') return;
+
     const body = document.body;
     
     // Remove all weather classes first
