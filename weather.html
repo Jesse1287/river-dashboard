@@ -343,14 +343,27 @@
             }
         }
 
-        // Collapsible location panels — start collapsed, tap header to expand/collapse
+        // Collapsible location panels — tap anywhere on the panel to expand/collapse
         document.querySelectorAll('.panel-toggle').forEach(h => {
-            h.addEventListener('click', () => {
+            h.addEventListener('click', (e) => {
+                e.stopPropagation(); // prevent double-fire when clicking header
                 const panel = h.closest('.panel');
                 const body = panel.querySelector('.panel-collapsible');
                 const chev = h.querySelector('.chev');
                 body.classList.toggle('collapsed');
                 chev.style.transform = body.classList.contains('collapsed') ? 'rotate(-90deg)' : '';
+            });
+        });
+
+        // Make entire panel clickable for expand/collapse
+        document.querySelectorAll('.panel').forEach(panel => {
+            panel.addEventListener('click', () => {
+                const collapsible = panel.querySelector('.panel-collapsible');
+                const chev = panel.querySelector('.chev');
+                if (collapsible && chev) {
+                    collapsible.classList.toggle('collapsed');
+                    chev.style.transform = collapsible.classList.contains('collapsed') ? 'rotate(-90deg)' : '';
+                }
             });
         });
 
