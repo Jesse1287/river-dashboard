@@ -321,6 +321,17 @@ function updateWeatherBackground(weatherCode, isNight) {
     }
 }
 
+// Apply time-based background immediately on page load (fallback before weather data loads)
+(function applyInitialBackground() {
+    const hour = new Date().getHours();
+    const isNight = hour < 6 || hour >= 20;
+    if (isNight) {
+        document.body.classList.add('weather-night');
+    } else {
+        document.body.classList.add('weather-clear');
+    }
+})();
+
 // Call this function after weather data is loaded
 // Example usage: updateWeatherBackground(weatherCode, isNight);
 // ============================================
