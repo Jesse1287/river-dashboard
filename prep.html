@@ -17,9 +17,6 @@
             <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">☀️</button>
         </div>
         
-        <div class="heartbeat-container">
-            <span class="pulse-dot" style="background: var(--status-orange); box-shadow: 0 0 8px var(--status-orange);"></span>             Go-Bag Inventory Sync: <span class="sys-clock">--:-- -- ---</span>
-        </div>
         <div id="season-badge" style="display:inline-block;font-size:0.78rem;font-weight:600;padding:6px 12px;border-radius:20px;margin-bottom:14px;"></div>
 
         <div class="nav-tabs">
@@ -51,46 +48,8 @@
     </div>
 </div>
 
-        <div class="grid-3">
-            <div class="panel float-hover" style="grid-column: span 2;">
-                <h3 style="color: var(--accent-blue);">🎒 Hurricane & Flood Go-Bag</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: -5px; margin-bottom: 10px;">Progress saves automatically to this device.</p>
-                <div style="margin-bottom: 15px;">
-                    <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">
-                        <span>Packed</span>
-                        <strong id="checklist-count" style="color:var(--text-main);">0/5</strong>
-                    </div>
-                    <div style="height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;">
-                        <div id="checklist-fill" style="height:100%;width:0%;background:var(--status-green);border-radius:4px;transition:width 0.4s ease, background 0.4s ease;"></div>
-                    </div>
-                </div>
-
-                <label class="checklist-item">
-                    <input type="checkbox" id="prep-water">
-                    <span>Bottled water (1 gallon per person, per day)</span>
-                </label>
-                <label class="checklist-item">
-                    <input type="checkbox" id="prep-meds">
-                    <span>Prescription medications & First Aid kit</span>
-                </label>
-                <label class="checklist-item">
-                    <input type="checkbox" id="prep-docs">
-                    <span>Important documents (ID, Insurance) in waterproof bag</span>
-                </label>
-                <label class="checklist-item">
-                    <input type="checkbox" id="prep-power">
-                    <span>Flashlights, extra batteries, and power banks</span>
-                </label>
-                <label class="checklist-item">
-                    <input type="checkbox" id="prep-gas">
-                    <span>Vehicles fueled up & generator gas secured</span>
-                </label>
-                
-                <button onclick="localStorage.clear(); location.reload();" style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; margin-top: 10px; font-size: 0.8rem;">🔄 Reset Checklist</button>
-            </div>
-
-            <div class="panel float-hover">
-                <h3 style="color: var(--status-red);">📞 Emergency Contacts</h3>
+        <div class="panel float-hover">
+            <h3 style="color: var(--status-red);">📞 Emergency Contacts</h3>
                 <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">Tap to dial on mobile.</p>
 
                 <div style="margin-bottom: 15px;">
@@ -112,7 +71,6 @@
     <script src="app.js"></script>
     <script>
         updateClock();
-        initChecklist();
 
         // Hurricane season badge (Atlantic season: Jun 1 – Nov 30)
         (function updateSeasonBadge() {
