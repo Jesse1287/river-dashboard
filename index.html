@@ -17,6 +17,7 @@
         <div class="heartbeat-container">
             <span class="pulse-dot"></span>             All Systems Nominal: <span class="sys-clock">--:-- -- ---</span>
         </div>
+        <div id="last-updated" style="font-size:0.72rem;color:var(--text-muted);text-align:center;margin-top:-6px;margin-bottom:10px;">Last updated: --:--</div>
 
         <div class="ticker-wrap">
             <div class="ticker-track" id="ticker-track">
@@ -30,12 +31,11 @@
             <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
             <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
             <a href="travel.html"><span class="icon">🚦</span> <span>Travel</span></a>
-            <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
             <a href="ukraine.html"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
         </div>
 
-        <div class="panel float-hover" id="home-river-panel" style="border-left: 5px solid var(--accent-blue);">
-            <h3>🌊 Amite River Status</h3>
+        <a href="river.html" class="panel float-hover" id="home-river-panel" style="border-left: 5px solid var(--accent-blue); display:block; text-decoration:none; color:inherit;">
+            <h3>🌊 Amite River Status <span style="float:right;font-size:0.75rem;color:var(--text-muted);font-weight:400;">Full telemetry →</span></h3>
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
                 <div id="home-stage" class="metric">Loading...</div>
                 <div id="home-river-status" class="status-badge" style="background: rgba(255,255,255,0.05); color: var(--text-muted);">Awaiting telemetry...</div>
@@ -44,7 +44,7 @@
                 <div id="mini-river-fill" style="height: 100%; background: var(--status-green); width: 0%; transition: width 1s ease, background 0.5s;"></div>
             </div>
             <div class="river-fact" id="river-fact"></div>
-        </div>
+        </a>
 
         <div id="alerts-container"></div>
 
@@ -241,6 +241,8 @@
                 document.getElementById('ukr-wind').innerText = (ua.current.wind ?? '--') + ' mph';
                 document.getElementById('ukr-pop').innerText = (ua.current.pop ?? '--') + '%';
             }
+
+            document.getElementById('last-updated').innerText = 'Last updated: ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
         }
 
         initDashboard();

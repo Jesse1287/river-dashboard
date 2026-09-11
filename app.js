@@ -46,10 +46,8 @@ function compassDeg(dir) {
     return m[(dir||'').toUpperCase().trim()] || 0;
 }
 
-const getWindDir = (degrees) => `transform: rotate(${degrees}deg); display: inline-block;`;
-
-async function fetchWeather(lat, lon) {
-    const omUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,pressure_msl,visibility,dew_point_2m,cloud_cover&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FChicago`;
+async function fetchWeather(lat, lon, tz = 'America/Chicago') {
+    const omUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,pressure_msl,visibility,dew_point_2m,cloud_cover&hourly=precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=${encodeURIComponent(tz)}`;
     let om = null;
     try { const r = await fetch(omUrl); om = await r.json(); } catch (e) { console.error("OM failed:", e); }
     if (!om) return null;
@@ -76,7 +74,8 @@ async function fetchWeather(lat, lon) {
             dewPoint: cur.dew_point_2m != null ? Math.round(cur.dew_point_2m) : null,
             cloudCover: cur.cloud_cover != null ? cur.cloud_cover : null
         },
-        daily: om.daily
+        daily: om.daily,
+        hourly: om.hourly
     };
     const llat=+lat, llon=+lon;
     let g = null;
@@ -116,17 +115,6 @@ async function fetchWeather(lat, lon) {
     return res;
 }
 
-async function fetchForecast(lat, lon) {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=America%2FChicago&forecast_days=5`;
-    try {
-        const response = await fetch(url);
-        return await response.json();
-    } catch (error) {
-        console.error("Forecast fetch failed:", error);
-        return null;
-    }
-}
-
 async function fetchAlerts(lat, lon) {
     const url = `https://api.weather.gov/alerts/active?point=${lat},${lon}`;
     try {
@@ -157,7 +145,8 @@ async function fetchRiver() {
         const currentStage = parseFloat(values[values.length - 1].value);
         const oldStage = parseFloat(values[0].value);
         const delta = (currentStage - oldStage).toFixed(2);
-        return { stage: currentStage.toFixed(2), raw: currentStage, delta: delta > 0 ? `+${delta}` : delta };
+        const series = values.map(v => ({ t: v.date_time, v: parseFloat(v.value) })).filter(p => !isNaN(p.v));
+        return { stage: currentStage.toFixed(2), raw: currentStage, delta: delta > 0 ? `+${delta}` : delta, series };
     } catch (error) {
         console.error("USGS fetch failed:", error);
         return null;
@@ -236,6 +225,20 @@ setInterval(updateClock, 1000);
 
 function initChecklist() {
     const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+    const countEl = document.getElementById('checklist-count');
+    const fillEl = document.getElementById('checklist-fill');
+
+    function updateProgress() {
+        const total = checkboxes.length;
+        const done = [...checkboxes].filter(b => b.checked).length;
+        if (countEl) countEl.innerText = `${done}/${total}`;
+        if (fillEl) {
+            const pct = total ? (done / total) * 100 : 0;
+            fillEl.style.width = pct + '%';
+            fillEl.style.background = pct === 100 ? 'var(--status-green)' : (pct >= 50 ? 'var(--accent-blue)' : 'var(--status-orange)');
+        }
+    }
+
     checkboxes.forEach(box => {
         const saved = localStorage.getItem(box.id);
         if (saved === 'true') {
@@ -249,8 +252,10 @@ function initChecklist() {
             } else {
                 e.target.parentElement.classList.remove('done');
             }
+            updateProgress();
         });
     });
+    updateProgress();
 }
 
 const RIVER_FACTS = [
@@ -332,52 +337,4 @@ function updateWeatherBackground(weatherCode, isNight) {
     }
 })();
 
-// Call this function after weather data is loaded
-// Example usage: updateWeatherBackground(weatherCode, isNight);
-// ============================================
-// NUMBER COUNTER ANIMATION
-// Smoothly counts numbers up instead of jumping
-// ============================================
 
-function animateNumber(elementId, newValue, suffix = '', prefix = '') {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-    
-    // Parse current displayed value
-    const currentText = el.innerText.replace(/[^\d.-]/g, '');
-    const start = parseFloat(currentText) || 0;
-    const end = parseFloat(newValue);
-    const duration = 600; // ms
-    const startTime = performance.now();
-    
-    function update(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        // Ease out cubic for smooth deceleration
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const current = start + (end - start) * eased;
-        
-        el.innerText = prefix + current.toFixed(newValue % 1 !== 0 ? 2 : 0) + suffix;
-        
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        } else {
-            // Ensure final value is exact
-            el.innerText = prefix + end.toFixed(newValue % 1 !== 0 ? 2 : 0) + suffix;
-        }
-    }
-    
-    requestAnimationFrame(update);
-}
-
-// Simple fade-in for text elements
-function fadeInElement(elementId, delay = 0) {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-    el.style.opacity = '0';
-    setTimeout(() => {
-        el.style.transition = 'opacity 0.4s ease';
-        el.style.opacity = '1';
-    }, delay);
-}

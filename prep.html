@@ -16,6 +16,7 @@
         <div class="heartbeat-container">
             <span class="pulse-dot" style="background: var(--status-orange); box-shadow: 0 0 8px var(--status-orange);"></span>             Go-Bag Inventory Sync: <span class="sys-clock">--:-- -- ---</span>
         </div>
+        <div id="season-badge" style="display:inline-block;font-size:0.78rem;font-weight:600;padding:6px 12px;border-radius:20px;margin-bottom:14px;"></div>
 
         <div class="nav-tabs">
             <a href="index.html"><span class="icon">🏠</span> <span>HQ</span></a>
@@ -23,7 +24,6 @@
             <a href="prep.html" class="active"><span class="icon">🌀</span> <span>Hurricane</span></a>
             <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
             <a href="travel.html"><span class="icon">🚦</span> <span>Travel</span></a>
-            <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
             <a href="ukraine.html"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
         </div>
 
@@ -50,8 +50,17 @@
         <div class="grid-3">
             <div class="panel float-hover" style="grid-column: span 2;">
                 <h3 style="color: var(--accent-blue);">🎒 Hurricane & Flood Go-Bag</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: -5px; margin-bottom: 15px;">Progress saves automatically to this device.</p>
-                
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: -5px; margin-bottom: 10px;">Progress saves automatically to this device.</p>
+                <div style="margin-bottom: 15px;">
+                    <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">
+                        <span>Packed</span>
+                        <strong id="checklist-count" style="color:var(--text-main);">0/5</strong>
+                    </div>
+                    <div style="height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;">
+                        <div id="checklist-fill" style="height:100%;width:0%;background:var(--status-green);border-radius:4px;transition:width 0.4s ease, background 0.4s ease;"></div>
+                    </div>
+                </div>
+
                 <label class="checklist-item">
                     <input type="checkbox" id="prep-water">
                     <span>Bottled water (1 gallon per person, per day)</span>
@@ -100,6 +109,40 @@
     <script>
         updateClock();
         initChecklist();
+
+        // Hurricane season badge (Atlantic season: Jun 1 – Nov 30)
+        (function updateSeasonBadge() {
+            const badge = document.getElementById('season-badge');
+            const now = new Date();
+            const y = now.getFullYear();
+            const seasonStart = new Date(y, 5, 1);   // Jun 1
+            const seasonEnd = new Date(y, 10, 30, 23, 59, 59); // Nov 30
+            const peak = new Date(y, 7, 30);         // Sep 30 (peak)
+
+            if (now < seasonStart) {
+                const days = Math.ceil((seasonStart - now) / 86400000);
+                badge.innerText = `🌀 Season starts in ${days} days (Jun 1)`;
+                badge.style.background = 'rgba(255,255,255,0.06)';
+                badge.style.color = 'var(--text-muted)';
+                badge.style.border = '1px solid var(--border-color)';
+            } else if (now > seasonEnd) {
+                const nextStart = new Date(y + 1, 5, 1);
+                const days = Math.ceil((nextStart - now) / 86400000);
+                badge.innerText = `🌀 Season over — next starts in ${days} days`;
+                badge.style.background = 'rgba(255,255,255,0.06)';
+                badge.style.color = 'var(--text-muted)';
+                badge.style.border = '1px solid var(--border-color)';
+            } else {
+                const daysLeft = Math.ceil((seasonEnd - now) / 86400000);
+                const isPeak = now >= new Date(y, 7, 1) && now <= peak;
+                badge.innerText = isPeak
+                    ? `🌀 PEAK SEASON — ${daysLeft} days left`
+                    : `🌀 Hurricane season active — ${daysLeft} days left`;
+                badge.style.background = isPeak ? 'rgba(248,113,113,0.12)' : 'rgba(251,146,60,0.12)';
+                badge.style.color = isPeak ? 'var(--status-red)' : 'var(--status-orange)';
+                badge.style.border = `1px solid ${isPeak ? 'rgba(248,113,113,0.4)' : 'rgba(251,146,60,0.4)'}`;
+            }
+        })();
     </script>
 </body>
 </html>

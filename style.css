@@ -25,6 +25,7 @@ body {
     display: flex;
     justify-content: center;
     position: relative;
+    min-height: 100vh;
 }
 
 body::before {
@@ -52,6 +53,109 @@ body::after {
     background: linear-gradient(180deg, rgba(7,10,14,0.2) 0%, rgba(11,16,23,0.95) 100%);
     z-index: -1;
     pointer-events: none;
+}
+
+/* ===== DYNAMIC WEATHER BACKGROUNDS ===== */
+/* All backgrounds go on body::before (single layer) to avoid grid/body conflicts */
+
+/* Night mode - deep navy with twinkling stars */
+body.weather-night {
+    background: #0a0e27;
+}
+body.weather-night::before {
+    background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(2px 2px at 40% 70%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 60% 20%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 80% 50%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 10% 80%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 70% 90%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 90% 10%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 50% 50%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 25% 60%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 85% 40%, rgba(255,255,255,0.7), transparent),
+        linear-gradient(rgba(36, 50, 69, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36, 50, 69, 0.15) 1px, transparent 1px);
+    background-size: 
+        100vw 100vh, 100vw 100vh, 100vw 100vh, 100vw 100vh,
+        100vw 100vh, 100vw 100vh, 100vw 100vh, 100vw 100vh,
+        100vw 100vh, 100vw 100vh, 60px 60px, 60px 60px;
+    background-position: center top;
+    animation: grid-breath 12s ease-in-out infinite, stars-twinkle 4s ease-in-out infinite;
+}
+
+/* Clear/Sunny - warm blue with golden glow */
+body.weather-clear {
+    background: linear-gradient(180deg, #1a3a5c 0%, #2d5f8a 40%, #4a7fb5 100%);
+}
+body.weather-clear::before {
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 200, 100, 0.3) 0%, transparent 50%),
+        linear-gradient(rgba(36, 50, 69, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36, 50, 69, 0.2) 1px, transparent 1px);
+    background-size: 100% 60%, 50px 50px, 50px 50px;
+    background-position: center top;
+}
+
+/* Cloudy - muted gray-blue */
+body.weather-cloudy {
+    background: linear-gradient(180deg, #2a3441 0%, #3a4a5c 40%, #4a5a6c 100%);
+}
+body.weather-cloudy::before {
+    background-image: 
+        radial-gradient(ellipse at 30% 20%, rgba(150, 170, 200, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(130, 150, 180, 0.1) 0%, transparent 40%),
+        linear-gradient(rgba(36, 50, 69, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36, 50, 69, 0.2) 1px, transparent 1px);
+    background-size: 100% 70%, 100% 60%, 50px 50px, 50px 50px;
+    background-position: center top;
+}
+
+/* Rainy - dark gray-blue with rain streaks */
+body.weather-rainy {
+    background: linear-gradient(180deg, #1a2332 0%, #243447 40%, #2d4055 100%);
+}
+body.weather-rainy::before {
+    background-image: 
+        repeating-linear-gradient(180deg, transparent, transparent 2px, rgba(150, 180, 220, 0.15) 2px, rgba(150, 180, 220, 0.15) 4px),
+        linear-gradient(rgba(36, 50, 69, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36, 50, 69, 0.2) 1px, transparent 1px);
+    background-size: 2px 30px, 50px 50px, 50px 50px;
+    background-position: center top;
+    animation: grid-breath 10s ease-in-out infinite, rain-fall 0.5s linear infinite;
+}
+
+/* Storm - dark purple-gray with lightning flash */
+body.weather-storm {
+    background: linear-gradient(180deg, #1a1525 0%, #252035 40%, #302a45 100%);
+}
+body.weather-storm::before {
+    background-image: 
+        repeating-linear-gradient(180deg, transparent, transparent 2px, rgba(180, 160, 220, 0.2) 2px, rgba(180, 160, 220, 0.2) 4px),
+        linear-gradient(rgba(36, 50, 69, 0.25) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36, 50, 69, 0.25) 1px, transparent 1px);
+    background-size: 2px 30px, 50px 50px, 50px 50px;
+    background-position: center top;
+    animation: grid-breath 8s ease-in-out infinite, rain-fall 0.4s linear infinite, lightning-flash 8s ease-in-out infinite;
+}
+
+/* Foggy - soft gray with haze */
+body.weather-foggy {
+    background: linear-gradient(180deg, #3a3f47 0%, #4a5058 40%, #5a6068 100%);
+}
+body.weather-foggy::before {
+    background-image: 
+        radial-gradient(ellipse at 50% 50%, rgba(200, 210, 220, 0.2) 0%, transparent 70%),
+        linear-gradient(rgba(36, 50, 69, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36, 50, 69, 0.15) 1px, transparent 1px);
+    background-size: 100% 80%, 60px 60px, 60px 60px;
+    background-position: center top;
+    animation: grid-breath 15s ease-in-out infinite, fog-drift 20s ease-in-out infinite;
+}
+
+/* Default fallback - keep original dark background */
+body:not(.weather-clear):not(.weather-cloudy):not(.weather-rainy):not(.weather-storm):not(.weather-foggy):not(.weather-night) {
+    background: var(--bg-dark);
 }
 
 .container {

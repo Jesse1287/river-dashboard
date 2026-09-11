@@ -43,7 +43,6 @@
             <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
             <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
             <a href="travel.html" class="active"><span class="icon">🚦</span> <span>Travel</span></a>
-            <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
             <a href="ukraine.html"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
         </div>
 
@@ -51,6 +50,7 @@
             <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Corridor Status</div>
             <div id="corridor-verdict" style="font-size: 1.6rem; font-weight: 800; margin: 8px 0;">Analyzing conditions...</div>
             <div id="corridor-reason" style="font-size: 0.85rem; color: var(--text-muted);"></div>
+            <div id="departure-tip" style="display:none; margin-top: 12px; padding: 10px 14px; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); border-radius: 10px; font-size: 0.85rem; color: var(--text-main);"></div>
         </div>
 
         <div class="grid-2" style="margin-bottom: 16px;">
@@ -58,6 +58,7 @@
                 <div class="route-badge" id="active-badge" style="color: var(--accent-blue);">⭐ Active</div>
                 <div id="active-route-name" style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Denham → Donaldsonville</div>
                 <div id="active-time" style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 45 min</div>
+                <div id="active-baseline" style="font-size: 0.72rem; color: var(--text-muted);">Normal: ~45 min</div>
                 <div id="active-route-path" style="font-size: 0.8rem; color: var(--text-muted);">I-12 W → I-10 W</div>
                 <div id="active-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </a>
@@ -65,6 +66,7 @@
                 <div style="font-size: 0.65rem; color: #f472b6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">🏥 Wife — Bedico</div>
                 <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Denham → Family Healthcare of Bedico</div>
                 <div style="font-size: 1.8rem; font-weight: 700; margin: 6px 0;">~ 35 min</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">Normal: ~35 min</div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">I-12 E → LA-445 S</div>
                 <div id="route-bedico-conditions" style="font-size: 0.8rem; margin-top: 6px; color: var(--status-green);">--</div>
             </a>
@@ -213,6 +215,7 @@
                 badge.style.color = 'var(--accent-blue)';
                 rName.innerText = 'Denham → Donaldsonville';
                 rTime.innerText = '~ 45 min';
+                document.getElementById('active-baseline').innerText = 'Normal: ~45 min';
                 rPath.innerText = 'I-12 W → I-10 W';
             } else {
                 card.href = `https://www.google.com/maps/dir/${WORK_COORDS}/${HOME_ADDR}`;
@@ -220,6 +223,7 @@
                 badge.style.color = 'var(--status-orange)';
                 rName.innerText = 'Donaldsonville → Denham Springs';
                 rTime.innerText = '~ 55 min';
+                document.getElementById('active-baseline').innerText = 'Normal: ~55 min';
                 rPath.innerText = 'LA-22 W → LA-16 W';
             }
 
@@ -238,6 +242,26 @@
                 const rc = routeConditions(c, activeDestW?.current);
                 document.getElementById('active-conditions').innerText = rc.label;
                 document.getElementById('active-conditions').style.color = rc.color;
+
+                // Departure window tip: find the driest 2h window in the next 6h
+                const tip = document.getElementById('departure-tip');
+                const hourly = activeOriginW.hourly;
+                if (hourly && hourly.precipitation_probability && hourly.time) {
+                    const nowIdx = hourly.time.findIndex(t => new Date(t) >= new Date());
+                    if (nowIdx >= 0) {
+                        let best = null;
+                        for (let i = nowIdx; i < Math.min(nowIdx + 5, hourly.time.length - 1); i++) {
+                            const avg = (hourly.precipitation_probability[i] + hourly.precipitation_probability[i + 1]) / 2;
+                            if (!best || avg < best.avg) best = { avg, i };
+                        }
+                        if (best && best.avg < 40) {
+                            const t = new Date(hourly.time[best.i]);
+                            const when = t.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                            tip.style.display = 'block';
+                            tip.innerText = `💡 Driest window: leave around ${when} (rain chance ~${Math.round(best.avg)}%)`;
+                        }
+                    }
+                }
             }
 
             if (denhamW && bedicoW) {

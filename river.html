@@ -13,7 +13,9 @@
 <body>
     <div class="container">
         <h1>🌊 Amite River Flood Watch</h1>
-        
+
+        <div id="stage-banner" style="display:none; text-align:center; font-weight:700; font-size:0.95rem; padding:10px 14px; border-radius:10px; margin-bottom:12px;"></div>
+
         <div class="heartbeat-container">
             <span class="pulse-dot"></span>             River Gauge Telemetry: <span class="sys-clock">--:-- -- ---</span>
         </div>
@@ -24,7 +26,6 @@
             <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
             <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
             <a href="travel.html"><span class="icon">🚦</span> <span>Travel</span></a>
-            <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
             <a href="ukraine.html"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
         </div>
 
@@ -35,7 +36,13 @@
             <div id="delta-container" style="font-size: 0.9rem; margin-bottom: 5px; font-weight: 600;">
                 24h Trend: <span id="delta-trend">--</span>
             </div>
-            
+
+            <div style="margin: 10px 0 15px 0;">
+                <div style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Last 24 Hours</div>
+                <svg id="sparkline" viewBox="0 0 300 60" preserveAspectRatio="none" style="width:100%;height:60px;display:block;"></svg>
+                <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:var(--text-muted);margin-top:2px;"><span>24h ago</span><span id="spark-now">--</span></div>
+            </div>
+
             <div id="ark-status" style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-bottom: 20px;">
                 Checking requirements...
             </div>
@@ -90,12 +97,32 @@
             deltaEl.innerText = r.delta;
             deltaEl.style.color = r.delta.startsWith('+') ? "var(--status-red)" : "var(--status-green)";
 
+            // 24h sparkline
+            if (r.series && r.series.length > 1) {
+                const W = 300, H = 60, PAD = 3;
+                const vals = r.series.map(p => p.v);
+                const min = Math.min(...vals), max = Math.max(...vals);
+                const range = (max - min) || 1;
+                const pts = r.series.map((p, i) => {
+                    const x = PAD + (i / (r.series.length - 1)) * (W - PAD * 2);
+                    const y = H - PAD - ((p.v - min) / range) * (H - PAD * 2);
+                    return `${x.toFixed(1)},${y.toFixed(1)}`;
+                });
+                const color = r.delta.startsWith('+') ? 'var(--status-red)' : 'var(--status-green)';
+                const last = pts[pts.length-1].split(',');
+                document.getElementById('sparkline').innerHTML =
+                    `<polyline points="${pts.join(' ')}" fill="none" style="stroke:${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` +
+                    `<circle cx="${last[0]}" cy="${last[1]}" r="3" style="fill:${color}"/>`;
+                document.getElementById('spark-now').innerText = r.stage + ' ft';
+            }
+
             let pct = (r.raw / 40) * 100;
             document.getElementById('flood-meter').style.width = Math.min(Math.max(pct, 0), 100) + '%';
 
             const status = document.getElementById('status-badge');
             const ark = document.getElementById('ark-status');
             const panel = document.getElementById('river-main-panel');
+            const banner = document.getElementById('stage-banner');
 
             if (r.raw >= 35) {
                 status.innerText = "🚨 MAJOR FLOOD";
@@ -103,18 +130,29 @@
                 status.style.color = "var(--status-red)";
                 panel.classList.add('critical-state');
                 ark.innerText = "Noah's Ark protocol: ACTIVATED. Severe overflow occurring.";
+                banner.style.display = 'block';
+                banner.innerText = "🚨 MAJOR FLOOD STAGE REACHED — " + r.stage + " ft (35 ft threshold)";
+                banner.style.background = "rgba(248, 113, 113, 0.15)";
+                banner.style.color = "var(--status-red)";
+                banner.style.border = "1px solid rgba(248, 113, 113, 0.4)";
             } else if (r.raw >= 29) {
                 status.innerText = "⚠️ ACTION STAGE";
                 status.style.background = "rgba(251, 146, 60, 0.15)";
                 status.style.color = "var(--status-orange)";
                 panel.classList.remove('critical-state');
                 ark.innerText = "Water entering low-lying areas. Monitor continuously.";
+                banner.style.display = 'block';
+                banner.innerText = "⚠️ ACTION STAGE REACHED — " + r.stage + " ft (29 ft threshold)";
+                banner.style.background = "rgba(251, 146, 60, 0.12)";
+                banner.style.color = "var(--status-orange)";
+                banner.style.border = "1px solid rgba(251, 146, 60, 0.4)";
             } else {
                 status.innerText = "🟢 FLOW NOMINAL";
                 status.style.background = "rgba(74, 222, 128, 0.15)";
                 status.style.color = "var(--status-green)";
                 panel.classList.remove('critical-state');
                 ark.innerText = "Discharge rate and stage depth within normal operating parameters.";
+                banner.style.display = 'none';
             }
             document.getElementById('hydrograph').src = 'https://water.noaa.gov/resources/hydrographs/denl1_hg.png?t=' + Date.now();
         }

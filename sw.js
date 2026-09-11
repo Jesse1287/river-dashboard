@@ -1,4 +1,4 @@
-const CACHE_NAME = 'roux-command-v1';
+const CACHE_NAME = 'roux-command-v2';
 const ASSETS = [
     './',
     './index.html',
@@ -6,6 +6,8 @@ const ASSETS = [
     './weather.html',
     './forecast.html',
     './prep.html',
+    './travel.html',
+    './ukraine.html',
     './style.css',
     './app.js',
     './manifest.json'

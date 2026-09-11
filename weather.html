@@ -72,6 +72,13 @@
         .cf-day-low { font-size: 0.72rem; color: var(--accent-blue); opacity: 0.7; }
         .cf-day-pop { font-size: 0.6rem; color: var(--accent-blue); }
         .cf-day.today { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.15); }
+        .cf-range { position: relative; width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 2px 0; }
+        .cf-range-bar { position: absolute; top: 0; bottom: 0; border-radius: 2px; background: linear-gradient(90deg, var(--accent-blue), var(--status-orange)); }
+
+        .panel-toggle { cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; }
+        .panel-toggle .chev { font-size: 0.8rem; color: var(--text-muted); transition: transform 0.3s ease; }
+        .panel-collapsible { overflow: hidden; max-height: 2000px; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 1; }
+        .panel-collapsible.collapsed { max-height: 0; opacity: 0; }
     </style>
 </head>
 <body>
@@ -88,13 +95,13 @@
             <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
             <a href="weather.html" class="active"><span class="icon">🌦️</span> <span>Weather</span></a>
             <a href="travel.html"><span class="icon">🚦</span> <span>Travel</span></a>
-            <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
             <a href="ukraine.html"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
         </div>
 
         <div class="grid-3" id="weather-panels">
             <div class="panel float-hover">
-                <h2 style="color: var(--accent-blue);">🏡 Denham Springs</h2>
+                <h2 class="panel-toggle" data-target="denham-body" style="color: var(--accent-blue);">🏡 Denham Springs <span class="chev">▾</span></h2>
+                <div class="panel-collapsible" id="denham-body">
                 <div class="metric" id="denham-temp">--°</div>
                 <div style="font-weight: 600; color: var(--text-main);">
                     <span id="denham-icon"></span> <span id="denham-desc">Awaiting feed...</span>
@@ -121,10 +128,12 @@
                 <div class="compact-forecast" id="denham-forecast">
                     <div style="color:var(--text-muted);font-size:0.75rem;padding:4px 0;">Loading forecast...</div>
                 </div>
+                </div>
             </div>
 
             <div class="panel float-hover">
-                <h2 style="color: var(--status-green);">🏭 Donaldsonville</h2>
+                <h2 class="panel-toggle" data-target="don-body" style="color: var(--status-green);">🏭 Donaldsonville <span class="chev">▾</span></h2>
+                <div class="panel-collapsible" id="don-body">
                 <div class="metric" id="don-temp">--°</div>
                 <div style="font-weight: 600; color: var(--text-main);">
                     <span id="don-icon"></span> <span id="don-desc">Awaiting feed...</span>
@@ -151,10 +160,12 @@
                 <div class="compact-forecast" id="don-forecast">
                     <div style="color:var(--text-muted);font-size:0.75rem;padding:4px 0;">Loading forecast...</div>
                 </div>
+                </div>
             </div>
 
             <div class="panel float-hover">
-                <h2 style="color: var(--status-orange);">🏥 Ponchatoula</h2>
+                <h2 class="panel-toggle" data-target="ponch-body" style="color: var(--status-orange);">🏥 Ponchatoula <span class="chev">▾</span></h2>
+                <div class="panel-collapsible" id="ponch-body">
                 <div class="metric" id="ponch-temp">--°</div>
                 <div style="font-weight: 600; color: var(--text-main);">
                     <span id="ponch-icon"></span> <span id="ponch-desc">Awaiting feed...</span>
@@ -180,6 +191,7 @@
                 </div>
                 <div class="compact-forecast" id="ponch-forecast">
                     <div style="color:var(--text-muted);font-size:0.75rem;padding:4px 0;">Loading forecast...</div>
+                </div>
                 </div>
             </div>
         </div>
@@ -286,6 +298,10 @@
 
                 const daily = w.daily;
                 const fcContainer = document.getElementById(`${loc.prefix}-forecast`);
+                // Global range across the 5 days, for the range bars
+                const gMax = Math.max(...daily.temperature_2m_max.slice(0, 5));
+                const gMin = Math.min(...daily.temperature_2m_min.slice(0, 5));
+                const gRange = (gMax - gMin) || 1;
                 let fhtml = '';
                 for (let i = 0; i < 5; i++) {
                     const dayName = getDayName(daily.time[i], i);
@@ -294,12 +310,15 @@
                     const pop = daily.precipitation_probability_max[i] || 0;
                     const sf = daily.shortForecast && daily.shortForecast[i];
                     const fc = sf ? nwsShortForecastIcon(sf) : getWMO(daily.weather_code[i]);
+                    const left = ((minT - gMin) / gRange) * 100;
+                    const width = ((maxT - minT) / gRange) * 100;
 
                     fhtml += `
                     <div class="cf-day${i === 0 ? ' today' : ''}">
                         <div class="cf-day-name">${dayName}</div>
                         <div class="cf-day-icon">${fc.icon}</div>
                         <div class="cf-day-high">${maxT}°</div>
+                        <div class="cf-range"><div class="cf-range-bar" style="left:${left.toFixed(1)}%;width:${Math.max(width, 4).toFixed(1)}%;"></div></div>
                         <div class="cf-day-low">${minT}°</div>
                         <div class="cf-day-pop">🌧${pop}%</div>
                     </div>`;
@@ -307,6 +326,16 @@
                 fcContainer.innerHTML = fhtml;
             }
         }
+
+        // Collapsible location panels (tap header to expand/collapse)
+        document.querySelectorAll('.panel-toggle').forEach(h => {
+            h.addEventListener('click', () => {
+                const body = document.getElementById(h.dataset.target);
+                const chev = h.querySelector('.chev');
+                body.classList.toggle('collapsed');
+                chev.style.transform = body.classList.contains('collapsed') ? 'rotate(-90deg)' : '';
+            });
+        });
 
         loadWeatherPage();
         setInterval(loadWeatherPage, 300000);

@@ -20,6 +20,24 @@
         }
         .ukraine-header h2 { font-size: 1.6rem; margin-bottom: 4px; }
         .ukraine-header .sub { font-size: 0.85rem; color: var(--text-muted); }
+        .cf-day {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            min-width: 52px;
+            padding: 8px 6px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.03);
+            text-align: center;
+        }
+        .cf-day-name { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+        .cf-day-icon { font-size: 1.2rem; line-height: 1; }
+        .cf-day-high { font-size: 0.85rem; font-weight: 700; color: var(--status-orange); }
+        .cf-day-low { font-size: 0.72rem; color: var(--accent-blue); opacity: 0.7; }
+        .cf-day-pop { font-size: 0.6rem; color: var(--accent-blue); }
+        .cf-day.today { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.15); }
     </style>
 </head>
 <body>
@@ -36,7 +54,6 @@
             <a href="prep.html"><span class="icon">🌀</span> <span>Hurricane</span></a>
             <a href="weather.html"><span class="icon">🌦️</span> <span>Weather</span></a>
             <a href="travel.html"><span class="icon">🚦</span> <span>Travel</span></a>
-            <a href="daily.html"><span class="icon">🌿</span> <span>Daily</span></a>
             <a href="ukraine.html" class="active"><span class="icon">🇺🇦</span> <span>Ukraine</span></a>
         </div>
 
@@ -80,6 +97,16 @@
                     <div id="ukr-vis" style="font-size: 1.2rem; font-weight: 700;">-- mi</div>
                 </div>
             </div>
+            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+                <span id="ukr-sunrise">🌅 --</span> &nbsp;·&nbsp; <span id="ukr-sunset">🌇 --</span> &nbsp;·&nbsp; <span id="ukr-moon">🌙 --</span>
+            </div>
+        </div>
+
+        <div class="panel float-hover">
+            <h3 style="color: var(--accent-blue);">📅 5-Day Outlook</h3>
+            <div id="ukr-forecast" style="display: flex; justify-content: center; gap: 6px; overflow-x: auto; padding: 6px 0;">
+                <div style="color:var(--text-muted);font-size:0.75rem;padding:4px 0;">Loading forecast...</div>
+            </div>
         </div>
     </div>
 
@@ -95,8 +122,14 @@
         updateUkraineClock();
         setInterval(updateUkraineClock, 1000);
 
+        function fmtUaTime(isoStr) {
+            if (!isoStr) return '--';
+            const d = new Date(isoStr);
+            return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        }
+
         async function loadUkraine() {
-            const w = await fetchWeather(48.03188, 35.82367);
+            const w = await fetchWeather(48.03188, 35.82367, 'Europe/Kyiv');
             if (w) {
                 const c = w.current;
                 document.getElementById('ukr-temp').innerText = c.temp + '°';
@@ -108,6 +141,32 @@ document.getElementById('ukr-hum').innerText = (c.hum ?? '--') + '%';
                 document.getElementById('ukr-pop').innerText = (c.pop ?? '--') + '%';
                 document.getElementById('ukr-pressure').innerText = (c.pressure ?? '--') + ' hPa';
                 document.getElementById('ukr-vis').innerText = (c.visibility ?? '--') + ' mi';
+
+                // Sunrise / sunset / moon
+                document.getElementById('ukr-sunrise').innerText = '🌅 ' + fmtUaTime(w.daily.sunrise?.[0]);
+                document.getElementById('ukr-sunset').innerText = '🌇 ' + fmtUaTime(w.daily.sunset?.[0]);
+                const moon = getMoonPhase(new Date());
+                document.getElementById('ukr-moon').innerText = `${moon.i} ${moon.n}`;
+
+                // 5-day outlook
+                const daily = w.daily;
+                let fhtml = '';
+                for (let i = 0; i < 5; i++) {
+                    const dayName = i === 0 ? 'Today' : new Date(daily.time[i] + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short' });
+                    const maxT = Math.round(daily.temperature_2m_max[i]);
+                    const minT = Math.round(daily.temperature_2m_min[i]);
+                    const pop = daily.precipitation_probability_max[i] || 0;
+                    const fc = getWMO(daily.weather_code[i]);
+                    fhtml += `
+                    <div class="cf-day${i === 0 ? ' today' : ''}">
+                        <div class="cf-day-name">${dayName}</div>
+                        <div class="cf-day-icon">${fc.icon}</div>
+                        <div class="cf-day-high">${maxT}°</div>
+                        <div class="cf-day-low">${minT}°</div>
+                        <div class="cf-day-pop">🌧${pop}%</div>
+                    </div>`;
+                }
+                document.getElementById('ukr-forecast').innerHTML = fhtml;
             }
         }
         loadUkraine();
