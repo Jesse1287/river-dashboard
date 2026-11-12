@@ -1,4 +1,4 @@
-const CACHE_NAME = 'roux-command-v3';
+const CACHE_NAME = 'roux-command-v4';
 const ASSETS = [
     './',
     './index.html',

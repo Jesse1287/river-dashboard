@@ -54,7 +54,7 @@
 [data-theme="light"] body.weather-rainy { background: linear-gradient(180deg, #8fa2b5 0%, #a7b6c6 40%, #c2cdd9 100%) !important; }
 [data-theme="light"] body.weather-storm { background: linear-gradient(180deg, #8b86a3 0%, #a49fb8 40%, #c0bcd0 100%) !important; }
 [data-theme="light"] body.weather-foggy { background: linear-gradient(180deg, #c3c9d1 0%, #d3d8de 40%, #e2e6ea 100%) !important; }
-[data-theme="light"] body.weather-night { background: linear-gradient(180deg, #33415c 0%, #46587a 50%, #5d6f92 100%) !important; }
+[data-theme="light"] body.weather-night { background: linear-gradient(180deg, #dfe7f2 0%, #e9eef6 50%, #f3f6fa 100%) !important; }
 
 /* In light mode, hide all weather-specific ::before overlays (they're dark patterns) */
 [data-theme="light"] body.weather-clear::before,
@@ -89,19 +89,6 @@
     background-size: 200px 100%;
 }
 
-/* In light mode the weather-specific card overrides below (hardcoded dark greys/blues) are more specific
-   than [data-theme="light"] .panel and therefore make cards on HQ / Ukraine / travel pages look black —
-   reset them to the card background so they match every other page */
-[data-theme="light"] body.weather-rainy .panel,
-[data-theme="light"] body.weather-storm .panel {
-    background: var(--card-bg);
-}
-[data-theme="light"] body.weather-foggy .panel {
-    background: var(--card-bg);
-}
-[data-theme="light"] body.weather-night .panel {
-    background: var(--card-bg);
-}
 
 /* ===== THEME TOGGLE BUTTON ===== */
 /* Touch-safe minimum: 48px per Apple HIG */
@@ -935,3 +922,22 @@ body.weather-night .panel {
 .panel:nth-child(3) { animation-delay: 0.15s; }
 .panel:nth-child(4) { animation-delay: 0.2s; }
 .panel:nth-child(5) { animation-delay: 0.25s; }
+
+/* ============================================
+   LIGHT THEME — CARDS MUST ALWAYS BE LIGHT
+   The weather-tinted card rules above (body.weather-*.panel) use
+   hard-coded dark colours and used to win over the light theme,
+   turning HQ / Ukraine / travel cards near-black in day mode.
+   This block is last in the file, matches every weather class, and
+   uses !important so light mode always wins.
+   ============================================ */
+[data-theme="light"] .panel,
+[data-theme="light"] body.weather-clear .panel,
+[data-theme="light"] body.weather-cloudy .panel,
+[data-theme="light"] body.weather-rainy .panel,
+[data-theme="light"] body.weather-storm .panel,
+[data-theme="light"] body.weather-foggy .panel,
+[data-theme="light"] body.weather-night .panel {
+    background: var(--card-bg) !important;
+    box-shadow: 0 8px 24px var(--panel-shadow) !important;
+}

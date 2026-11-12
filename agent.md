@@ -35,11 +35,13 @@
 - [x] Live on GitHub Pages: https://jesse1287.github.io/river-dashboard/
 - Local HEAD == origin/main = 442c7969f00d7c39237f4243ab04dea18e8ab252
 
-## Round 3 — Day-Mode Legibility + Tighter Text (in progress)
-- [ ] A. Light-mode panels dark in day mode: `body.weather-* .panel` overrides (hardcoded `rgba(20,30,45,0.7)` etc.) are more specific than `[data-theme="light"] .panel`, so HQ / Ukraine / Travel cards turned black → reset to `var(--card-bg)` (matches every other page) when `[data-theme="light"]`
-- [ ] B. Text too big: all numbers/letters reduced ~15% site-wide — `.metric` 2.2→1.85rem, `.ukraine-temp` 3→2.6rem, `h2/h3` 1.15→0.95rem, nav tabs 0.95→0.82rem (+phone 0.75→0.68), ticker 0.9→0.78rem, all forecast rows (~0.85→~0.75rem) + their phone variants, quick-link labels 0.85→0.78rem, plus inline overrides in river/travel/ukraine/index
-- [ ] C. h1 headers untouched (user: "the header is perfect"); weather emoji icons untouched — only text/metrics reduced
-- [ ] D. Push to origin/main + live check
+## Round 3 — Day-Mode Legibility + Tighter Text (COMPLETE, pushed)
+- [x] A. Light-mode panels dark in day mode: `body.weather-* .panel` overrides (hardcoded `rgba(20,30,45,0.7)` etc.) are more specific than `[data-theme="light"] .panel`, so HQ / Ukraine / Travel cards turned black → reset to `var(--card-bg)` (matches every other page) when `[data-theme="light"]`
+- [x] B. Text too big: all numbers/letters reduced ~15% site-wide — `.metric` 2.2→1.85rem, `.ukraine-temp` 3→2.6rem, `h2/h3` 1.15→0.95rem, nav tabs 0.95→0.82rem (+phone 0.75→0.68), ticker 0.9→0.78rem, all forecast rows (~0.85→~0.75rem) + their phone variants, quick-link labels 0.85→0.78rem, plus inline overrides in river/travel/ukraine/index
+- [x] C. h1 headers untouched (user: "the header is perfect"); weather emoji icons untouched — only text/metrics reduced
+- [x] D. Pushed to origin/main = `3f10d8b` and live at https://jesse1287.github.io/river-dashboard/ (verified against raw file + CDN)
+- [x] E. User reported cards still dark after 3f10d8b → hardened: moved the light-mode card override to the **end** of `style.css`, added `!important`, and covered *all* weather classes (clear/cloudy/rainy/storm/foggy/night); also made the light-mode `weather-night` body background light instead of dark navy
+- [x] F. Cache busting: `sw.js` cache `v3 → v4` + `style.css?v=4` on all 6 pages (GitHub Pages sends `max-age=600`, and the SW precached the old CSS, so browsers could keep serving old rules)
 
 ## Questions for Jesse — RESOLVED (Phase 3)
 1. **Icons**: no assets → generated real PNGs programmatically (not placeholders; they trigger the install prompt ✓)
