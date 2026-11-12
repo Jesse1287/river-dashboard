@@ -89,6 +89,20 @@
     background-size: 200px 100%;
 }
 
+/* In light mode the weather-specific card overrides below (hardcoded dark greys/blues) are more specific
+   than [data-theme="light"] .panel and therefore make cards on HQ / Ukraine / travel pages look black —
+   reset them to the card background so they match every other page */
+[data-theme="light"] body.weather-rainy .panel,
+[data-theme="light"] body.weather-storm .panel {
+    background: var(--card-bg);
+}
+[data-theme="light"] body.weather-foggy .panel {
+    background: var(--card-bg);
+}
+[data-theme="light"] body.weather-night .panel {
+    background: var(--card-bg);
+}
+
 /* ===== THEME TOGGLE BUTTON ===== */
 /* Touch-safe minimum: 48px per Apple HIG */
 .theme-toggle {
@@ -188,8 +202,8 @@ h1 {
 }
 
 h2, h3 { 
-    margin: 0 0 12px 0; 
-    font-size: 1.15rem; 
+    margin: 0 0 10px 0; 
+    font-size: 0.95rem; 
     color: var(--heading-color);
     user-select: none;
     -webkit-user-select: none;
@@ -331,7 +345,7 @@ h2, h3 {
     text-decoration: none;
     padding: 10px 16px;
     border-radius: 10px;
-    font-size: 0.95rem;
+    font-size: 0.82rem;
     font-weight: 600;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
@@ -350,8 +364,8 @@ h2, h3 {
 }
 
 /* Base metrics and Ukraine temp — the @media (max-width: 768px) block below overrides them on phones */
-.metric { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; margin: 8px 0; }
-.ukraine-temp { font-size: 3rem; }
+.metric { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.5px; margin: 8px 0; }
+.ukraine-temp { font-size: 2.6rem; }
 
 @media (max-width: 768px) {
     body { padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
@@ -375,7 +389,7 @@ h2, h3 {
     }
     .nav-tabs a {
         flex-direction: column;
-        font-size: 0.75rem;
+        font-size: 0.68rem;
         padding: 8px 4px;
         gap: 4px;
         flex: 1;
@@ -410,12 +424,12 @@ h2, h3 {
     
     /* Bigger metric numbers for readability */
     .metric {
-        font-size: 2rem;
+        font-size: 1.65rem;
     }
 
     /* Ukraine page — large temp on desktop, clamped for phone */
     .ukraine-temp {
-        font-size: 2.4rem;
+        font-size: 2rem;
     }
 }
 
@@ -475,7 +489,7 @@ h2, h3 {
     white-space: nowrap;
     padding-left: 100%;
     animation: ticker-scroll 40s linear infinite;
-    font-size: 0.9rem;
+    font-size: 0.78rem;
     color: var(--accent-blue);
     text-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
 }
@@ -562,23 +576,23 @@ button {
     border: 1px solid var(--border-color);
     border-radius: 12px;
 }
-.forecast-day { min-width: 55px; font-weight: 600; font-size: 0.9rem; }
-.forecast-cond { min-width: 105px; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--text-muted); }
+.forecast-day { min-width: 55px; font-weight: 600; font-size: 0.78rem; }
+.forecast-cond { min-width: 105px; display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text-muted); }
 .forecast-bar { flex: 1; display: flex; align-items: center; gap: 8px; }
 .forecast-track { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; position: relative; overflow: hidden; }
 .forecast-fill { position: absolute; height: 100%; background: linear-gradient(90deg, var(--accent-blue), var(--status-orange)); border-radius: 3px; }
-.forecast-temp-min { font-weight: 600; width: 26px; text-align: right; font-size: 0.85rem; }
-.forecast-temp-max { font-weight: 600; width: 26px; font-size: 0.85rem; }
-.forecast-pop { min-width: 45px; text-align: right; font-size: 0.85rem; font-weight: 600; }
+.forecast-temp-min { font-weight: 600; width: 26px; text-align: right; font-size: 0.75rem; }
+.forecast-temp-max { font-weight: 600; width: 26px; font-size: 0.75rem; }
+.forecast-pop { min-width: 45px; text-align: right; font-size: 0.75rem; font-weight: 600; }
 .pop-high { color: var(--accent-blue); text-shadow: 0 0 8px rgba(56,189,248,0.4); }
 @media (max-width: 600px) {
     .forecast-row { flex-wrap: wrap; gap: 4px; padding: 8px 10px; }
-    .forecast-day { min-width: 40px; font-size: 0.8rem; }
-    .forecast-cond { min-width: 0; font-size: 0.75rem; }
+    .forecast-day { min-width: 40px; font-size: 0.7rem; }
+    .forecast-cond { min-width: 0; font-size: 0.65rem; }
     .forecast-cond span { display: none; }
     .forecast-bar { width: 100%; order: 10; margin-top: 2px; }
-    .forecast-temp-min, .forecast-temp-max { font-size: 0.8rem; }
-    .forecast-pop { min-width: 40px; font-size: 0.85rem; }
+    .forecast-temp-min, .forecast-temp-max { font-size: 0.7rem; }
+    .forecast-pop { min-width: 40px; font-size: 0.72rem; }
     /* Tighter density + readable ticker at the smallest sizes */
     .panel { padding: 14px; margin-bottom: 10px; }
     .ticker-track { font-size: 1rem; animation-duration: 60s; }
@@ -654,7 +668,7 @@ button {
 }
 /* Labels kept large enough to read at arm's length */
 .quick-link .ql-label {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 600;
 }
 .quick-link .ql-desc {

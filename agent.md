@@ -30,6 +30,17 @@
 - [x] B. Oblong circles: `.nav-tabs a.active span.icon` was a horizontal pill (`border-radius: 12px; padding: 4px 16px`) — now a proper circle (`border-radius: 50%; padding: 4px`).
 - [x] C. Headers too large on phone: `h1` was 1.6rem with a 48px theme toggle in one flex row → wraps/overflows. Now `h1 { font-size: clamp(1.05rem, 4.2vw, 1.25rem) }` + `.header-row { flex-wrap: wrap }` so text breaks cleanly rather than throwing the layout.
 
+## Round 2 — Pushed to origin/main (live)
+- [x] `442c796` pushed via the AGENTS.md method: token at `/home/Jesse/.github-token` passed inline as a one-shot URL (`https://x:$TOKEN@github.com/...`) — git push + Bearer header both return 200; the earlier "401" was from the query-param API test (GitHub prefers `Authorization: Bearer`).
+- [x] Live on GitHub Pages: https://jesse1287.github.io/river-dashboard/
+- Local HEAD == origin/main = 442c7969f00d7c39237f4243ab04dea18e8ab252
+
+## Round 3 — Day-Mode Legibility + Tighter Text (in progress)
+- [ ] A. Light-mode panels dark in day mode: `body.weather-* .panel` overrides (hardcoded `rgba(20,30,45,0.7)` etc.) are more specific than `[data-theme="light"] .panel`, so HQ / Ukraine / Travel cards turned black → reset to `var(--card-bg)` (matches every other page) when `[data-theme="light"]`
+- [ ] B. Text too big: all numbers/letters reduced ~15% site-wide — `.metric` 2.2→1.85rem, `.ukraine-temp` 3→2.6rem, `h2/h3` 1.15→0.95rem, nav tabs 0.95→0.82rem (+phone 0.75→0.68), ticker 0.9→0.78rem, all forecast rows (~0.85→~0.75rem) + their phone variants, quick-link labels 0.85→0.78rem, plus inline overrides in river/travel/ukraine/index
+- [ ] C. h1 headers untouched (user: "the header is perfect"); weather emoji icons untouched — only text/metrics reduced
+- [ ] D. Push to origin/main + live check
+
 ## Questions for Jesse — RESOLVED (Phase 3)
 1. **Icons**: no assets → generated real PNGs programmatically (not placeholders; they trigger the install prompt ✓)
 2. **Which page most**: polish done globally on all pages
