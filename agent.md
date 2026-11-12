@@ -42,6 +42,7 @@
 - [x] D. Pushed to origin/main = `3f10d8b` and live at https://jesse1287.github.io/river-dashboard/ (verified against raw file + CDN)
 - [x] E. User reported cards still dark after 3f10d8b → hardened: moved the light-mode card override to the **end** of `style.css`, added `!important`, and covered *all* weather classes (clear/cloudy/rainy/storm/foggy/night); also made the light-mode `weather-night` body background light instead of dark navy
 - [x] F. Cache busting: `sw.js` cache `v3 → v4` + `style.css?v=4` on all 6 pages (GitHub Pages sends `max-age=600`, and the SW precached the old CSS, so browsers could keep serving old rules)
+- [x] G. Pushed as `ea835c3`; live checks: `index.html`/`ukraine.html` load `style.css?v=4`, live CSS ends with the `!important` light-card block, light-mode night body is light, and `sw.js` reports `roux-command-v4`
 
 ## Questions for Jesse — RESOLVED (Phase 3)
 1. **Icons**: no assets → generated real PNGs programmatically (not placeholders; they trigger the install prompt ✓)
