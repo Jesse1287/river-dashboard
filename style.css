@@ -90,13 +90,14 @@
 }
 
 /* ===== THEME TOGGLE BUTTON ===== */
+/* Touch-safe minimum: 48px per Apple HIG */
 .theme-toggle {
     position: relative;
     top: auto;
     right: auto;
     z-index: 10;
-    width: 36px;
-    height: 36px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     border: 1px solid var(--border-color);
     background: var(--card-bg);
@@ -314,12 +315,20 @@ h2, h3 {
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.float-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(56, 189, 248, 0.2);
-    border-color: rgba(56, 189, 248, 0.5);
+/* Desktop-only hover physics — never apply on touch devices (no hover pointer) */
+@media (hover: hover) {
+    .float-hover:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(56, 189, 248, 0.2);
+        border-color: rgba(56, 189, 248, 0.5);
+    }
+
+    .metric-sparkle:hover {
+        text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+    }
 }
 
+/* Tap feedback — works on touch AND hover devices (keeps desktop feel) */
 .float-hover:active, .nav-tabs a:active, button:active, .emergency-btn:active, .checklist-item:active {
     transform: scale(0.97);
 }
@@ -400,6 +409,19 @@ h2, h3 {
     50% { transform: translateY(-3px); }
 }
 
+/* Map panels — must never take over a phone viewport */
+.map-panel {
+    height: 600px;
+    min-height: 280px;
+}
+
+@media (max-width: 768px) {
+    .map-panel {
+        height: max(45vh, 260px);
+        max-height: 360px;
+    }
+}
+
 /* Navigation */
 .nav-tabs {
     display: flex;
@@ -434,6 +456,10 @@ h2, h3 {
     border: 1px solid rgba(56, 189, 248, 0.3);
     box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
 }
+
+/* Base metrics and Ukraine temp — the @media (max-width: 768px) block below overrides them on phones */
+.metric { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; margin: 8px 0; }
+.ukraine-temp { font-size: 3rem; }
 
 @media (max-width: 768px) {
     body { padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
@@ -487,9 +513,12 @@ h2, h3 {
     .metric {
         font-size: 2rem;
     }
-}
 
-.metric { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; margin: 8px 0; }
+    /* Ukraine page — large temp on desktop, clamped for phone */
+    .ukraine-temp {
+        font-size: 2.4rem;
+    }
+}
 
 .status-badge {
     display: inline-block;
@@ -569,6 +598,7 @@ h2, h3 {
 @media (min-width: 768px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
 
 /* Prep Checklist Styles */
+/* Touch-safe minimum: 48px per Apple HIG */
 .checklist-item {
     display: flex;
     align-items: center;
@@ -578,6 +608,7 @@ h2, h3 {
     margin-bottom: 8px;
     border: 1px solid rgba(255,255,255,0.05);
     cursor: pointer;
+    min-height: 48px;
     transition: background 0.2s, opacity 0.2s;
     user-select: none;
     -webkit-user-select: none;
@@ -610,11 +641,13 @@ button {
     transition: all 0.2s ease;
 }
 
+/* Touch-safe minimum: 48px per Apple HIG */
 .emergency-btn {
     display: block; width: 100%; text-align: center;
     background: rgba(248, 113, 113, 0.15); color: var(--status-red);
-    padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold;
+    padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold;
     border: 1px solid rgba(248, 113, 113, 0.3); margin-top: 8px;
+    min-height: 48px;
     transition: all 0.2s;
     user-select: none;
     -webkit-user-select: none;
@@ -646,7 +679,10 @@ button {
     .forecast-cond span { display: none; }
     .forecast-bar { width: 100%; order: 10; margin-top: 2px; }
     .forecast-temp-min, .forecast-temp-max { font-size: 0.8rem; }
-    .forecast-pop { min-width: 35px; font-size: 0.75rem; }
+    .forecast-pop { min-width: 40px; font-size: 0.85rem; }
+    /* Tighter density + readable ticker at the smallest sizes */
+    .panel { padding: 14px; margin-bottom: 10px; }
+    .ticker-track { font-size: 1rem; animation-duration: 60s; }
 }
 
 /* Custom Scrollbar */
@@ -691,6 +727,7 @@ button {
     gap: 12px;
     margin-top: 6px;
 }
+/* Touch-safe minimum: 48px per Apple HIG */
 .quick-link {
     flex: 1;
     min-width: 140px;
@@ -702,6 +739,7 @@ button {
     color: inherit;
     text-align: center;
     transition: all 0.2s;
+    min-height: 48px;
 }
 .quick-link:hover {
     background: rgba(56, 189, 248, 0.08);
@@ -715,12 +753,13 @@ button {
     display: block;
     margin-bottom: 4px;
 }
+/* Labels kept large enough to read at arm's length */
 .quick-link .ql-label {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 600;
 }
 .quick-link .ql-desc {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     margin-top: 2px;
 }
